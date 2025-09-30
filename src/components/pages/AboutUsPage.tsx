@@ -204,6 +204,8 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                     <p className="text-gray-800 leading-relaxed">
                       Master cutting-edge technologies and AI tools with comprehensive courses, personalized mentoring, 
                       and a supportive community. Transform your career with practical, industry-relevant skills.
+                      Master cutting-edge technologies and AI tools with comprehensive courses, personalized mentoring, 
+                      and a supportive community. Transform your career with practical, industry-relevant skills.
                     </p>
                   </div>
 

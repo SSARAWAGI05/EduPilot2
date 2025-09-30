@@ -229,6 +229,9 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                       Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
                       technologies and AI tools. With years of industry experience and a proven track record in 
                       education, I've created a comprehensive learning ecosystem that combines theoretical knowledge 
+                      with practical applications. Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
+                      technologies and AI tools. With years of industry experience and a proven track record in 
+                      education, I've created a comprehensive learning ecosystem that combines theoretical knowledge 
                       with practical applications.
                     </p>
                   </div>
@@ -419,122 +422,80 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
         </div>
       </div>
 
-      {/* Slide 4: FAQ Section */}
-      <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 lg:p-8" style={{ backgroundColor: '#e9ecef' }}>
-        <div className="w-full max-w-6xl">
-          <div className="relative">
-            {/* Main FAQ Container */}
-            <div className="relative rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 xl:p-12 shadow-2xl border-2 sm:border-4 border-white" style={{ backgroundColor: '#ffffff' }}>
-              <div className="grid lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-12">
-                
-                {/* Left Panel */}
-                <div className="lg:col-span-2 flex flex-col justify-center space-y-4 sm:space-y-6 lg:space-y-8">
-                  {/* EduPilot Branding */}
-                  <div className="flex items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-2 sm:mb-3 lg:mb-4">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#ff8787' }}>
-                      <span className="text-white font-bold text-sm sm:text-base lg:text-lg">R</span>
+      {/* FAQ Section */}
+              <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: '#e9ecef' }}>
+                <div className="w-full max-w-7xl px-4">
+                  <div className="text-center mb-16">
+                    <div className="flex items-center justify-center gap-3 mb-6">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#ff8787' }}>
+                        <span className="text-white font-bold text-xl">R</span>
+                      </div>
+                      <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
                     </div>
-                    <span className="text-base sm:text-lg lg:text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
-                  </div>
-
-                  <div className="space-y-1 sm:space-y-2 lg:space-y-4 text-center lg:text-left">
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black text-gray-900 leading-tight">
-                      Frequently
+                    
+                    <h2 className="text-4xl lg:text-6xl font-black mb-4 text-gray-900">
+                      Frequently Asked Questions
                     </h2>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black text-gray-900 leading-tight">
-                      Asked
-                    </h2>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black text-gray-900 leading-tight">
-                      Questions
-                    </h2>
-                  </div>
-                  
-                  <div className="flex flex-col space-y-2 sm:space-y-3 lg:space-y-4 items-center lg:items-start">
-                    <button 
-                      onClick={onLogin}
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base lg:text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                      style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
-                    >
-                      Get Started Today
-                    </button>
-                    <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium text-center lg:text-left">
-                      Everything you need to know about our platform
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                      Everything you need to know about our courses and services
                     </p>
                   </div>
-                </div>
-
-                {/* Right Panel */}
-                <div className="lg:col-span-3">
-                  <div className="rounded-2xl h-full flex flex-col">
-                    <div className="space-y-2 sm:space-y-3 lg:space-y-4 max-h-[300px] sm:max-h-[400px] lg:max-h-[500px] overflow-y-auto pr-1 sm:pr-2 lg:pr-4">
-                      {faqs.map((faq, index) => (
-                        <div
-                          key={index}
-                          className={`transition-all duration-300 cursor-pointer rounded-lg sm:rounded-xl overflow-hidden border-2 ${
-                            openFAQ === index 
-                              ? 'border-gray-300 shadow-lg' 
-                              : 'border-gray-100 hover:border-gray-200'
-                          }`}
-                          style={{ 
-                            backgroundColor: openFAQ === index ? '#f8f9fa' : '#ffffff'
-                          }}
-                          onClick={() => toggleFAQ(index)}
-                        >
-                          <div className="p-3 sm:p-4 lg:p-6">
-                            <div className="flex justify-between items-start gap-4">
-                              <span className={`font-semibold pr-4 transition-all duration-300 flex-1 ${
-                                openFAQ === index 
-                                  ? 'text-gray-900' 
-                                  : 'text-gray-800 hover:text-gray-900'
-                              } text-sm sm:text-base`}>
-                                {faq.question}
-                              </span>
-                              <div className={`flex-shrink-0 transition-all duration-300 transform ${
-                                openFAQ === index ? 'rotate-45' : ''
-                              } w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 rounded-lg flex items-center justify-center`}
-                              style={{ 
-                                backgroundColor: openFAQ === index ? '#ff8787' : '#e9ecef',
-                                color: openFAQ === index ? '#ffffff' : '#1e1e1e'
-                              }}>
-                                <Plus className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4" />
-                              </div>
+      
+                  <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                    {faqs.map((faq, index) => (
+                      <div
+                        key={index}
+                        className={`group transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-[1.02] ${
+                          openFAQ === index 
+                            ? 'shadow-2xl border-white' 
+                            : 'shadow-lg border-white hover:shadow-xl'
+                        }`}
+                        style={{ 
+                          backgroundColor: index % 4 === 0 ? '#a5d8ff' : index % 4 === 1 ? '#ffec99' : index % 4 === 2 ? '#ffc9c9' : '#fff4e6'
+                        }}
+                        onClick={() => toggleFAQ(index)}
+                      >
+                        <div className="p-6">
+                          <div className="flex justify-between items-start gap-4 mb-4">
+                            <h3 className="font-bold text-lg text-gray-900 flex-1 leading-snug">
+                              {faq.question}
+                            </h3>
+                            <div className={`flex-shrink-0 transition-all duration-300 transform ${
+                              openFAQ === index ? 'rotate-45' : 'group-hover:rotate-90'
+                            } w-10 h-10 rounded-xl flex items-center justify-center shadow-md`}
+                            style={{ 
+                              backgroundColor: openFAQ === index ? '#ff8787' : '#ffffff',
+                              color: openFAQ === index ? '#ffffff' : '#1e1e1e'
+                            }}>
+                              <Plus className="w-6 h-6" />
                             </div>
-                            
-                            {/* Answer */}
-                            <div className={`overflow-hidden transition-all duration-500 ${
-                              openFAQ === index ? 'max-h-96 opacity-100 mt-2 sm:mt-3 lg:mt-4' : 'max-h-0 opacity-0'
-                            }`}>
-                              <div className="pt-2 sm:pt-3 lg:pt-4 border-t border-gray-200">
-                                <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                                  {faq.answer}
-                                </p>
-                              </div>
+                          </div>
+                          
+                          <div className={`overflow-hidden transition-all duration-500 ${
+                            openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                          }`}>
+                            <div className="pt-4 border-t-2 border-white/50">
+                              <p className="text-gray-800 leading-relaxed font-medium">{faq.answer}</p>
                             </div>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                    
-                    {/* Footer */}
-                    <div className="pt-4 sm:pt-6 lg:pt-8 mt-2 sm:mt-3 lg:mt-4 border-t border-gray-200 text-center">
-                      <p className="text-gray-600 mb-2 sm:mb-3 lg:mb-4 text-xs sm:text-sm lg:text-base">
-                        Still have questions?
-                      </p>
+                      </div>
+                    ))}
+                  </div>
+      
+                  <div className="text-center mt-16">
+                    <div className="inline-block bg-white rounded-2xl p-8 shadow-xl border-4 border-white">
+                      <p className="text-gray-800 text-lg mb-4 font-semibold">Still have questions?</p>
                       <button 
-                        onClick={onLogin}
-                        className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-xs sm:text-sm lg:text-base"
-                        style={{ backgroundColor: '#a5d8ff', color: '#1e1e1e' }}
+                        className="px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                        style={{ backgroundColor: '#ff8787', color: '#ffffff' }}
                       >
-                        Contact Support
+                        Contact Support <ChevronRight className="w-5 h-5 inline ml-2" />
                       </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </section>
 
       <style dangerouslySetInnerHTML={{
         __html: `
