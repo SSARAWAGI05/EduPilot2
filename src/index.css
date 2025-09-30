@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Load Comic Sans MS as a web font */
+@font-face {
+  font-family: 'Comic Sans MS';
+  src: url('/src/assets/fonts/ComicSansMS.woff') format('woff2'),
+       url('/src/assets/fonts/ComicSansMS.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Apply Comic Sans globally */
+* {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+/* ✅ Testimonial train animation */
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-slide {
+  animation: slide 30s linear infinite;
+}
