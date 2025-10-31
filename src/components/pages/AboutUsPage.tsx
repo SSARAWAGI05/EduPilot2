@@ -398,7 +398,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                 <p className="text-gray-800 text-lg mb-4 font-semibold">Still have questions?</p>
                 <button 
                   className="px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                  style={{ backgroundColor: '#ff8787', color: '#ffffff' }}
+                  style={{ backgroundColor: '#000000ff', color: '#ffffff' }}
                 >
                   Contact Support <ChevronRight className="w-5 h-5 inline ml-2" />
                 </button>

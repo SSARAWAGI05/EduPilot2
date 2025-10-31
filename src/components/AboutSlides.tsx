@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Plus, Minus, Star, ChevronRight, Users, Video, Brain, FileText } from 'lucide-react';
+import { Play, Plus, Star, ChevronRight, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react';
 
 interface AboutSlidesProps {
   onLogin: () => void;
@@ -14,10 +14,19 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const defaultVideoUrl = "/src/graphics/rs.mp4";
   
-  // Use provided props or fall back to defaults
   const finalVideoUrl = videoUrl || defaultVideoUrl;
+
+  // Mouse movement effect for subtle interactivity
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const handlePlayPause = () => {
     if (videoRef) {
@@ -41,7 +50,6 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
     return () => clearTimeout(timeoutId);
   }, [typedText, currentSlide, fullText]);
 
-  // Reset typing animation when returning to first slide
   useEffect(() => {
     if (currentSlide === 0) {
       setTypedText('');
@@ -49,24 +57,24 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
   }, [currentSlide]);
 
   const testimonials = [
-    { text: "Amazing courses that helped me land my dream job!", rating: 5 },
-    { text: "The AI tools are incredibly helpful for learning.", rating: 5 },
-    { text: "Rishika's teaching style is exceptional and engaging.", rating: 4 },
-    { text: "Best investment I made for my career development.", rating: 5 }
+    { text: "Amazing courses that helped me land my dream job!", rating: 5, highlight: "dream job" },
+    { text: "The AI tools are incredibly helpful for learning.", rating: 5, highlight: "AI tools" },
+    { text: "Rishika's teaching style is exceptional and engaging.", rating: 4, highlight: "exceptional" },
+    { text: "Best investment I made for my career development.", rating: 5, highlight: "best investment" }
   ];
 
   const testimonialsRow2 = [
-    { text: "The personalized mentoring changed my career path completely!", rating: 5 },
-    { text: "Interactive coding environments made learning so much easier.", rating: 4 },
-    { text: "Live classes are engaging and well-structured.", rating: 5 },
-    { text: "The community support is incredible and motivating.", rating: 4 }
+    { text: "The personalized mentoring changed my career path completely!", rating: 5, highlight: "career path" },
+    { text: "Interactive coding environments made learning so much easier.", rating: 4, highlight: "much easier" },
+    { text: "Live classes are engaging and well-structured.", rating: 5, highlight: "well-structured" },
+    { text: "The community support is incredible and motivating.", rating: 4, highlight: "incredible" }
   ];
 
   const testimonialsRow3 = [
-    { text: "Certificates helped me get recognition at my workplace.", rating: 5 },
-    { text: "The AI Hub tools boosted my productivity significantly.", rating: 4 },
-    { text: "Offline access feature is perfect for my schedule.", rating: 5 },
-    { text: "30-day guarantee shows confidence in their quality.", rating: 5 }
+    { text: "Certificates helped me get recognition at my workplace.", rating: 5, highlight: "recognition" },
+    { text: "The AI Hub tools boosted my productivity significantly.", rating: 4, highlight: "productivity" },
+    { text: "Offline access feature is perfect for my schedule.", rating: 5, highlight: "perfect" },
+    { text: "30-day guarantee shows confidence in their quality.", rating: 5, highlight: "confidence" }
   ];
 
   const services = [
@@ -74,26 +82,37 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
       icon: <Video className="w-8 h-8" />,
       title: "Pre-Recorded Courses",
       description: "Comprehensive courses on latest technologies and tools with lifetime access and regular updates.",
-      color: "#a5d8ff"
+      color: "#a5d8ff",
+      gradient: "from-blue-200 to-blue-300"
     },
     {
       icon: <Users className="w-8 h-8" />,
       title: "Live Classes",
       description: "One-on-one or small group sessions tailored to your learning needs with expert instructors.",
-      color: "#ffec99"
+      color: "#ffec99",
+      gradient: "from-yellow-200 to-yellow-300"
     },
     {
       icon: <Brain className="w-8 h-8" />,
       title: "AI Hub Access",
       description: "Cutting-edge AI tools to maximize your learning and boost productivity with exclusive features.",
-      color: "#ffc9c9"
+      color: "#ffc9c9",
+      gradient: "from-red-200 to-red-300"
     },
     {
       icon: <FileText className="w-8 h-8" />,
       title: "Study Resources",
       description: "Access to PYQs, cheatsheets, and comprehensive materials for your field of study.",
-      color: "#fff4e6"
+      color: "#fff4e6",
+      gradient: "from-orange-100 to-orange-200"
     }
+  ];
+
+  const stats = [
+    { icon: <Users className="w-6 h-6" />, value: "10K+", label: "Happy Students", color: "#ffec99" },
+    { icon: <Award className="w-6 h-6" />, value: "50+", label: "Expert Courses", color: "#ffc9c9" },
+    { icon: <TrendingUp className="w-6 h-6" />, value: "95%", label: "Success Rate", color: "#a5d8ff" },
+    { icon: <Zap className="w-6 h-6" />, value: "24/7", label: "AI Support", color: "#fff4e6" }
   ];
 
   const faqs = [
@@ -139,128 +158,166 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
-        className={`w-4 h-4 ${i < rating ? 'fill-current text-yellow-500' : 'text-gray-300'}`}
+        className={`w-4 h-4 transition-all duration-300 ${i < rating ? 'fill-current text-yellow-500 scale-110' : 'text-gray-300'}`}
       />
     ));
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto scroll-smooth">
-      {/* Slide 1: Hero/About */}
-      <div className="min-h-screen flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8" style={{ backgroundColor: '#e9ecef' }}>
-        <div className="w-full max-w-7xl px-3 sm:px-6 md:px-8 lg:px-12">
-          <div className="w-full flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-16">
-            {/* Left: Video Section */}
-            <div className="w-full max-w-xs sm:max-w-sm lg:max-w-none lg:w-2/5">
-              <div 
-                className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 sm:border-4 border-white"
-                style={{ backgroundColor: '#1e1e1e' }}
-              >
-                <div className="aspect-[9/16] relative">
-                  {finalVideoUrl ? (
-                    <div className="relative w-full h-full">
-                      <video
-                        ref={setVideoRef}
-                        className="w-full h-full object-cover"
-                        controls={false}
-                        onClick={handlePlayPause}
-                      >
-                        <source src={finalVideoUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                      
-                      {/* Custom Play/Pause Button */}
-                      <div 
-                        className="absolute inset-0 flex items-center justify-center cursor-pointer group"
-                        onClick={handlePlayPause}
-                      >
-                        <div className={`relative z-10 w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-lg ${
-                          isPlaying ? 'bg-black/60 backdrop-blur-sm' : 'bg-white/90 backdrop-blur-sm'
-                        }`}>
-                          {isPlaying ? (
-                            <div className="flex gap-1">
-                              <div className="w-1 sm:w-1.5 h-4 sm:h-6 bg-white rounded-full"></div>
-                              <div className="w-1 sm:w-1.5 h-4 sm:h-6 bg-white rounded-full"></div>
-                            </div>
-                          ) : (
-                            <Play className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8 ml-0.5 text-gray-900" />
-                          )}
+    <div className="min-h-screen overflow-y-auto scroll-smooth bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Slide 1: Hero Section with Enhanced Design */}
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: '#efe9e9ff' }}>
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+          <div className="absolute top-40 right-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        </div>
+
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+            {/* Left: Enhanced Video Section */}
+            <div className="w-full max-w-sm lg:max-w-none lg:w-2/5 transform hover:scale-105 transition-all duration-500">
+              <div className="relative">
+                {/* Glow effect */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-3xl blur-lg opacity-75 group-hover:opacity-100 transition duration-1000"></div>
+                
+                <div 
+                  className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white backdrop-blur-sm"
+                  style={{ backgroundColor: '#000000ff' }}
+                >
+                  <div className="aspect-[9/16] relative">
+                    {finalVideoUrl ? (
+                      <div className="relative w-full h-full">
+                        <video
+                          ref={setVideoRef}
+                          className="w-full h-full object-cover"
+                          controls={false}
+                          onClick={handlePlayPause}
+                        >
+                          <source src={finalVideoUrl} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                        
+                        {/* Enhanced Play/Pause Button */}
+                        <div 
+                          className="absolute inset-0 flex items-center justify-center cursor-pointer group"
+                          onClick={handlePlayPause}
+                        >
+                          <div className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-125 shadow-2xl ${
+                            isPlaying ? 'bg-black/70 backdrop-blur-md' : 'bg-white/95 backdrop-blur-md'
+                          }`}>
+                            {isPlaying ? (
+                              <div className="flex gap-1.5">
+                                <div className="w-2 h-8 bg-white rounded-full animate-pulse"></div>
+                                <div className="w-2 h-8 bg-white rounded-full animate-pulse delay-75"></div>
+                              </div>
+                            ) : (
+                              <Play className="w-10 h-10 ml-1 text-gray-900 group-hover:text-pink-500 transition-colors" />
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="text-center text-white p-3 sm:p-4 lg:p-8 flex flex-col items-center justify-center h-full">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 lg:mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#ff8787' }}>
-                        <Play className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8 ml-1" />
+                    ) : (
+                      <div className="text-center text-white p-8 flex flex-col items-center justify-center h-full">
+                        <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
+                          <Play className="w-10 h-10 ml-1" />
+                        </div>
+                        <p className="text-lg font-semibold mb-2">Welcome Video</p>
+                        <p className="text-sm opacity-80">Custom video player</p>
                       </div>
-                      <p className="text-sm sm:text-base lg:text-lg font-semibold mb-1 sm:mb-2">Welcome Video</p>
-                      <p className="text-xs sm:text-sm opacity-80">Custom video player</p>
-                    </div>
-                  )}
-                </div>
-                <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3 lg:bottom-4 lg:left-4 lg:right-4 p-2 sm:p-3 rounded-xl sm:rounded-2xl" style={{ backgroundColor: '#a5d8ff' }}>
-                  <p className="text-xs sm:text-sm font-medium text-center text-gray-900">
-                    {finalVideoUrl ? 'Click to play/pause' : 'Add video URL to display'}
-                  </p>
+                    )}
+                  </div>
+                  <div
+                    className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl backdrop-blur-md border border-white/20"
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+                  >
+                    <button
+                      className="w-full text-sm font-semibold text-white hover:text-pink-300 transition-colors cursor-pointer"
+                      onClick={finalVideoUrl ? onLogin : undefined}
+                    >
+                      {finalVideoUrl ? "🚀 Log In / Sign Up" : "Add video URL to display"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Content */}
+            {/* Right: Enhanced Content */}
             <div className="w-full lg:w-3/5">
-              {/* EduPilot Branding - positioned above the white card */}
-              <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4 lg:mb-6">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#ff8787' }}>
-                  <span className="text-white font-bold text-sm sm:text-lg lg:text-xl">R</span>
+              {/* Floating EduPilot Branding */}
+              <div className="flex items-center justify-center gap-3 mb-6 animate-fade-in-down">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl transform hover:rotate-12 transition-transform duration-300 bg-gradient-to-br from-pink-400 to-red-400">
+                  <span className="text-white font-bold text-xl">R</span>
+                  <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-yellow-400 animate-pulse" />
                 </div>
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">EduPilot</span>
               </div>
 
-              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 xl:p-12 shadow-2xl border-2 sm:border-4 border-white">
-                <h2 className="text-xl sm:text-2xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6 text-gray-900 min-h-[1.5rem] sm:min-h-[2rem] lg:min-h-[3rem]">
+              <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-12 shadow-2xl border-4 border-white transform hover:scale-[1.02] transition-all duration-300">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 min-h-[3rem]">
                   {typedText}
-                  <span className="animate-pulse">|</span>
+                  <span className="animate-pulse text-pink-500">|</span>
                 </h2>
 
-                <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-                  <div className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl" style={{ backgroundColor: '#a5d8ff' }}>
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-gray-900">About Me</h3>
-                    <p className="text-xs sm:text-sm lg:text-base text-gray-800 leading-relaxed">
-                      Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
-                      technologies and AI tools. With years of industry experience and a proven track record in 
-                      education, I've created a comprehensive learning ecosystem that combines theoretical knowledge 
-                      with practical applications. Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
-                      technologies and AI tools. With years of industry experience and a proven track record in 
-                      education, I've created a comprehensive learning ecosystem that combines theoretical knowledge 
-                      with practical applications.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="text-center p-2 sm:p-3 lg:p-4 rounded-xl sm:rounded-2xl" style={{ backgroundColor: '#ffec99' }}>
-                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">10K+</div>
-                      <div className="text-xs sm:text-sm text-gray-700">Students</div>
-                    </div>
-                    <div className="text-center p-2 sm:p-3 lg:p-4 rounded-xl sm:rounded-2xl" style={{ backgroundColor: '#ffc9c9' }}>
-                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">50+</div>
-                      <div className="text-xs sm:text-sm text-gray-700">Courses</div>
+                <div className="space-y-6">
+                  {/* About Section with Gradient Border */}
+                  <div className="relative group">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-300 to-blue-400 rounded-2xl blur opacity-30 group-hover:opacity-75 transition duration-300"></div>
+                    <div className="relative p-6 rounded-2xl" style={{ backgroundColor: '#a5d8ff' }}>
+                      <h3 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-2">
+                        About Me
+                      </h3>
+                      <p className="text-sm lg:text-base text-gray-800 leading-relaxed">
+                        Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
+                        technologies and AI tools. With years of industry experience and a proven track record in 
+                        education, I've created a comprehensive learning            ecosystem that combines theoretical knowledge 
+                        with practical applications. passionate about helping students master cutting-edge 
+                        technologies and AI tools. With years of industry dfdfdfdfdffdfdffdfddfdddffddffddf ecosystem that combines theoretical 
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2 sm:gap-3 lg:flex-row lg:gap-4 pt-2 sm:pt-3 lg:pt-4">
+                  {/* Enhanced Stats Grid */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {stats.slice(0, 2).map((stat, index) => (
+                      <div 
+                        key={index}
+                        className="relative group text-center p-4 rounded-2xl transform hover:scale-110 hover:-rotate-2 transition-all duration-300 cursor-pointer"
+                        style={{ backgroundColor: stat.color }}
+                      >
+                        <div className="absolute inset-0 bg-white rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                        <div className="relative">
+                          <div className="flex items-center justify-center mb-2">
+                            {stat.icon}
+                          </div>
+                          <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
+                          <div className="text-sm text-gray-700 font-medium">{stat.label}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Enhanced CTA Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <button
                       onClick={onLogin}
-                      className="flex-1 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base lg:text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                      className="flex-1 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
                       style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
                     >
-                      Get Started
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        Get Started
+                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </button>
                     <button
                       onClick={onLogin}
-                      className="flex-1 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base lg:text-lg border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                      style={{ borderColor: '#1e1e1e', color: '#1e1e1e', backgroundColor: 'transparent' }}
+                      className="flex-1 px-8 py-4 rounded-xl font-bold text-lg border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden group"
+                      style={{ borderColor: '#1e1e1e', color: '#1e1e1e', backgroundColor: 'white' }}
                     >
-                      Learn More
+                      <span className="relative z-10">Learn More</span>
+                      <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-5 transition-opacity"></div>
                     </button>
                   </div>
                 </div>
@@ -270,94 +327,118 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
         </div>
       </div>
 
-      {/* Slide 2: Services */}
-      <div className="min-h-screen flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8" style={{ backgroundColor: '#ffffff' }}>
-        <div className="w-full max-w-7xl px-3 sm:px-6 md:px-8 lg:px-12">
+      {/* Slide 2: Services with Enhanced Cards */}
+      <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ backgroundColor: '#ffffff' }}>
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12">
           {/* Header */}
-          <div className="text-center mb-6 sm:mb-8 lg:mb-12 xl:mb-16">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6 lg:mb-8">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#ff8787' }}>
-                <span className="text-white font-bold text-sm sm:text-base lg:text-lg">R</span>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in-down">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
+                <span className="text-white font-bold text-lg">R</span>
               </div>
-              <span className="text-base sm:text-lg lg:text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
             </div>
             
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6 text-gray-900">
-              What We Offer
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
+              What We <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">Offer</span>
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-3 sm:px-4">
-              Comprehensive learning solutions designed to accelerate your career growth and skill development
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Comprehensive learning solutions designed to accelerate your career growth
             </p>
           </div>
 
-          {/* Services Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8 lg:mb-12">
+          {/* Enhanced Services Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-lg border-2 border-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                className="group relative rounded-2xl p-6 shadow-lg border-3 border-white transition-all duration-500 hover:scale-110 hover:-rotate-1 cursor-pointer"
                 style={{ backgroundColor: service.color }}
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl bg-white flex items-center justify-center mb-2 sm:mb-3 lg:mb-4 shadow-md">
-                  {service.icon}
+                {/* Hover glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-300 to-purple-300 rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500"></div>
+                
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center mb-4 shadow-md transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    {service.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">{service.title}</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">{service.description}</p>
+                  
+                  {/* Floating indicator */}
+                  <div className="absolute top-4 right-4 w-3 h-3 bg-pink-500 rounded-full animate-ping opacity-0 group-hover:opacity-75"></div>
                 </div>
-                <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-1 sm:mb-2 lg:mb-3 text-gray-900">{service.title}</h3>
-                <p className="text-gray-700 text-xs sm:text-sm lg:text-sm leading-relaxed">{service.description}</p>
               </div>
             ))}
           </div>
 
-          {/* CTA */}
+          {/* Enhanced CTA */}
           <div className="text-center">
             <button 
-              className="px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base lg:text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              onClick={onLogin}
+              className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
               style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
             >
-              Explore All Courses <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 inline ml-1 sm:ml-2" />
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Explore All Courses 
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Slide 3: Testimonials */}
-      <div className="min-h-screen flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8" style={{ backgroundColor: '#e9ecef' }}>
-        <div className="w-full max-w-7xl px-3 sm:px-6 md:px-8 lg:px-12">
-          {/* Header - Fixed with proper spacing */}
-          <div className="text-center mb-6 sm:mb-8 lg:mb-12 relative z-10">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4 lg:mb-6 mt-4 sm:mt-8 lg:mt-16">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#ff8787' }}>
-                <span className="text-white font-bold text-sm sm:text-base lg:text-lg">R</span>
+      {/* Slide 3: Enhanced Testimonials */}
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: '#e9ecef' }}>
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        </div>
+
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12 relative z-10">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
+                <span className="text-white font-bold text-lg">R</span>
               </div>
-              <span className="text-base sm:text-lg lg:text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 lg:mb-4 text-gray-900">
-              Student Success Stories
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
+              Student <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">Success Stories</span>
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-3 sm:px-4">
-              Join thousands of learners who have transformed their careers with our programs
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Join thousands of learners who have transformed their careers
             </p>
           </div>
 
-          {/* Testimonial Rows - Adjusted spacing */}
-          <div className="space-y-3 sm:space-y-4 lg:space-y-6 mb-4 sm:mb-6 lg:mb-8">
+          {/* Enhanced Testimonial Rows */}
+          <div className="space-y-6 mb-12">
             {/* First Row */}
             <div className="overflow-hidden">
-              <div className="flex animate-slide space-x-3 sm:space-x-4 lg:space-x-6 w-max">
+              <div className="flex animate-slide space-x-6 w-max">
                 {[...testimonials, ...testimonials].map((testimonial, index) => (
                   <div
                     key={index}
-                    className="w-56 sm:w-64 lg:w-80 flex-shrink-0 bg-white p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white"
+                    className="w-80 flex-shrink-0 bg-white p-6 rounded-2xl shadow-xl border-3 border-white hover:scale-105 transition-transform duration-300"
                   >
-                    <div className="flex mb-3">
+                    <div className="flex mb-4">
                       {renderStars(testimonial.rating)}
                     </div>
-                    <p className="text-gray-800 mb-2 sm:mb-3 lg:mb-4 italic text-xs sm:text-sm leading-relaxed">
+                    <p className="text-gray-800 mb-4 italic text-sm leading-relaxed">
                       "{testimonial.text}"
                     </p>
-                    <p className="text-gray-600 font-semibold text-xs sm:text-sm">
-                      Student {index % testimonials.length + 1}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-red-400 flex items-center justify-center text-white font-bold">
+                        {index % testimonials.length + 1}
+                      </div>
+                      <p className="text-gray-600 font-semibold text-sm">
+                        Student {index % testimonials.length + 1}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -365,22 +446,27 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
 
             {/* Second Row */}
             <div className="overflow-hidden">
-              <div className="flex animate-slide-reverse space-x-3 sm:space-x-4 lg:space-x-6 w-max">
+              <div className="flex animate-slide-reverse space-x-6 w-max">
                 {[...testimonialsRow2, ...testimonialsRow2].map((testimonial, index) => (
                   <div
                     key={index}
-                    className="w-56 sm:w-64 lg:w-80 flex-shrink-0 p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white"
+                    className="w-80 flex-shrink-0 p-6 rounded-2xl shadow-xl border-3 border-white hover:scale-105 transition-transform duration-300"
                     style={{ backgroundColor: '#ffec99' }}
                   >
-                    <div className="flex mb-3">
+                    <div className="flex mb-4">
                       {renderStars(testimonial.rating)}
                     </div>
-                    <p className="text-gray-800 mb-2 sm:mb-3 lg:mb-4 italic text-xs sm:text-sm leading-relaxed">
+                    <p className="text-gray-800 mb-4 italic text-sm leading-relaxed">
                       "{testimonial.text}"
                     </p>
-                    <p className="text-gray-600 font-semibold text-xs sm:text-sm">
-                      Student {index % testimonialsRow2.length + 5}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
+                        {index % testimonialsRow2.length + 5}
+                      </div>
+                      <p className="text-gray-600 font-semibold text-sm">
+                        Student {index % testimonialsRow2.length + 5}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -388,22 +474,27 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
 
             {/* Third Row */}
             <div className="overflow-hidden">
-              <div className="flex animate-slide space-x-3 sm:space-x-4 lg:space-x-6 w-max">
+              <div className="flex animate-slide space-x-6 w-max">
                 {[...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
                   <div
                     key={index}
-                    className="w-56 sm:w-64 lg:w-80 flex-shrink-0 p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white"
+                    className="w-80 flex-shrink-0 p-6 rounded-2xl shadow-xl border-3 border-white hover:scale-105 transition-transform duration-300"
                     style={{ backgroundColor: '#ffc9c9' }}
                   >
-                    <div className="flex mb-3">
+                    <div className="flex mb-4">
                       {renderStars(testimonial.rating)}
                     </div>
-                    <p className="text-gray-800 mb-2 sm:mb-3 lg:mb-4 italic text-xs sm:text-sm leading-relaxed">
+                    <p className="text-gray-800 mb-4 italic text-sm leading-relaxed">
                       "{testimonial.text}"
                     </p>
-                    <p className="text-gray-600 font-semibold text-xs sm:text-sm">
-                      Student {index % testimonialsRow3.length + 9}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-pink-400 flex items-center justify-center text-white font-bold">
+                        {index % testimonialsRow3.length + 9}
+                      </div>
+                      <p className="text-gray-600 font-semibold text-sm">
+                        Student {index % testimonialsRow3.length + 9}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -411,25 +502,30 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
           </div>
 
           {/* CTA */}
-          <div className="text-center relative z-10">
+          <div className="text-center">
             <button 
-              className="px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base lg:text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              onClick={onLogin}
+              className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
               style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
             >
-              Join Our Community <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 inline ml-1 sm:ml-2" />
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Join Our Community 
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           </div>
         </div>
       </div>
 
-      {/* FAQ Section */}
-              <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: '#e9ecef' }}>
-                <div className="w-full max-w-7xl px-4">
-                  <div className="text-center mb-16">
-                    <div className="flex items-center justify-center gap-3 mb-6">
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#ff8787' }}>
-                        <span className="text-white font-bold text-xl">R</span>
-                      </div>
+      {/* Enhanced FAQ Section */}
+      <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: '#ffffff' }}>
+        <div className="w-full max-w-7xl px-4">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg bg-gradient-to-br from-pink-400 to-red-400">
+                <span className="text-white font-bold text-xl">R</span>
+              </div>
                       <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
                     </div>
                     
@@ -487,8 +583,9 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                     <div className="inline-block bg-white rounded-2xl p-8 shadow-xl border-4 border-white">
                       <p className="text-gray-800 text-lg mb-4 font-semibold">Still have questions?</p>
                       <button 
+                        onClick={onLogin}
                         className="px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                        style={{ backgroundColor: '#ff8787', color: '#ffffff' }}
+                        style={{ backgroundColor: '#000000ff', color: '#ffffff' }}
                       >
                         Contact Support <ChevronRight className="w-5 h-5 inline ml-2" />
                       </button>

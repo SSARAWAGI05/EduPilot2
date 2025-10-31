@@ -1,29 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { AboutSlides } from './components/AboutSlides';
-import { AuthenticatedApp } from './components/AuthenticatedApp';
+import React, { useState, useEffect } from "react";
+import { AboutSlides } from "./components/AboutSlides";
+import { AuthenticatedApp } from "./components/AuthenticatedApp";
+import LoginModal from "./components/LoginModal";
+import { supabase } from "./supabaseClient";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [showLogin, setShowLogin] = useState(false);
 
-  // Check for saved auth state on load
+  // Load session on mount
   useEffect(() => {
-    const savedAuthState = localStorage.getItem('isAuthenticated');
-    if (savedAuthState === 'true') {
-      setIsAuthenticated(true);
-    }
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
+
+    // Subscribe to auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Save auth state to localStorage
-  const handleAuthChange = (authState: boolean) => {
-    setIsAuthenticated(authState);
-    localStorage.setItem('isAuthenticated', String(authState));
+  // Logout handler
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
   };
 
-  if (isAuthenticated) {
-    return <AuthenticatedApp onLogout={() => handleAuthChange(false)} />;
+  if (session) {
+    return <AuthenticatedApp onLogout={handleLogout} />;
   }
 
-  return <AboutSlides onLogin={() => handleAuthChange(true)} />;
+  return (
+    <>
+      <AboutSlides onLogin={() => setShowLogin(true)} />
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onLoginSuccess={() => setSession(true)}
+      />
+    </>
+  );
 }
 
 export default App;

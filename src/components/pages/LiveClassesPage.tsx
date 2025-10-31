@@ -529,8 +529,8 @@ export const LiveClassesPage: React.FC = () => {
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } w-64 sm:w-72 lg:w-80 overflow-y-auto`}
       >
-        <div className="p-3 sm:p-4 lg:p-6 pt-16 sm:pt-20 md:pt-24 lg:pt-28">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[#1e1e1e]">Live Classes</h2>
+        <div className="p-3 sm:p-4 lg:p-6 pt-32 sm:pt-36 md:pt-40 lg:pt-44">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[#1e1e1e] mt-6 sm:mt-8">Live Classes</h2>
 
           <div className="space-y-2 sm:space-y-3">
             {sidebarItems.map((item) => (
@@ -585,7 +585,8 @@ export const LiveClassesPage: React.FC = () => {
       {/* Main Content */}
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 pt-20 sm:pt-24 md:pt-28 lg:pt-32 xl:pt-36 pb-6 sm:pb-8 lg:pb-12">
         {/* Header */}
-        <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+        {/* Header */}
+        <div className="text-center mb-4 sm:mb-6 lg:mb-8 pl-12 sm:pl-16 md:pl-0">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#1e1e1e] px-2 sm:px-4">
             {currentSection === 'home' ? 'Live Classes' : sidebarItems.find(item => item.id === currentSection)?.label}
           </h1>

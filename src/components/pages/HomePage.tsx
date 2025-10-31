@@ -23,12 +23,17 @@ import {
   Instagram,
   Linkedin
 } from 'lucide-react';
+import { supabase } from "../../supabaseClient";
 
 export const HomePage: React.FC = () => {
-  const [userName] = useState('Rishika');
+  const [userName, setUserName] = useState<string | null>(null);
   const [jiggle, setJiggle] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [typedText, setTypedText] = useState('');
+  const [typedName, setTypedName] = useState('');
+  const [newTodo, setNewTodo] = useState('');
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setJiggle(true);
@@ -37,19 +42,111 @@ export const HomePage: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const todoItems = [
-    { task: 'Complete React Module 3', completed: false },
-    { task: 'Submit AI Project Proposal', completed: false },
-    { task: 'Join Live Class Tomorrow', completed: false },
-    { task: 'Review Course Materials', completed: true },
-  ];
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const {
+        data: { user },
+        error: userError
+      } = await supabase.auth.getUser();
 
-  const quickStats = [
-    { label: 'Courses Completed', value: '12', icon: <Award className="w-6 h-6" />, color: 'bg-yellow-400' },
-    { label: 'Current Streak', value: '15 days', icon: <TrendingUp className="w-6 h-6" />, color: 'bg-orange-400' },
-    { label: 'Study Hours', value: '45h', icon: <Clock className="w-6 h-6" />, color: 'bg-blue-400' },
-    { label: 'Certificates', value: '8', icon: <Star className="w-6 h-6" />, color: 'bg-purple-400' },
-  ];
+      if (userError || !user) {
+        setLoading(false);  // stop loading even if no user
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("first_name")
+        .eq("id", user.id)
+        .single();
+
+      if (!error && data) {
+        setUserName(data.first_name);
+      }
+
+      setLoading(false);  // done loading
+    };
+
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('todos')
+        .select('id, title, description, status')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: true });
+
+      if (!error && data) {
+        setTodoItems(data);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      const { data, error } = await supabase
+        .from('announcements')
+        .select('id, title, content, is_active')
+        .eq('is_active', true) // only active announcements
+        .order('created_at', { ascending: false }); // latest first
+
+      if (!error && data) {
+        setAnnouncements(data);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
+
+
+  useEffect(() => {
+    if (!loading && userName) { // start only if we have a userName
+      let index = 0;
+      const interval = setInterval(() => {
+        setTypedName(userName.slice(0, index + 1));
+        index++;
+        if (index === userName.length) clearInterval(interval);
+      }, 150); // adjust typing speed here
+      return () => clearInterval(interval);
+    }
+  }, [loading, userName]);
+
+
+  const addTodo = async () => {
+    if (!newTodo.trim()) return;  // don't allow empty tasks
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+
+    if (!user || userError) return;
+
+    // Insert new todo into the DB
+    const { data, error } = await supabase
+      .from('todos')
+      .insert([{ title: newTodo, user_id: user.id }])
+      .select()
+      .single(); // return the inserted row
+
+    if (!error && data) {
+      setTodoItems(prev => [...prev, data]);  // update UI
+      setNewTodo('');  // clear input field
+    }
+  };
+
+  const [todoItems, setTodoItems] = useState<{ id: string; title: string; description: string | null; status: string; }[]>([]);
 
   const recentActivities = [
     { title: 'Completed JavaScript Basics', time: '2 hours ago', type: 'course' },
@@ -78,6 +175,19 @@ export const HomePage: React.FC = () => {
     }
   };
 
+  const deleteTodo = async (id: string) => {
+    const { error } = await supabase
+      .from('todos')
+      .delete()
+      .eq('id', id);
+
+    if (!error) {
+      // Remove the deleted todo from the UI
+      setTodoItems(prev => prev.filter(t => t.id !== id));
+    }
+  };
+
+
   const getEventColor = (type: string) => {
     switch (type) {
       case 'Live Class':
@@ -100,6 +210,14 @@ export const HomePage: React.FC = () => {
     return 'Good Evening';
   };
 
+  const [announcements, setAnnouncements] = useState<{ 
+    id: string; 
+    title: string; 
+    content: string; 
+    is_active: boolean; 
+  }[]>([]);
+
+
   return (
     <div className="min-h-screen bg-white">
       {/* Spacer for fixed navbar */}
@@ -108,15 +226,21 @@ export const HomePage: React.FC = () => {
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Improved Greeting Section */}
         <div className="bg-white border-2 border-black rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8">
-          <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8 lg:py-10 xl:py-12 text-center">
+          <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6 text-center">
             <div className={`inline-flex items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}>
               <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">{getCurrentGreeting()}</span>
             </div>
             
-            <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4 text-black">
-              Welcome back, <span style={{ color: "#000000ff" }}>{userName}!</span>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4">
+              Welcome back
+              {typedName || userName ? ',' : ''}{' '}
+              {(typedName || userName) && (
+                <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
+                  {typedName || userName}!
+                </span>
+              )}
             </h1>
-            
+
             <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-600 mb-4 sm:mb-6 lg:mb-8 max-w-2xl mx-auto px-2 sm:px-4">
               
             </p>
@@ -138,8 +262,45 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Announcements */}
-        <div className="bg-pink-200 text-center py-6 sm:py-8 lg:py-12 xl:py-16 rounded-lg sm:rounded-xl shadow mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Announcements</h2>
+        <div className="bg-pink-200 py-6 sm:py-8 lg:py-12 xl:py-16 rounded-lg sm:rounded-xl shadow mb-6 sm:mb-8">
+          {/* Header */}
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold #1e1e1e mb-6 text-center">
+            Announcements
+          </h2>
+
+          {/* Announcement Grid */}
+          <div className="grid gap-4 justify-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
+              style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+            {announcements.length === 0 ? (
+              <p className="text-center text-gray-700 text-sm sm:text-base col-span-full">
+                No announcements at the moment.
+              </p>
+            ) : (
+              announcements.map(a => (
+                <div
+                  key={a.id}
+                  className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg shadow flex flex-col justify-between text-center"
+                >
+                  {/* Title */}
+                  <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 mb-2">
+                    {a.title}
+                  </h3>
+
+                  {/* Content */}
+                  <p className="text-gray-700 text-xs sm:text-sm lg:text-base">
+                    {a.content}
+                  </p>
+
+                  {/* Optional Active Badge */}
+                  {a.is_active && (
+                    <span className="text-xs bg-pink-100 text-pink-800 px-2 py-0.5 rounded-full font-medium mt-3 inline-block">
+                      Active
+                    </span>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
         {/* Dashboard + To-Do */}
@@ -153,35 +314,57 @@ export const HomePage: React.FC = () => {
           <div className="bg-green-200 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4">To Do List</h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
-              {todoItems.map((item, index) => (
-                <div key={index} className="flex items-center bg-white p-2 sm:p-3 rounded-lg shadow-sm text-left">
-                  <input type="checkbox" defaultChecked={item.completed} className="mr-2 sm:mr-3 flex-shrink-0" />
-                  <span className={`${item.completed ? 'line-through text-gray-500' : ''} text-xs sm:text-sm lg:text-base`}>
-                    {item.task}
-                  </span>
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={newTodo}
+                  onChange={(e) => setNewTodo(e.target.value)}
+                  placeholder="Add a new task..."
+                  className="flex-1 border p-2 rounded"
+                />
+                <button
+                  onClick={addTodo}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  Add
+                </button>
+              </div>
+              {todoItems.map((item) => (
+                <div key={item.id} className="flex items-center justify-between bg-white p-2 sm:p-3 rounded-lg shadow-sm text-left">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={item.status === 'done'}
+                      onChange={async () => {
+                        const newStatus = item.status === 'done' ? 'pending' : 'done';
+                        const { error } = await supabase
+                          .from('todos')
+                          .update({ status: newStatus })
+                          .eq('id', item.id);
+                        if (!error) {
+                          setTodoItems(prev =>
+                            prev.map(t => t.id === item.id ? { ...t, status: newStatus } : t)
+                          );
+                        }
+                      }}
+                      className="mr-2 sm:mr-3 flex-shrink-0"
+                    />
+                    <span className={`${item.status === 'done' ? 'line-through text-gray-500' : ''} text-xs sm:text-sm lg:text-base`}>
+                      {item.title}
+                    </span>
+                  </div>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => deleteTodo(item.id)}
+                    className="text-red-500 hover:text-red-700 ml-2 text-xs sm:text-sm"
+                  >
+                    Delete
+                  </button>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 mb-6 sm:mb-8">
-          {quickStats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white/80 p-3 sm:p-4 lg:p-5 xl:p-6 rounded-xl sm:rounded-2xl shadow-lg border hover:shadow-xl transition"
-            >
-              <div className="flex items-center justify-between mb-1 sm:mb-2 lg:mb-3">
-                <div className={`${stat.color} p-1 sm:p-2 lg:p-3 rounded-lg sm:rounded-xl text-white`}>
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6">{stat.icon}</div>
-                </div>
-                <ArrowRight className="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-gray-400" />
-              </div>
-              <p className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-black mb-1">{stat.value}</p>
-              <p className="text-xs sm:text-sm lg:text-sm text-gray-600">{stat.label}</p>
-            </div>
-          ))}
         </div>
 
         {/* Recent Activity + Events */}

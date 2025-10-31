@@ -26,8 +26,8 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
     { id: 'courses', label: 'Courses' },
     { id: 'live-classes', label: 'Live Classes' },
     { id: 'ai-hub', label: 'AI Hub' },
-    { id: 'contact', label: 'Contact Us' },
     { id: 'about', label: 'About Us' },
+    { id: 'contact', label: 'Contact Us' },
   ];
 
   const handlePageChange = (page: string) => {
