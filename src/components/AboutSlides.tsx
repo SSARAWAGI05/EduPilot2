@@ -251,7 +251,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                   <span className="text-white font-bold text-xl">R</span>
                   <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-yellow-400 animate-pulse" />
                 </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">EduPilot</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">DE-ECO</span>
               </div>
 
               <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-12 shadow-2xl border-4 border-white transform hover:scale-[1.02] transition-all duration-300">
@@ -336,7 +336,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
                 <span className="text-white font-bold text-lg">R</span>
               </div>
-              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
@@ -404,7 +404,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
                 <span className="text-white font-bold text-lg">R</span>
               </div>
-              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
             </div>
 
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
@@ -526,7 +526,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
               <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg bg-gradient-to-br from-pink-400 to-red-400">
                 <span className="text-white font-bold text-xl">R</span>
               </div>
-                      <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+                      <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
                     </div>
                     
                     <h2 className="text-4xl lg:text-6xl font-black mb-4 text-gray-900">

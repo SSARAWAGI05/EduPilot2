@@ -48,7 +48,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
         {!session ? (
           <>
-            <h2 className="text-2xl font-bold text-center mb-4">Login to EduPilot</h2>
+            <h2 className="text-2xl font-bold text-center mb-4">Login to DE-ECO</h2>
             <Auth
               supabaseClient={supabase}
               appearance={{ theme: ThemeSupa }}

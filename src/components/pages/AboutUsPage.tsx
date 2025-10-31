@@ -188,7 +188,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                     <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
                       <span className="font-bold" style={{ color: '#ff8787' }}>R</span>
                     </div>
-                    <span className="text-lg font-bold text-white">EduPilot</span>
+                    <span className="text-lg font-bold text-white">DE-ECO</span>
                   </div>
 
                   <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-tight">
@@ -239,7 +239,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#ffffff' }}>
                   <span className="font-bold" style={{ color: '#ff8787' }}>R</span>
                 </div>
-                <span className="text-lg font-bold text-white">EduPilot</span>
+                <span className="text-lg font-bold text-white">DE-ECO</span>
               </div>
               
               <h2 className="text-4xl lg:text-5xl xl:text-6xl font-black mb-4 text-gray-900">
@@ -285,7 +285,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                 <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#ff8787' }}>
                   <span className="text-white font-bold text-lg">R</span>
                 </div>
-                <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+                <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
               </div>
               
               <h2 className="text-4xl lg:text-5xl font-black mb-4 text-gray-900">
@@ -340,7 +340,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                 <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#ff8787' }}>
                   <span className="text-white font-bold text-xl">R</span>
                 </div>
-                <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>EduPilot</span>
+                <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
               </div>
               
               <h2 className="text-4xl lg:text-6xl font-black mb-4 text-gray-900">

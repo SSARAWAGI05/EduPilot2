@@ -47,7 +47,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
             <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gray-900 rounded-full flex items-center justify-center">
               <User className="w-3 h-3 lg:w-4 lg:h-4 text-white" />
             </div>
-            <span className="text-gray-900 text-sm lg:text-base xl:text-lg font-bold">EduPilot</span>
+            <span className="text-gray-900 text-sm lg:text-base xl:text-lg font-bold">DE-ECO</span>
           </div>
 
           {/* Navigation Pills - Right Side */}
@@ -113,7 +113,7 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
                   isScrolled ? 'text-white/90' : 'text-white'
                 }`}
               >
-                EduPilot
+                DE-ECO
               </span>
             </div>
 
