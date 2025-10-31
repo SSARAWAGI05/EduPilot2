@@ -201,10 +201,14 @@ export const LiveClassesPage: React.FC = () => {
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1e1e1e]">Next Class Starting In</h3>
             <p className="text-[#495057] text-xs sm:text-sm lg:text-base">Advanced React Patterns</p>
           </div>
-          <button className="bg-[#1e1e1e] hover:bg-[#495057] text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition text-xs sm:text-sm lg:text-base">
+          <button
+            onClick={() => window.open("https://meet.google.com/yyd-tpdv-mek", "_blank")}
+            className="bg-[#1e1e1e] hover:bg-[#495057] text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition text-xs sm:text-sm lg:text-base"
+          >
             Join Class
           </button>
         </div>
+
 
         <div className="grid grid-cols-2 sm:flex sm:justify-center gap-3 sm:gap-6">
           {[
