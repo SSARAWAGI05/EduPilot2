@@ -273,7 +273,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                         technologies and AI tools. With years of industry experience and a proven track record in 
                         education, I've created a comprehensive learning            ecosystem that combines theoretical knowledge 
                         with practical applications. passionate about helping students master cutting-edge 
-                        technologies and AI tools. With years of industry dfdfdfdfdffdfdffdfddfdddffddffddf ecosystem that combines theoretical 
+                        technologies and AI tools. With years of industry tools. With years of industry ecosystem that combines theoretical 
                       </p>
                     </div>
                   </div>
