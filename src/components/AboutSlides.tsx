@@ -3,21 +3,25 @@ import { Play, Plus, Star, ChevronRight, Users, Video, Brain, FileText, Sparkles
 
 interface AboutSlidesProps {
   onLogin: () => void;
-  videoUrl?: string;
+  heroVideoUrl?: string;
+  testimonialVideoUrl?: string;
   thumbnailUrl?: string;
 }
 
-export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thumbnailUrl }) => {
+export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl, testimonialVideoUrl, thumbnailUrl }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [typedText, setTypedText] = useState('');
   const fullText = "Hi! I am Rishika!";
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const defaultVideoUrl = "public/graphics/rs.mp4";
-  
-  const finalVideoUrl = videoUrl || defaultVideoUrl;
+  const defaultHeroVideoUrl = "public/graphics/hero-video.mp4";
+  const defaultTestimonialVideoUrl = "public/graphics/rs.mp4";
+    
+  const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
+  const finalTestimonialVideoUrl = testimonialVideoUrl || defaultTestimonialVideoUrl;
 
   // Mouse movement effect for subtle interactivity
   useEffect(() => {
@@ -187,7 +191,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                   style={{ backgroundColor: '#000000ff' }}
                 >
                   <div className="aspect-[9/16] relative">
-                    {finalVideoUrl ? (
+                    {finalHeroVideoUrl ? (
                       <div className="relative w-full h-full">
                         <video
                           ref={setVideoRef}
@@ -195,7 +199,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                           controls={false}
                           onClick={handlePlayPause}
                         >
-                          <source src={finalVideoUrl} type="video/mp4" />
+                          <source src={finalHeroVideoUrl} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
                         
@@ -234,9 +238,9 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                   >
                     <button
                       className="w-full text-sm font-semibold text-white hover:text-pink-300 transition-colors cursor-pointer"
-                      onClick={finalVideoUrl ? onLogin : undefined}
+                      onClick={finalHeroVideoUrl ? onLogin : undefined}
                     >
-                      {finalVideoUrl ? "🚀 Log In / Sign Up" : "Add video URL to display"}
+                      {finalHeroVideoUrl ? "🚀 Log In / Sign Up" : "Add video URL to display"}
                     </button>
                   </div>
                 </div>
@@ -425,25 +429,35 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
                   className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white backdrop-blur-sm"
                   style={{ backgroundColor: '#000000ff' }}
                 >
-                  <div className="aspect-[9/16] relative">
-                    <video
-                      className="w-full h-full object-cover"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                    >
-                      <source src={finalVideoUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                <div className="aspect-[9/16] relative">
+                  <video
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted={isMuted}
+                    playsInline
+                  >
+                    <source src={finalTestimonialVideoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
 
-                    {/* Play overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-2xl">
-                        <Play className="w-8 h-8 text-gray-800" />
-                      </div>
-                    </div>
-                  </div>
+                  {/* Mute/Unmute button */}
+                  <button
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 z-10"
+                  >
+                    {isMuted ? (
+                      <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                      </svg>
+                    ) : (
+                      <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
                 </div>
               </div>
             </div>
