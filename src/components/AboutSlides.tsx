@@ -15,7 +15,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, videoUrl, thu
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const defaultVideoUrl = "/src/graphics/rs.mp4";
+  const defaultVideoUrl = "public/graphics/rs.mp4";
   
   const finalVideoUrl = videoUrl || defaultVideoUrl;
 

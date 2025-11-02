@@ -156,7 +156,7 @@ export const AboutUsPage: React.FC<AboutUsPageProps> = ({ onLogout }) => {
                           controls={false}
                           onClick={handlePlayPause}
                         >
-                          <source src="/src/graphics/rs.mp4" type="video/mp4" />
+                          <source src="public/graphics/rs.mp4" type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
                         
