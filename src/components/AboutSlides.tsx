@@ -17,8 +17,8 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const defaultHeroVideoUrl = "public/graphics/hero-video.mp4";
-  const defaultTestimonialVideoUrl = "public/graphics/rs.mp4";
+  const defaultHeroVideoUrl = "/graphics/hero-video.mp4";
+  const defaultTestimonialVideoUrl = "/graphics/rs.mp4";
     
   const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
   const finalTestimonialVideoUrl = testimonialVideoUrl || defaultTestimonialVideoUrl;
