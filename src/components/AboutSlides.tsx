@@ -198,7 +198,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                           className="w-full h-full object-cover"
                           controls={false}
                           autoPlay
-                          muted
+                          muted={isMuted}
                           playsInline
                           webkit-playsinline="true"
                           loop
@@ -439,7 +439,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                     className="w-full h-full object-cover"
                     autoPlay
                     loop
-                    muted
+                    muted={isMuted}
                     playsInline
                     webkit-playsinline="true"
                   >
