@@ -464,10 +464,10 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
 
             {/* Right 2/3 - Testimonials Content */}
             <div className="w-full lg:w-2/3 flex items-stretch">
-              {/* Enhanced Testimonial Columns - Vertical Scrolling */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full h-[600px]">
+              {/* Enhanced Testimonial Columns - Horizontal on Mobile, Vertical on Desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full h-[600px] md:h-[600px] h-[400px]">
                 {/* First Column */}
-                <div className="overflow-hidden h-full relative" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
+                <div className="overflow-hidden h-full relative md:block hidden" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
                   <div className="flex flex-col animate-slide-vertical space-y-6 absolute w-full">
                     {[...testimonials, ...testimonials].map((testimonial, index) => (
                       <div
@@ -494,7 +494,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                 </div>
 
                 {/* Second Column */}
-                <div className="overflow-hidden h-full relative" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
+                <div className="overflow-hidden h-full relative md:block hidden" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
                   <div className="flex flex-col animate-slide-vertical-reverse space-y-6 absolute w-full">
                     {[...testimonialsRow2, ...testimonialsRow2].map((testimonial, index) => (
                       <div
@@ -522,7 +522,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                 </div>
 
                 {/* Third Column */}
-                <div className="overflow-hidden h-full relative" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
+                <div className="overflow-hidden h-full relative md:block hidden" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
                   <div className="flex flex-col animate-slide-vertical space-y-6 absolute w-full">
                     {[...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
                       <div
@@ -546,6 +546,92 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Mobile Horizontal Scroll - 3 Rows */}
+                <div className="md:hidden flex flex-col gap-6 w-full">
+                  {/* First Row - Scroll Right */}
+                  <div className="overflow-hidden relative w-full h-[200px]" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+                    <div className="flex animate-slide-horizontal space-x-4 absolute">
+                      {[...testimonials, ...testimonials].map((testimonial, index) => (
+                        <div
+                          key={index}
+                          className="flex-shrink-0 w-[280px] bg-white p-5 rounded-2xl shadow-xl border-3 border-white"
+                        >
+                          <div className="flex mb-3">
+                            {renderStars(testimonial.rating)}
+                          </div>
+                          <p className="text-gray-800 mb-3 italic text-sm leading-relaxed line-clamp-3">
+                            "{testimonial.text}"
+                          </p>
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-red-400 flex items-center justify-center text-white font-bold">
+                              {(index % testimonials.length) + 1}
+                            </div>
+                            <p className="text-gray-600 font-semibold text-sm">
+                              Student {(index % testimonials.length) + 1}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Second Row - Scroll Left */}
+                  <div className="overflow-hidden relative w-full h-[200px]" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+                    <div className="flex animate-slide-horizontal-reverse space-x-4 absolute">
+                      {[...testimonialsRow2, ...testimonialsRow2].map((testimonial, index) => (
+                        <div
+                          key={index}
+                          className="flex-shrink-0 w-[280px] p-5 rounded-2xl shadow-xl border-3 border-white"
+                          style={{ backgroundColor: '#ffec99' }}
+                        >
+                          <div className="flex mb-3">
+                            {renderStars(testimonial.rating)}
+                          </div>
+                          <p className="text-gray-800 mb-3 italic text-sm leading-relaxed line-clamp-3">
+                            "{testimonial.text}"
+                          </p>
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
+                              {(index % testimonialsRow2.length) + 5}
+                            </div>
+                            <p className="text-gray-600 font-semibold text-sm">
+                              Student {(index % testimonialsRow2.length) + 5}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Third Row - Scroll Right */}
+                  <div className="overflow-hidden relative w-full h-[200px]" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+                    <div className="flex animate-slide-horizontal space-x-4 absolute">
+                      {[...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
+                        <div
+                          key={index}
+                          className="flex-shrink-0 w-[280px] p-5 rounded-2xl shadow-xl border-3 border-white"
+                          style={{ backgroundColor: '#ffc9c9' }}
+                        >
+                          <div className="flex mb-3">
+                            {renderStars(testimonial.rating)}
+                          </div>
+                          <p className="text-gray-800 mb-3 italic text-sm leading-relaxed line-clamp-3">
+                            "{testimonial.text}"
+                          </p>
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-pink-400 flex items-center justify-center text-white font-bold">
+                              {(index % testimonialsRow3.length) + 9}
+                            </div>
+                            <p className="text-gray-600 font-semibold text-sm">
+                              Student {(index % testimonialsRow3.length) + 9}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -654,11 +740,25 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             0% { transform: translateY(-50%); }
             100% { transform: translateY(0); }
           }
+          @keyframes slide-horizontal {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @keyframes slide-horizontal-reverse {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+          }
           .animate-slide-vertical {
             animation: slide-vertical 20s linear infinite;
           }
           .animate-slide-vertical-reverse {
             animation: slide-vertical-reverse 25s linear infinite;
+          }
+          .animate-slide-horizontal {
+            animation: slide-horizontal 25s linear infinite;
+          }
+          .animate-slide-horizontal-reverse {
+            animation: slide-horizontal-reverse 30s linear infinite;
           }
         `
       }} />
