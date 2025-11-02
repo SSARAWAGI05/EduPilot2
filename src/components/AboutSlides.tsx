@@ -197,6 +197,10 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                           ref={setVideoRef}
                           className="w-full h-full object-cover"
                           controls={false}
+                          autoPlay
+                          muted
+                          playsInline
+                          loop
                           onClick={handlePlayPause}
                         >
                           <source src={finalHeroVideoUrl} type="video/mp4" />
