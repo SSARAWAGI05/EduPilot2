@@ -200,6 +200,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                           autoPlay
                           muted
                           playsInline
+                          webkit-playsinline="true"
                           loop
                           onClick={handlePlayPause}
                         >
@@ -438,8 +439,9 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                     className="w-full h-full object-cover"
                     autoPlay
                     loop
-                    muted={isMuted}
+                    muted
                     playsInline
+                    webkit-playsinline="true"
                   >
                     <source src={finalTestimonialVideoUrl} type="video/mp4" />
                     Your browser does not support the video tag.
