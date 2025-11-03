@@ -218,36 +218,53 @@ export const HomePage: React.FC = () => {
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Improved Greeting Section */}
         <div className="bg-white border-2 border-black rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8">
-          <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6 text-center">
-            <div className={`inline-flex items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}>
-              <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">{getCurrentGreeting()}</span>
-            </div>
-            
-            <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4">
-              Welcome back
-              {typedName || userName ? ',' : ''}{' '}
-              {(typedName || userName) && (
-                <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
-                  {typedName || userName}!
-                </span>
-              )}
-            </h1>
-
-            <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-600 mb-4 sm:mb-6 lg:mb-8 max-w-2xl mx-auto px-2 sm:px-4">
-              
-            </p>
-            
-            <div className="flex flex-col gap-2 sm:gap-3 lg:flex-row lg:gap-4 justify-center">
+          <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6">
+            <div className="flex items-stretch gap-3 sm:gap-4 lg:gap-6 w-full">
+              {/* Left Button - Continue Learning */}
               <button
-                className="text-black hover:opacity-90 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-xs sm:text-sm lg:text-base"
+                className="flex-1 flex flex-col items-center justify-center text-black font-bold border-2 border-black rounded-2xl sm:rounded-3xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:opacity-90 text-sm sm:text-base lg:text-lg"
                 style={{ backgroundColor: colors.accent.yellowBright }}
               >
-                <Play className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 mr-1 sm:mr-2" />
-                Continue Learning
+                <Play className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 mb-2" />
+                <span className="text-center leading-tight">Continue<br />Learning</span>
               </button>
-              <button className="bg-transparent border-2 border-black text-black hover:bg-black hover:text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-xs sm:text-sm lg:text-base">
-                Take Platform Tour
-                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 ml-1 sm:ml-2" />
+
+              {/* Center - Welcome and Quote */}
+              <div className="flex-[2] flex flex-col justify-center text-center px-2 sm:px-4">
+                <div className={`inline-flex items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}>
+                  <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
+                    {getCurrentGreeting()}
+                  </span>
+                </div>
+
+                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4">
+                  Welcome back
+                  {typedName || userName ? ',' : ''}{' '}
+                  {(typedName || userName) && (
+                    <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
+                      {typedName || userName}!
+                    </span>
+                  )}
+                </h1>
+
+                {/* Quote of the Day */}
+                <div className="bg-white text-black p-5 sm:p-6 rounded-2xl max-w-2xl mx-auto mt-5 shadow-md border-2 border-black">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <p className="text-sm sm:text-lg lg:text-xl font-extrabold tracking-wide uppercase">
+                      Quote of the Day
+                    </p>
+                  </div>
+
+                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2">
+                    “The beautiful thing about learning is that no one can take it away from you.”
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Button - Take Platform Tour */}
+              <button className="flex-1 flex flex-col items-center justify-center bg-black text-white border-2 border-black rounded-2xl sm:rounded-3xl font-bold transition-all duration-300 transform hover:scale-105 hover:bg-white hover:text-black text-sm sm:text-base lg:text-lg shadow-lg">
+                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 mb-2" />
+                <span className="text-center leading-tight">Take<br />Platform<br />Tour</span>
               </button>
             </div>
           </div>
