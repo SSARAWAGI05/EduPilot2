@@ -252,16 +252,16 @@ export const HomePage: React.FC = () => {
                 </h1>
 
                 {/* Quote of the Day */}
-                <div className="bg-white text-black p-5 sm:p-6 rounded-2xl max-w-2xl mx-auto mt-5 shadow-md border-2 border-black">
+                <div className="bg-white text-black p-5 sm:p-6 rounded-2xl max-w-2xl mx-auto mt-5 shadow-md border-2 border-grey">
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <p className="text-sm sm:text-lg lg:text-xl font-extrabold tracking-wide uppercase">
                       Quote of the Day
                     </p>
                   </div>
 
-                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2">
-                    “The beautiful thing about learning is that no one can take it away from you.”
-                  </p>
+                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2 text-gray-700">
+                  “The beautiful thing about learning is that no one can take it away from you.”
+                </p>
                 </div>
               </div>
 
