@@ -230,13 +230,17 @@ export const HomePage: React.FC = () => {
               </button>
 
               {/* Center - Welcome and Quote */}
-              <div className="flex-[2] flex flex-col justify-center text-center px-2 sm:px-4">
-                <div className={`inline-flex items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}>
+              <div className="flex-[2] flex flex-col items-center justify-center text-center px-2 sm:px-4">
+                {/* Greeting */}
+                <div
+                  className={`flex justify-center items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}
+                >
                   <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                     {getCurrentGreeting()}
                   </span>
                 </div>
 
+                {/* Welcome Back Heading */}
                 <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4">
                   Welcome back
                   {typedName || userName ? ',' : ''}{' '}
