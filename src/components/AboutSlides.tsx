@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Plus, Star, ChevronRight, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react';
+import { colors, getPriorityColor } from '../styles/colors';
 
 interface AboutSlidesProps {
   onLogin: () => void;
@@ -82,42 +83,42 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   ];
 
   const services = [
-    {
-      icon: <Video className="w-8 h-8" />,
-      title: "Pre-Recorded Courses",
-      description: "Comprehensive courses on latest technologies and tools with lifetime access and regular updates.",
-      color: "#a5d8ff",
-      gradient: "from-blue-200 to-blue-300"
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: "Live Classes",
-      description: "One-on-one or small group sessions tailored to your learning needs with expert instructors.",
-      color: "#ffec99",
-      gradient: "from-yellow-200 to-yellow-300"
-    },
-    {
-      icon: <Brain className="w-8 h-8" />,
-      title: "AI Hub Access",
-      description: "Cutting-edge AI tools to maximize your learning and boost productivity with exclusive features.",
-      color: "#ffc9c9",
-      gradient: "from-red-200 to-red-300"
-    },
-    {
-      icon: <FileText className="w-8 h-8" />,
-      title: "Study Resources",
-      description: "Access to PYQs, cheatsheets, and comprehensive materials for your field of study.",
-      color: "#fff4e6",
-      gradient: "from-orange-100 to-orange-200"
-    }
-  ];
+  {
+    icon: <Video className="w-8 h-8" />,
+    title: "Pre-Recorded Courses",
+    description: "Comprehensive courses on latest technologies and tools with lifetime access and regular updates.",
+    color: colors.accent.blue,
+    gradient: colors.gradient.blueGradient
+  },
+  {
+    icon: <Users className="w-8 h-8" />,
+    title: "Live Classes",
+    description: "One-on-one or small group sessions tailored to your learning needs with expert instructors.",
+    color: colors.accent.yellow,
+    gradient: colors.gradient.yellowGradient
+  },
+  {
+    icon: <Brain className="w-8 h-8" />,
+    title: "AI Hub Access",
+    description: "Cutting-edge AI tools to maximize your learning and boost productivity with exclusive features.",
+    color: colors.accent.red,
+    gradient: colors.gradient.redGradient
+  },
+  {
+    icon: <FileText className="w-8 h-8" />,
+    title: "Study Resources",
+    description: "Access to PYQs, cheatsheets, and comprehensive materials for your field of study.",
+    color: colors.accent.orange,
+    gradient: colors.gradient.orangeGradient
+  }
+];
 
   const stats = [
-    { icon: <Users className="w-6 h-6" />, value: "10K+", label: "Happy Students", color: "#ffec99" },
-    { icon: <Award className="w-6 h-6" />, value: "50+", label: "Expert Courses", color: "#ffc9c9" },
-    { icon: <TrendingUp className="w-6 h-6" />, value: "95%", label: "Success Rate", color: "#a5d8ff" },
-    { icon: <Zap className="w-6 h-6" />, value: "24/7", label: "AI Support", color: "#fff4e6" }
-  ];
+     { icon: <Users className="w-6 h-6" />, value: "10K+", label: "Happy Students", color: colors.accent.yellow },
+     { icon: <Award className="w-6 h-6" />, value: "50+", label: "Expert Courses", color: colors.accent.red },
+     { icon: <TrendingUp className="w-6 h-6" />, value: "95%", label: "Success Rate", color: colors.accent.blue },
+     { icon: <Zap className="w-6 h-6" />, value: "24/7", label: "AI Support", color: colors.accent.orange }
+   ];
 
   const faqs = [
     {
@@ -170,7 +171,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   return (
     <div className="min-h-screen overflow-y-auto scroll-smooth bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Slide 1: Hero Section with Enhanced Design */}
-      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: '#efe9e9ff' }}>
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: colors.background.beige }}>
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -188,7 +189,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                 
                 <div 
                   className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white backdrop-blur-sm"
-                  style={{ backgroundColor: '#000000ff' }}
+                  style={{ backgroundColor: colors.background.black }}
                 >
                   <div className="aspect-[9/16] relative">
                     {finalHeroVideoUrl ? (
@@ -273,7 +274,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                   {/* About Section with Gradient Border */}
                   <div className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-300 to-blue-400 rounded-2xl blur opacity-30 group-hover:opacity-75 transition duration-300"></div>
-                    <div className="relative p-6 rounded-2xl" style={{ backgroundColor: '#a5d8ff' }}>
+                    <div className="relative p-6 rounded-2xl" style={{ backgroundColor: colors.accent.blue }}>
                       <h3 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-2">
                         About Me
                       </h3>
@@ -312,7 +313,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                     <button
                       onClick={onLogin}
                       className="flex-1 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
-                      style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
+                      style={{ backgroundColor: colors.primary.black, color: colors.text.white }}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         Get Started
@@ -323,7 +324,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                     <button
                       onClick={onLogin}
                       className="flex-1 px-8 py-4 rounded-xl font-bold text-lg border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden group"
-                      style={{ borderColor: '#1e1e1e', color: '#1e1e1e', backgroundColor: 'white' }}
+                      style={{ borderColor: colors.primary.black, color: colors.primary.black, backgroundColor: colors.background.white }}
                     >
                       <span className="relative z-10">Learn More</span>
                       <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-5 transition-opacity"></div>
@@ -337,7 +338,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
       </div>
 
       {/* Slide 2: Services with Enhanced Cards */}
-      <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ backgroundColor: '#ffffff' }}>
+      <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ backgroundColor: colors.background.white }}>
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12">
           {/* Header */}
           <div className="text-center mb-16">
@@ -345,7 +346,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
                 <span className="text-white font-bold text-lg">R</span>
               </div>
-              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
+              <span className="text-xl font-bold" style={{ color: colors.primary.black }}>DE-ECO</span>
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
@@ -386,7 +387,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             <button 
               onClick={onLogin}
               className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
-              style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
+              style={{ backgroundColor: colors.primary.black, color: colors.text.white }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Explore All Courses 
@@ -399,7 +400,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
       </div>
 
       {/* Slide 3: Enhanced Testimonials */}
-      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: '#e9ecef' }}>
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: colors.primary.lightGray }}>
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -413,7 +414,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
                 <span className="text-white font-bold text-lg">R</span>
               </div>
-              <span className="text-xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
+              <span className="text-xl font-bold" style={{ color: colors.primary.black }}>DE-ECO</span>
             </div>
 
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
@@ -432,7 +433,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                 <div className="absolute -inset-1 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-3xl blur-lg opacity-75"></div>
                 <div 
                   className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white backdrop-blur-sm"
-                  style={{ backgroundColor: '#000000ff' }}
+                  style={{ backgroundColor: colors.background.black }}
                 >
                 <div className="aspect-[9/16] relative">
                   <video
@@ -649,7 +650,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             <button 
               onClick={onLogin}
               className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
-              style={{ backgroundColor: '#1e1e1e', color: '#ffffff' }}
+              style={{ backgroundColor: colors.primary.black, color: colors.text.white }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Join Our Community 
@@ -661,14 +662,14 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
         </div>
       </div>
       {/* Enhanced FAQ Section */}
-      <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: '#ffffff' }}>
+      <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: colors.background.white }}>
         <div className="w-full max-w-7xl px-4">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg bg-gradient-to-br from-pink-400 to-red-400">
                 <span className="text-white font-bold text-xl">R</span>
               </div>
-                      <span className="text-2xl font-bold" style={{ color: '#1e1e1e' }}>DE-ECO</span>
+                      <span className="text-2xl font-bold" style={{ color: colors.primary.black }}>DE-ECO</span>
                     </div>
                     
                     <h2 className="text-4xl lg:text-6xl font-black mb-4 text-gray-900">
@@ -701,9 +702,12 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                             <div className={`flex-shrink-0 transition-all duration-300 transform ${
                               openFAQ === index ? 'rotate-45' : 'group-hover:rotate-90'
                             } w-10 h-10 rounded-xl flex items-center justify-center shadow-md`}
+                            // Update the backgroundColor calculation:
                             style={{ 
-                              backgroundColor: openFAQ === index ? '#ff8787' : '#ffffff',
-                              color: openFAQ === index ? '#ffffff' : '#1e1e1e'
+                              backgroundColor: index % 4 === 0 ? colors.accent.blue : 
+                                              index % 4 === 1 ? colors.accent.yellow : 
+                                              index % 4 === 2 ? colors.accent.red : 
+                                              colors.accent.orange
                             }}>
                               <Plus className="w-6 h-6" />
                             </div>
@@ -727,7 +731,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                       <button 
                         onClick={onLogin}
                         className="px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                        style={{ backgroundColor: '#000000ff', color: '#ffffff' }}
+                        style={{ backgroundColor: colors.primary.black, color: colors.text.white }}
                       >
                         Contact Support <ChevronRight className="w-5 h-5 inline ml-2" />
                       </button>

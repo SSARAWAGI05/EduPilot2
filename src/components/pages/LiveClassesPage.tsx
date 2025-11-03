@@ -19,6 +19,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { colors, getPriorityColor, getStatusColor } from '../../styles/colors';
 
 type SidebarSection = 'home' | 'upcoming' | 'notes' | 'recordings' | 'schedule';
 
@@ -63,12 +64,13 @@ export const LiveClassesPage: React.FC = () => {
   }, []);
 
   const sidebarItems = [
-    { id: 'home' as SidebarSection, label: 'Home', icon: <Home className="w-5 h-5" />, color: '#a5d8ff' },
-    { id: 'upcoming' as SidebarSection, label: 'Upcoming Classes', icon: <Calendar className="w-5 h-5" />, color: '#ffec99' },
-    { id: 'notes' as SidebarSection, label: 'Class Notes', icon: <BookOpen className="w-5 h-5" />, color: '#ffc9c9' },
-    { id: 'recordings' as SidebarSection, label: 'Recordings & Transcripts', icon: <Video className="w-5 h-5" />, color: '#fff4e6' },
-    { id: 'schedule' as SidebarSection, label: 'Week Schedule', icon: <Clock className="w-5 h-5" />, color: '#e7f5ff' },
+    { id: 'home' as SidebarSection, label: 'Home', icon: <Home className="w-5 h-5" />, color: colors.accent.blue },
+    { id: 'upcoming' as SidebarSection, label: 'Upcoming Classes', icon: <Calendar className="w-5 h-5" />, color: colors.accent.yellow },
+    { id: 'notes' as SidebarSection, label: 'Class Notes', icon: <BookOpen className="w-5 h-5" />, color: colors.accent.red },
+    { id: 'recordings' as SidebarSection, label: 'Recordings & Transcripts', icon: <Video className="w-5 h-5" />, color: colors.accent.orange },
+    { id: 'schedule' as SidebarSection, label: 'Week Schedule', icon: <Clock className="w-5 h-5" />, color: colors.accent.blueLight },
   ];
+
 
   const announcements = [
     { 
@@ -142,24 +144,6 @@ export const LiveClassesPage: React.FC = () => {
     { id: 3, title: 'Performance Optimization', date: 'Dec 5', duration: '1h 30m', views: 71 },
   ];
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return '#ffc9c9';
-      case 'medium': return '#ffec99';
-      case 'low': return '#a5d8ff';
-      default: return '#fff4e6';
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'confirmed': return '#a5d8ff';
-      case 'pending': return '#ffec99';
-      case 'cancelled': return '#ffc9c9';
-      default: return '#fff4e6';
-    }
-  };
-
   const renderHomeContent = () => (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Welcome Section */}
@@ -175,19 +159,19 @@ export const LiveClassesPage: React.FC = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-          <div className="bg-[#a5d8ff] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+          <div style={{ backgroundColor: colors.accent.blue }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">12</div>
             <div className="text-xs sm:text-sm text-[#495057]">Classes Attended</div>
           </div>
-          <div className="bg-[#ffec99] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+          <div style={{ backgroundColor: colors.accent.yellow }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">3</div>
             <div className="text-xs sm:text-sm text-[#495057]">Upcoming</div>
           </div>
-          <div className="bg-[#ffc9c9] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+          <div style={{ backgroundColor: colors.accent.red }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">8</div>
             <div className="text-xs sm:text-sm text-[#495057]">Notes Available</div>
           </div>
-          <div className="bg-[#fff4e6] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+          <div style={{ backgroundColor: colors.accent.orange }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">15</div>
             <div className="text-xs sm:text-sm text-[#495057]">Recordings</div>
           </div>
@@ -195,18 +179,18 @@ export const LiveClassesPage: React.FC = () => {
       </div>
 
       {/* Next Class Countdown */}
-      <div className="bg-[#a5d8ff] p-3 sm:p-4 lg:p-6 xl:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg">
+      <div style={{ backgroundColor: colors.accent.blue }} className="p-3 sm:p-4 lg:p-6 xl:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
           <div>
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1e1e1e]">Next Class Starting In</h3>
             <p className="text-[#495057] text-xs sm:text-sm lg:text-base">Advanced React Patterns</p>
           </div>
           <button
-            onClick={() => window.open("https://meet.google.com/yyd-tpdv-mek", "_blank")}
-            className="bg-[#1e1e1e] hover:bg-[#495057] text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition text-xs sm:text-sm lg:text-base"
-          >
-            Join Class
-          </button>
+          onClick={() => window.open("https://meet.google.com/yyd-tpdv-mek", "_blank")}
+          className="bg-brand-black text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition hover:bg-brand-gray"
+        >
+          Join Class
+        </button>
         </div>
 
 
@@ -228,7 +212,7 @@ export const LiveClassesPage: React.FC = () => {
       </div>
 
       {/* Announcements & Reminders */}
-      <div className="bg-[#fff4e6] p-3 sm:p-4 lg:p-6 xl:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg">
+      <div style={{ backgroundColor: colors.accent.orange }} className="p-3 sm:p-4 lg:p-6 xl:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg">
         <div className="flex items-center justify-between mb-4 sm:mb-6">
           <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1e1e1e] flex items-center gap-2">
             <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-[#1e1e1e]" />
@@ -267,7 +251,7 @@ export const LiveClassesPage: React.FC = () => {
       {/* Quick Access Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
         {/* Recent Classes */}
-        <div className="bg-[#ffc9c9] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg">
+        <div style={{ backgroundColor: colors.accent.red }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg">
           <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#1e1e1e] mb-3 sm:mb-4 flex items-center gap-2">
             <Play className="w-5 h-5" />
             Recent Classes
@@ -297,7 +281,7 @@ export const LiveClassesPage: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-[#e7f5ff] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg">
+        <div style={{ backgroundColor: colors.accent.blueLight }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg">
           <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#1e1e1e] mb-3 sm:mb-4">Quick Actions</h3>
           <div className="space-y-2 sm:space-y-3">
             <button 
@@ -343,7 +327,7 @@ export const LiveClassesPage: React.FC = () => {
         
         <div className="space-y-4">
           {upcomingClasses.map((cls) => (
-            <div key={cls.id} className="bg-[#a5d8ff] p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-md">
+            <div key={cls.id} style={{ backgroundColor: colors.accent.blue }} className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-md">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
                 <div>
                   <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#1e1e1e]">{cls.title}</h3>
@@ -398,7 +382,7 @@ export const LiveClassesPage: React.FC = () => {
         
         <div className="grid gap-4">
           {recentNotes.map((note) => (
-            <div key={note.id} className="bg-[#ffc9c9] p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-md">
+            <div key={note.id} style={{ backgroundColor: colors.accent.red }} className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-md">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <FileText className="w-6 h-6 text-[#1e1e1e]" />
@@ -430,7 +414,7 @@ export const LiveClassesPage: React.FC = () => {
         
         <div className="grid gap-4">
           {recentRecordings.map((recording) => (
-            <div key={recording.id} className="bg-[#fff4e6] p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-md">
+            <div key={recording.id} style={{ backgroundColor: colors.accent.orange }} className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-md">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <Video className="w-6 h-6 text-[#1e1e1e]" />
@@ -460,7 +444,7 @@ export const LiveClassesPage: React.FC = () => {
       <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1e1e1e] mb-3 sm:mb-4 lg:mb-6">This Week's Schedule</h2>
         
-        <div className="bg-[#e7f5ff] p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl">
+        <div style={{ backgroundColor: colors.accent.blueLight }} className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl">
           <div className="grid grid-cols-7 gap-2 mb-4">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, i) => (
               <div key={i} className="text-center font-bold text-[#1e1e1e] text-sm p-2">
@@ -492,7 +476,7 @@ export const LiveClassesPage: React.FC = () => {
           <div className="mt-4 p-3 bg-white rounded-lg">
             <h4 className="font-bold text-[#1e1e1e] mb-2">Legend:</h4>
             <div className="flex items-center gap-2 text-sm">
-              <div className="w-4 h-4 bg-[#a5d8ff] rounded"></div>
+              <div style={{ backgroundColor: colors.accent.blue }} className="w-4 h-4 rounded"></div>
               <span className="text-[#495057]">Class scheduled</span>
             </div>
           </div>
@@ -517,11 +501,12 @@ export const LiveClassesPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#e9ecef] text-[#1e1e1e]">
+    <div style={{ backgroundColor: colors.primary.lightGray }} className="min-h-screen text-[#1e1e1e]">
       {/* Floating Sidebar Toggle Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed left-3 sm:left-4 lg:left-6 top-20 sm:top-24 md:top-28 lg:top-32 z-50 bg-[#a5d8ff] hover:bg-[#74c0fc] text-[#1e1e1e] p-2 sm:p-3 rounded-full shadow-lg transition-all duration-300"
+        style={{ backgroundColor: colors.accent.blue }}
+        className="fixed left-3 sm:left-4 lg:left-6 top-20 sm:top-24 md:top-28 lg:top-32 z-50 text-[#1e1e1e] p-2 sm:p-3 rounded-full shadow-lg transition-all duration-300 hover:bg-accent-blue-lighter"
         aria-label="Toggle sidebar"
       >
         {isSidebarOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
@@ -606,7 +591,7 @@ export const LiveClassesPage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#1e1e1e] text-white border-2 border-black rounded-3xl shadow-2xl mx-3 sm:mx-6 my-6 sm:my-10">
+      <footer style={{ backgroundColor: colors.primary.black }} className="text-white border-2 border-black rounded-3xl shadow-2xl mx-3 sm:mx-6 my-6 sm:my-10">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10 xl:py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* Company Info */}

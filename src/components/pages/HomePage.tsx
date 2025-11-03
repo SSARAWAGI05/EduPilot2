@@ -24,6 +24,7 @@ import {
   Linkedin
 } from 'lucide-react';
 import { supabase } from "../../supabaseClient";
+import { colors, getActivityIconColor, getEventColorClasses } from '../../styles/colors';
 
 export const HomePage: React.FC = () => {
   const [userName, setUserName] = useState<string | null>(null);
@@ -159,19 +160,21 @@ export const HomePage: React.FC = () => {
   ];
 
   const getActivityIcon = (type: string) => {
+    const colorClass = getActivityIconColor(type);
+
     switch (type) {
       case 'course':
-        return <BookOpen className="w-4 h-4 text-blue-600" />;
+        return <BookOpen className={`w-4 h-4 ${colorClass}`} />;
       case 'community':
-        return <Users className="w-4 h-4 text-green-600" />;
+        return <Users className={`w-4 h-4 ${colorClass}`} />;
       case 'assignment':
-        return <Target className="w-4 h-4 text-red-600" />;
+        return <Target className={`w-4 h-4 ${colorClass}`} />;
       case 'session':
-        return <Play className="w-4 h-4 text-purple-600" />;
+        return <Play className={`w-4 h-4 ${colorClass}`} />;
       case 'achievement':
-        return <Award className="w-4 h-4 text-yellow-600" />;
+        return <Award className={`w-4 h-4 ${colorClass}`} />;
       default:
-        return <Activity className="w-4 h-4 text-gray-600" />;
+        return <Activity className={`w-4 h-4 ${colorClass}`} />;
     }
   };
 
@@ -189,19 +192,8 @@ export const HomePage: React.FC = () => {
 
 
   const getEventColor = (type: string) => {
-    switch (type) {
-      case 'Live Class':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'Assignment':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'Community':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'Workshop':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+     return getEventColorClasses(type);
+   };
 
   const getCurrentGreeting = () => {
     const hour = new Date().getHours();
@@ -248,7 +240,7 @@ export const HomePage: React.FC = () => {
             <div className="flex flex-col gap-2 sm:gap-3 lg:flex-row lg:gap-4 justify-center">
               <button
                 className="text-black hover:opacity-90 px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-xs sm:text-sm lg:text-base"
-                style={{ backgroundColor: "#ffd43b" }}
+                style={{ backgroundColor: colors.accent.yellowBright }}
               >
                 <Play className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 mr-1 sm:mr-2" />
                 Continue Learning
