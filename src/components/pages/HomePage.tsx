@@ -275,15 +275,17 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Announcements */}
-        <div className="bg-pink-200 py-6 sm:py-8 lg:py-12 xl:py-16 rounded-lg sm:rounded-xl shadow mb-6 sm:mb-8">
+        <div className="bg-pink-200 py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6">
           {/* Header */}
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold #1e1e1e mb-6 text-center">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1e1e1e] mb-4 text-center">
             Announcements
           </h2>
 
           {/* Announcement Grid */}
-          <div className="grid gap-4 justify-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
-              style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+          <div
+            className="grid gap-3 justify-center max-w-6xl mx-auto px-2 sm:px-3 lg:px-4"
+            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}
+          >
             {announcements.length === 0 ? (
               <p className="text-center text-gray-700 text-sm sm:text-base col-span-full">
                 No announcements at the moment.
@@ -292,10 +294,10 @@ export const HomePage: React.FC = () => {
               announcements.map(a => (
                 <div
                   key={a.id}
-                  className="bg-white p-4 sm:p-5 lg:p-6 rounded-lg shadow flex flex-col justify-between text-center"
+                  className="bg-white p-3 sm:p-4 lg:p-5 rounded-lg shadow flex flex-col justify-between text-center"
                 >
                   {/* Title */}
-                  <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 mb-2">
+                  <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 mb-1">
                     {a.title}
                   </h3>
 
@@ -306,7 +308,7 @@ export const HomePage: React.FC = () => {
 
                   {/* Optional Active Badge */}
                   {a.is_active && (
-                    <span className="text-xs bg-pink-100 text-pink-800 px-2 py-0.5 rounded-full font-medium mt-3 inline-block">
+                    <span className="text-xs bg-pink-100 text-pink-800 px-2 py-0.5 rounded-full font-medium mt-2 inline-block">
                       Active
                     </span>
                   )}
