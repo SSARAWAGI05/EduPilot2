@@ -24,9 +24,12 @@ import {
   Linkedin
 } from 'lucide-react';
 import { supabase } from "../../supabaseClient";
-import { colors, getActivityIconColor, getEventColorClasses } from '../../styles/colors';
+import { colors, getActivityIconColor, getEventColorClasses, getThemeColors } from '../../styles/colors';
+import { useTheme } from '../../contexts/ThemeContext';  // ← ADD THIS LINE
 
 export const HomePage: React.FC = () => {
+  const { isDark } = useTheme();  // ← ADD THIS
+  const themeColors = getThemeColors(isDark);  // ← ADD THIS
   const [userName, setUserName] = useState<string | null>(null);
   const [jiggle, setJiggle] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -211,23 +214,25 @@ export const HomePage: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Spacer for fixed navbar */}
       <div className="h-14 sm:h-16 md:h-20 lg:h-24"></div>
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Improved Greeting Section */}
-        <div className="bg-white border-2 border-black rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8">
+        <div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-gray-700 rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8">
           <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6">
             <div className="flex items-stretch gap-3 sm:gap-4 lg:gap-6 w-full">
               {/* Left Button - Continue Learning */}
+              {/*
               <button
-                className="flex-1 flex flex-col items-center justify-center text-black font-bold border-2 border-black rounded-2xl sm:rounded-3xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:opacity-90 text-sm sm:text-base lg:text-lg"
-                style={{ backgroundColor: colors.accent.yellowBright }}
+                className="flex-1 flex flex-col items-center justify-center text-black dark:text-white font-bold border-2 border-black dark:border-white rounded-2xl sm:rounded-3xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:opacity-90 text-sm sm:text-base lg:text-lg"
+                style={{ backgroundColor: themeColors.accent.yellowBright }}
               >
                 <Play className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 mb-2" />
                 <span className="text-center leading-tight">Continue<br />Learning</span>
               </button>
+              */}
 
               {/* Center - Welcome and Quote */}
               <div className="flex-[2] flex flex-col items-center justify-center text-center px-2 sm:px-4">
@@ -235,13 +240,13 @@ export const HomePage: React.FC = () => {
                 <div
                   className={`flex justify-center items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}
                 >
-                  <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
+                  <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700 dark:text-gray-300">
                     {getCurrentGreeting()}
                   </span>
                 </div>
 
                 {/* Welcome Back Heading */}
-                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
                   Welcome back
                   {typedName || userName ? ',' : ''}{' '}
                   {(typedName || userName) && (
@@ -252,86 +257,86 @@ export const HomePage: React.FC = () => {
                 </h1>
 
                 {/* Quote of the Day */}
-                <div
-                  className="text-black p-5 sm:p-6 rounded-2xl max-w-2xl mx-auto mt-5 shadow-md border-2 border-gray-300"
-                  style={{ backgroundColor: '#ffffffff' }} // ✅ pastel green
-                >
-                  <div className="flex items-center justify-center gap-2 mb-4">
-                    <p className="text-sm sm:text-lg lg:text-xl font-extrabold tracking-wide">
-                      Quote of the Day
-                    </p>
-                  </div>
-
-                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2 text-gray-700">
-                    “The beautiful thing about learning is that no one can take it away from you.”
+                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2 text-gray-700 dark:text-gray-300">
+                    "The beautiful thing about learning is that no one can take it away from you."
                   </p>
-                </div>
-
               </div>
 
               {/* Right Button - Take Platform Tour */}
-              <button className="flex-1 flex flex-col items-center justify-center bg-black text-white border-2 border-black rounded-2xl sm:rounded-3xl font-bold transition-all duration-300 transform hover:scale-105 hover:bg-white hover:text-black text-sm sm:text-base lg:text-lg shadow-lg">
+              {/*<button className="flex-1 flex flex-col items-center justify-center bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white rounded-2xl sm:rounded-3xl font-bold transition-all duration-300 transform hover:scale-105 hover:bg-white dark:hover:bg-gray-800 hover:text-black dark:hover:text-white text-sm sm:text-base lg:text-lg shadow-lg">
                 <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 mb-2" />
                 <span className="text-center leading-tight">Take<br />Platform<br />Tour</span>
-              </button>
+              </button>*/}
             </div>
           </div>
         </div>
 
         {/* Announcements */}
-        <div className="bg-pink-200 py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6">
+        <div className="bg-pink-200 dark:bg-gray-800 py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6">
           {/* Header */}
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1e1e1e] mb-4 text-center">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
             Announcements
           </h2>
 
-          {/* Announcement Grid */}
-          <div
-            className="grid gap-3 justify-center max-w-6xl mx-auto px-2 sm:px-3 lg:px-4"
-            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}
-          >
-            {announcements.length === 0 ? (
-              <p className="text-center text-gray-700 text-sm sm:text-base col-span-full">
-                No announcements at the moment.
-              </p>
-            ) : (
-              announcements.map(a => (
-                <div
-                  key={a.id}
-                  className="bg-white p-3 sm:p-4 lg:p-5 rounded-lg shadow flex flex-col justify-between text-center"
-                >
-                  {/* Title */}
-                  <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 mb-1">
-                    {a.title}
-                  </h3>
-
-                  {/* Content */}
-                  <p className="text-gray-700 text-xs sm:text-sm lg:text-base">
-                    {a.content}
+          {/* Horizontal Scrollable Container */}
+          <div className="relative px-2 sm:px-3 lg:px-4">
+            <div 
+              className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide"
+              style={{ 
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
+              {announcements.length === 0 ? (
+                <div className="w-full text-center py-8">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+                    No announcements at the moment.
                   </p>
-
-                  {/* Optional Active Badge */}
-                  {a.is_active && (
-                    <span className="text-xs bg-pink-100 text-pink-800 px-2 py-0.5 rounded-full font-medium mt-2 inline-block">
-                      Active
-                    </span>
-                  )}
                 </div>
-              ))
-            )}
+              ) : (
+                announcements.map(a => (
+                  <div
+                    key={a.id}
+                    className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-5 rounded-lg shadow flex flex-col justify-between text-center flex-shrink-0"
+                    style={{ 
+                      minWidth: '220px',
+                      maxWidth: '280px',
+                      scrollSnapAlign: 'start'
+                    }}
+                  >
+                    {/* Title */}
+                    <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 dark:text-gray-100 mb-1">
+                      {a.title}
+                    </h3>
+
+                    {/* Content */}
+                    <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm lg:text-base">
+                      {a.content}
+                    </p>
+
+                    {/* Optional Active Badge */}
+                    {a.is_active && (
+                      <span className="text-xs bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-2 py-0.5 rounded-full font-medium mt-2 inline-block">
+                        Active
+                      </span>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
 
         {/* Dashboard + To-Do */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <div className="bg-blue-200 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4">Dashboard</h2>
-            <p className="text-xs sm:text-sm lg:text-base text-gray-700">
+          <div className="bg-blue-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-gray-900 dark:text-gray-100">Dashboard</h2>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-700 dark:text-gray-300">
               Includes graphs, details about study time, upcoming classes, etc.
             </p>
           </div>
-          <div className="bg-green-200 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4">To Do List</h2>
+          <div className="bg-green-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-gray-900 dark:text-gray-100">To Do List</h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
               <div className="flex gap-2 mb-2">
                 <input
@@ -339,17 +344,17 @@ export const HomePage: React.FC = () => {
                   value={newTodo}
                   onChange={(e) => setNewTodo(e.target.value)}
                   placeholder="Add a new task..."
-                  className="flex-1 border p-2 rounded"
+                  className="flex-1 border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
                 <button
                   onClick={addTodo}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded"
                 >
                   Add
                 </button>
               </div>
               {todoItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between bg-white p-2 sm:p-3 rounded-lg shadow-sm text-left">
+                <div key={item.id} className="flex items-center justify-between bg-white dark:bg-gray-700 p-2 sm:p-3 rounded-lg shadow-sm text-left">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -368,7 +373,7 @@ export const HomePage: React.FC = () => {
                       }}
                       className="mr-2 sm:mr-3 flex-shrink-0"
                     />
-                    <span className={`${item.status === 'done' ? 'line-through text-gray-500' : ''} text-xs sm:text-sm lg:text-base`}>
+                    <span className={`${item.status === 'done' ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'} text-xs sm:text-sm lg:text-base`}>
                       {item.title}
                     </span>
                   </div>
@@ -388,37 +393,37 @@ export const HomePage: React.FC = () => {
 
         {/* Recent Activity + Events */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <div className="bg-purple-200 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center">
+          <div className="bg-purple-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow">
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center text-gray-900 dark:text-gray-100">
               <Activity className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Recent Activity
             </h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
               {recentActivities.map((a, i) => (
-                <div key={i} className="bg-white p-2 sm:p-3 rounded-lg flex items-start shadow-sm">
+                <div key={i} className="bg-white dark:bg-gray-700 p-2 sm:p-3 rounded-lg flex items-start shadow-sm">
                   <div className="mr-2 sm:mr-3 flex-shrink-0">{getActivityIcon(a.type)}</div>
                   <div>
-                    <p className="font-medium text-xs sm:text-sm lg:text-base">{a.title}</p>
-                    <p className="text-xs sm:text-sm text-gray-500">{a.time}</p>
+                    <p className="font-medium text-xs sm:text-sm lg:text-base text-gray-900 dark:text-gray-100">{a.title}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{a.time}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-orange-200 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center">
+          <div className="bg-orange-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow">
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center text-gray-900 dark:text-gray-100">
               <Calendar className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Upcoming Events
             </h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
               {upcomingEvents.map((e, i) => (
-                <div key={i} className="bg-white p-2 sm:p-3 rounded-lg shadow-sm">
+                <div key={i} className="bg-white dark:bg-gray-700 p-2 sm:p-3 rounded-lg shadow-sm">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-0">
-                    <p className="font-medium text-xs sm:text-sm lg:text-base">{e.title}</p>
+                    <p className="font-medium text-xs sm:text-sm lg:text-base text-gray-900 dark:text-gray-100">{e.title}</p>
                     <span className={`px-2 py-1 text-xs rounded-full border ${getEventColor(e.type)} self-start`}>
                       {e.type}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {e.date} at {e.time}
                   </p>
                 </div>
@@ -517,24 +522,25 @@ export const HomePage: React.FC = () => {
             </div>
           </button>
         ) : (
-          <div className="bg-white p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-2xl w-64 sm:w-72 lg:w-80 border max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)]">
+          <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-2xl w-64 sm:w-72 lg:w-80 border border-gray-200 dark:border-gray-700 max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)]">
             <div className="flex justify-between items-center mb-2 sm:mb-3 lg:mb-4">
-              <h3 className="font-bold text-sm sm:text-base">Chat Bot</h3>
+              <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-gray-100">Chat Bot</h3>
               <button onClick={() => setIsChatbotOpen(false)}>
                 <X className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
               </button>
             </div>
             <div className="space-y-1 sm:space-y-2 mb-2 sm:mb-3 lg:mb-4">
-              <div className="bg-blue-50 p-2 sm:p-3 rounded text-xs sm:text-sm">Hello! How can I help you?</div>
-              <div className="bg-green-50 p-2 sm:p-3 rounded ml-3 sm:ml-4 lg:ml-6 text-xs sm:text-sm">Hi! I need help with my courses.</div>
+              <div className="bg-blue-50 dark:bg-blue-900 p-2 sm:p-3 rounded text-xs sm:text-sm text-gray-900 dark:text-gray-100">Hello! How can I help you?</div>
+              <div className="bg-green-50 dark:bg-green-900 p-2 sm:p-3 rounded ml-3 sm:ml-4 lg:ml-6 text-xs sm:text-sm text-gray-900 dark:text-gray-100">Hi! I need help with my courses.</div>
             </div>
             <div className="flex">
               <input
                 type="text"
                 placeholder="Type message..."
-                className="flex-1 border p-1 sm:p-2 rounded mr-1 sm:mr-2 text-xs sm:text-sm"
+                className="flex-1 border border-gray-300 dark:border-gray-600 p-1 sm:p-2 rounded mr-1 sm:mr-2 text-xs sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
-              <button className="bg-blue-500 text-white p-1 sm:p-2 rounded flex-shrink-0">
+              
+              <button className="bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white p-1 sm:p-2 rounded flex-shrink-0">
                 <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
             </div>

@@ -166,17 +166,17 @@ export const LiveClassesPage: React.FC = () => {
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">12</div>
             <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Classes Attended</div>
           </div>
-          <div style={{ backgroundColor: themeColors.accent.yellow }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
-            <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">3</div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Upcoming</div>
+          <div style={{ backgroundColor: colors.accent.yellow }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+            <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">3</div>
+            <div className="text-xs sm:text-sm text-[#495057]">Upcoming</div>
           </div>
-          <div style={{ backgroundColor: themeColors.accent.red }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
-            <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">8</div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Notes Available</div>
+          <div style={{ backgroundColor: colors.accent.red }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+            <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">8</div>
+            <div className="text-xs sm:text-sm text-[#495057]">Notes Available</div>
           </div>
-          <div style={{ backgroundColor: themeColors.accent.orange }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
-            <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">15</div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Recordings</div>
+          <div style={{ backgroundColor: colors.accent.orange }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
+            <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-[#1e1e1e]">15</div>
+            <div className="text-xs sm:text-sm text-[#495057]">Recordings</div>
           </div>
         </div>
       </div>
@@ -221,32 +221,32 @@ export const LiveClassesPage: React.FC = () => {
             <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900 dark:text-gray-100" />
             Announcements & Reminders
           </h3>
-          <button className="bg-black dark:bg-white text-white dark:text-black px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition">
+          className="p-3 sm:p-4 rounded-xl shadow-sm border border-white dark:border-gray-700"
             View All
           </button>
         </div>
 
         <div className="space-y-3 sm:space-y-4">
           {announcements.map((announcement) => (
-           <div
-            key={announcement.id}
-            className="p-3 sm:p-4 rounded-xl shadow-sm border border-white dark:border-gray-700"
-            style={{ backgroundColor: getPriorityColor(announcement.priority, isDark) }}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  {announcement.priority === 'high' && <AlertCircle className="w-4 h-4" style={{ color: themeColors.text.primary }} />}
-                  {announcement.priority === 'medium' && <Clock className="w-4 h-4" style={{ color: themeColors.text.primary }} />}
-                  {announcement.priority === 'low' && <CheckCircle className="w-4 h-4" style={{ color: themeColors.text.primary }} />}
-                  <h4 className="font-semibold text-sm sm:text-base" style={{ color: themeColors.text.primary }}>{announcement.title}</h4>
+            <div
+              key={announcement.id}
+              className="p-3 sm:p-4 rounded-xl shadow-sm border border-white dark:border-gray-700"
+              style={{ backgroundColor: getPriorityColor(announcement.priority) }}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    {announcement.priority === 'high' && <AlertCircle className="w-4 h-4 text-gray-900 dark:text-gray-100" />}
+                    {announcement.priority === 'medium' && <Clock className="w-4 h-4 text-gray-900 dark:text-gray-100" />}
+                    {announcement.priority === 'low' && <CheckCircle className="w-4 h-4 text-gray-900 dark:text-gray-100" />}
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">{announcement.title}</h4>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm mb-2">{announcement.message}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs">{announcement.time}</p>
                 </div>
-                <p className="text-xs sm:text-sm mb-2" style={{ color: themeColors.text.secondary }}>{announcement.message}</p>
-                <p className="text-xs" style={{ color: themeColors.text.tertiary }}>{announcement.time}</p>
+                <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0" />
               </div>
-              <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: themeColors.text.tertiary }} />
             </div>
-          </div>
           ))}
         </div>
       </div>
@@ -261,20 +261,17 @@ export const LiveClassesPage: React.FC = () => {
           </h3>
           <div className="space-y-2 sm:space-y-3">
             {upcomingClasses.slice(0, 3).map((cls) => (
-              <div key={cls.id} className="p-3 rounded-xl shadow-sm" style={{ backgroundColor: themeColors.background.white }}>
+              <div key={cls.id} className="bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-medium text-sm" style={{ color: themeColors.text.primary }}>{cls.title}</h4>
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100 text-sm">{cls.title}</h4>
                   <span 
                     className="px-2 py-1 text-xs rounded-full"
-                    style={{ 
-                      backgroundColor: getStatusColor(cls.status, isDark), 
-                      color: themeColors.text.primary 
-                    }}
+                    style={{ backgroundColor: getStatusColor(cls.status), color: isDark ? '#f8fafc' : '#1e1e1e' }}
                   >
                     {cls.status}
                   </span>
                 </div>
-                <p className="text-xs" style={{ color: themeColors.text.tertiary }}>{cls.date} • {cls.time}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">{cls.date} • {cls.time}</p>
               </div>
             ))}
           </div>
@@ -294,30 +291,30 @@ export const LiveClassesPage: React.FC = () => {
               onClick={() => setCurrentSection('notes')}
               className="w-full bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
             >
-              <BookOpen className="w-5 h-5 text-gray-900 dark:text-gray-100" />
-              <div>
-                <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">Access Class Notes</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">{recentNotes.length} files available</div>
-              </div>
-            </button>
-            <button 
-              onClick={() => setCurrentSection('recordings')}
-              className="w-full bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
-            >
-              <Video className="w-5 h-5 text-gray-900 dark:text-gray-100" />
-              <div>
-                <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">Watch Recordings</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">{recentRecordings.length} videos available</div>
-              </div>
-            </button>
-            <button 
-              onClick={() => setCurrentSection('schedule')}
-              className="w-full bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
-            >
               <Calendar className="w-5 h-5 text-gray-900 dark:text-gray-100" />
               <div>
                 <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">View Schedule</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">This week's classes</div>
+              </div>
+            </button>
+            <button 
+              onClick={() => setCurrentSection('recordings')}
+              className="w-full bg-white p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
+            >
+              <Video className="w-5 h-5 text-[#1e1e1e]" />
+              <div>
+                <div className="font-medium text-[#1e1e1e] text-sm">Watch Recordings</div>
+                <div className="text-xs text-[#495057]">{recentRecordings.length} videos available</div>
+              </div>
+            </button>
+            <button 
+              onClick={() => setCurrentSection('schedule')}
+              className="w-full bg-white p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
+            >
+              <Calendar className="w-5 h-5 text-[#1e1e1e]" />
+              <div>
+                <div className="font-medium text-[#1e1e1e] text-sm">View Schedule</div>
+                <div className="text-xs text-[#495057]">This week's classes</div>
               </div>
             </button>
           </div>
@@ -342,17 +339,11 @@ export const LiveClassesPage: React.FC = () => {
                 <div className="flex gap-2">
                   <span 
                     className="px-3 py-1 text-xs rounded-full font-medium"
-                    style={{ 
-                      backgroundColor: getStatusColor(cls.status, isDark), 
-                      color: themeColors.text.primary 
-                    }}
+                    style={{ backgroundColor: getStatusColor(cls.status), color: isDark ? '#f8fafc' : '#1e1e1e' }}
                   >
                     {cls.status}
                   </span>
-                  <button 
-                    onClick={() => window.open("https://meet.google.com/yyd-tpdv-mek", "_blank")}
-                    className="bg-black dark:bg-white text-white dark:text-black px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition"
-                  >
+                  <button className="bg-black dark:bg-white text-white dark:text-black px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition">
                     Join Class
                   </button>
                 </div>
@@ -364,20 +355,20 @@ export const LiveClassesPage: React.FC = () => {
                   <div className="text-xs text-gray-600 dark:text-gray-400">Date</div>
                   <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">{cls.date}</div>
                 </div>
-                <div className="bg-white dark:bg-gray-700 p-3 rounded-lg text-center">
-                  <Clock className="w-4 h-4 mx-auto mb-1 text-gray-900 dark:text-gray-100" />
-                  <div className="text-xs text-gray-600 dark:text-gray-400">Time</div>
-                  <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">{cls.time}</div>
+                <div className="bg-white p-3 rounded-lg text-center">
+                  <Clock className="w-4 h-4 mx-auto mb-1 text-[#1e1e1e]" />
+                  <div className="text-xs text-[#495057]">Time</div>
+                  <div className="font-medium text-[#1e1e1e] text-sm">{cls.time}</div>
                 </div>
-                <div className="bg-white dark:bg-gray-700 p-3 rounded-lg text-center">
-                  <Users className="w-4 h-4 mx-auto mb-1 text-gray-900 dark:text-gray-100" />
-                  <div className="text-xs text-gray-600 dark:text-gray-400">Participants</div>
-                  <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">{cls.participants}</div>
+                <div className="bg-white p-3 rounded-lg text-center">
+                  <Users className="w-4 h-4 mx-auto mb-1 text-[#1e1e1e]" />
+                  <div className="text-xs text-[#495057]">Participants</div>
+                  <div className="font-medium text-[#1e1e1e] text-sm">{cls.participants}</div>
                 </div>
-                <div className="bg-white dark:bg-gray-700 p-3 rounded-lg text-center">
-                  <Clock className="w-4 h-4 mx-auto mb-1 text-gray-900 dark:text-gray-100" />
-                  <div className="text-xs text-gray-600 dark:text-gray-400">Duration</div>
-                  <div className="font-medium text-gray-900 dark:text-gray-100 text-sm">{cls.duration}</div>
+                <div className="bg-white p-3 rounded-lg text-center">
+                  <Clock className="w-4 h-4 mx-auto mb-1 text-[#1e1e1e]" />
+                  <div className="text-xs text-[#495057]">Duration</div>
+                  <div className="font-medium text-[#1e1e1e] text-sm">{cls.duration}</div>
                 </div>
               </div>
             </div>
@@ -475,13 +466,9 @@ export const LiveClassesPage: React.FC = () => {
                   key={i}
                   className={`p-2 sm:p-3 rounded-lg text-center text-sm cursor-pointer transition ${
                     hasClass 
-                      ? 'font-bold' 
-                      : 'hover:bg-white dark:hover:bg-gray-700'
+                      ? 'bg-blue-400 dark:bg-gray-600 text-gray-900 dark:text-gray-100 font-bold' 
+                      : 'hover:bg-white dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400'
                   }`}
-                  style={{
-                    backgroundColor: hasClass ? themeColors.accent.blue : undefined,
-                    color: hasClass ? themeColors.text.primary : themeColors.text.tertiary
-                  }}
                 >
                   {dayNumber}
                 </div>
@@ -607,26 +594,20 @@ export const LiveClassesPage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer 
-        style={{ 
-          backgroundColor: themeColors.background.darkSection,
-          color: themeColors.text.white 
-        }} 
-        className="border-2 border-black dark:border-gray-700 rounded-3xl shadow-2xl mx-3 sm:mx-6 my-6 sm:my-10"
-      >
+      <footer style={{ backgroundColor: themeColors.primary.black }} className="text-white dark:text-gray-100 border-2 border-black dark:border-gray-700 rounded-3xl shadow-2xl mx-3 sm:mx-6 my-6 sm:my-10">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10 xl:py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* Company Info */}
             <div className="space-y-2 sm:space-y-3 lg:space-y-4 text-center sm:text-left">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: themeColors.text.white }}>LearnHub</h3>
-              <p className="text-xs sm:text-sm lg:text-sm" style={{ color: themeColors.text.secondary }}>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">LearnHub</h3>
+              <p className="text-gray-300 text-xs sm:text-sm lg:text-sm">
                 Empowering learners worldwide with innovative educational experiences and cutting-edge technology.
               </p>
               <div className="flex space-x-3 sm:space-x-4 justify-center sm:justify-start">
-                <Facebook className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition" style={{ color: themeColors.text.tertiary }} />
-                <Twitter className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition" style={{ color: themeColors.text.tertiary }} />
-                <Instagram className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition" style={{ color: themeColors.text.tertiary }} />
-                <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition" style={{ color: themeColors.text.tertiary }} />
+                <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
+                <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
+                <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
+                <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
               </div>
             </div>
 
@@ -634,11 +615,11 @@ export const LiveClassesPage: React.FC = () => {
             <div className="text-center sm:text-left">
               <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4">Quick Links</h4>
               <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm lg:text-sm">
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>FAQ</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Contact Us</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Technical Support</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Privacy Policy</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Terms of Service</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Courses</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Dashboard</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Community</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Certificates</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Help Center</a></li>
               </ul>
             </div>
 
@@ -646,11 +627,11 @@ export const LiveClassesPage: React.FC = () => {
             <div className="text-center sm:text-left">
               <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4">Support</h4>
               <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm lg:text-sm">
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>FAQ</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Contact Us</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Technical Support</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Privacy Policy</a></li>
-                <li><a href="#" className="transition" style={{ color: themeColors.text.secondary }}>Terms of Service</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">FAQ</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Contact Us</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Technical Support</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Privacy Policy</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white transition">Terms of Service</a></li>
               </ul>
             </div>
 
@@ -659,30 +640,30 @@ export const LiveClassesPage: React.FC = () => {
               <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4">Contact</h4>
               <div className="space-y-1 sm:space-y-2 lg:space-y-3 text-xs sm:text-sm lg:text-sm">
                 <div className="flex items-center justify-center sm:justify-start">
-                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" style={{ color: themeColors.text.tertiary }} />
-                  <span style={{ color: themeColors.text.secondary }}>support@learnhub.com</span>
+                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
+                  <span className="text-gray-300">support@learnhub.com</span>
                 </div>
                 <div className="flex items-center justify-center sm:justify-start">
-                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" style={{ color: themeColors.text.tertiary }} />
-                  <span style={{ color: themeColors.text.secondary }}>+1 (555) 123-4567</span>
+                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
+                  <span className="text-gray-300">+1 (555) 123-4567</span>
                 </div>
                 <div className="flex items-center justify-center sm:justify-start">
-                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" style={{ color: themeColors.text.tertiary }} />
-                  <span style={{ color: themeColors.text.secondary }}>San Francisco, CA</span>
+                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
+                  <span className="text-gray-300">San Francisco, CA</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="border-t mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 flex flex-col md:flex-row justify-between items-center text-center" style={{ borderColor: themeColors.text.tertiary }}>
-            <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>
+          <div className="border-t border-gray-700 mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 flex flex-col md:flex-row justify-between items-center text-center">
+            <p className="text-gray-400 text-xs sm:text-sm">
               © 2024 LearnHub. All rights reserved.
             </p>
-            <div className="flex space-x-3 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm mt-2 sm:mt-3 md:mt-0">
-              <a href="#" className="transition" style={{ color: themeColors.text.tertiary }}>Privacy</a>
-              <a href="#" className="transition" style={{ color: themeColors.text.tertiary }}>Terms</a>
-              <a href="#" className="transition" style={{ color: themeColors.text.tertiary }}>Accessibility</a>
+            <div className="flex space-x-3 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm text-gray-400 mt-2 sm:mt-3 md:mt-0">
+              <a href="#" className="hover:text-white transition">Privacy</a>
+              <a href="#" className="hover:text-white transition">Terms</a>
+              <a href="#" className="hover:text-white transition">Accessibility</a>
             </div>
           </div>
         </div>

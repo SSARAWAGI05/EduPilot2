@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { AboutSlides } from "./components/AboutSlides";
 import { AuthenticatedApp } from "./components/AuthenticatedApp";
 import LoginModal from "./components/LoginModal";
+import { ThemeProvider } from "./contexts/ThemeContext";  // ← ADD THIS
+import { ThemeToggle } from "./components/ThemeToggle";  // ← ADD THIS
 import { supabase } from "./supabaseClient";
 
 function App() {
@@ -30,19 +32,22 @@ function App() {
     setSession(null);
   };
 
-  if (session) {
-    return <AuthenticatedApp onLogout={handleLogout} />;
-  }
-
   return (
-    <>
-      <AboutSlides onLogin={() => setShowLogin(true)} />
-      <LoginModal
-        isOpen={showLogin}
-        onClose={() => setShowLogin(false)}
-        onLoginSuccess={() => setSession(true)}
-      />
-    </>
+    <ThemeProvider>
+      <ThemeToggle />
+      {session ? (
+        <AuthenticatedApp onLogout={handleLogout} />
+      ) : (
+        <>
+          <AboutSlides onLogin={() => setShowLogin(true)} />
+          <LoginModal
+            isOpen={showLogin}
+            onClose={() => setShowLogin(false)}
+            onLoginSuccess={() => setSession(true)}
+          />
+        </>
+      )}
+    </ThemeProvider>
   );
 }
 
