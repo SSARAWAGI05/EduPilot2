@@ -2,7 +2,120 @@
 
 export const colors = {
   // Light Mode Colors - ORIGINAL PASTELS
-  light: {
+    // Light Monochrome Mode - Minimal & Neutral
+  lightMonochrome: {
+    primary: {
+      black: '#1a1a1a',
+      darkGray: '#333333',
+      mediumGray: '#666666',
+      lightGray: '#b3b3b3',
+      offWhite: '#f2f2f2',
+      beige: '#e6e6e6',
+    },
+    accent: {
+      blue: '#9ca3af',
+      br: '#9ca3af',
+      blueLight: '#d1d5db',
+      yellow: '#a3a3a3',
+      yellowBright: '#737373',
+      red: '#a1a1aa',
+      pink: '#cfcfcf',
+      pinkLight: '#e5e5e5',
+      orange: '#bdbdbd',
+      green: '#a3a3a3',
+      purple: '#b8b8b8',
+      orangeSection: '#d4d4d4',
+    },
+    text: {
+      primary: '#1a1a1a',
+      secondary: '#333333',
+      tertiary: '#4b4b4b',
+      light: '#666666',
+      lighter: '#7d7d7d',
+      lightest: '#999999',
+      white: '#ffffff',
+      dark: '#000000',
+      muted: '#6b6b6b',
+    },
+    background: {
+      white: '#ffffff',
+      offWhite: '#f2f2f2',
+      lightGray: '#e6e6e6',
+      beige: '#f5f5f5',
+      black: '#000000',
+      darkSection: '#dcdcdc',
+    },
+    priority: {
+      high: '#999999',
+      medium: '#bfbfbf',
+      low: '#d9d9d9',
+      default: '#f0f0f0',
+    },
+    status: {
+      success: '#a3a3a3',
+      warning: '#b3b3b3',
+      error: '#8c8c8c',
+      info: '#d4d4d4',
+    },
+  },
+
+  // Dark Monochrome Mode - Sleek & Focused
+  darkMonochrome: {
+    primary: {
+      black: '#ffffff',
+      darkGray: '#d4d4d4',
+      mediumGray: '#a3a3a3',
+      lightGray: '#404040',
+      offWhite: '#000000',
+      beige: '#1a1a1a',
+    },
+    accent: {
+      blue: '#737373',
+      br: '#a3a3a3',
+      blueLight: '#525252',
+      yellow: '#a1a1a1',
+      yellowBright: '#7d7d7d',
+      red: '#8c8c8c',
+      pink: '#999999',
+      pinkLight: '#4b4b4b',
+      orange: '#6b6b6b',
+      green: '#808080',
+      purple: '#a3a3a3',
+      orangeSection: '#525252',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#d4d4d4',
+      tertiary: '#a3a3a3',
+      light: '#808080',
+      lighter: '#666666',
+      lightest: '#4b4b4b',
+      white: '#000000',
+      dark: '#f9f9f9',
+      muted: '#9ca3af',
+    },
+    background: {
+      white: '#000000',
+      offWhite: '#0a0a0a',
+      lightGray: '#1a1a1a',
+      beige: '#262626',
+      black: '#ffffff',
+      darkSection: '#121212',
+    },
+    priority: {
+      high: '#737373',
+      medium: '#8c8c8c',
+      low: '#a3a3a3',
+      default: '#bfbfbf',
+    },
+    status: {
+      success: '#808080',
+      warning: '#999999',
+      error: '#666666',
+      info: '#a1a1a1',
+    },
+  },
+light: {
     // Primary Brand Colors
     primary: {
       black: '#1e1e1e',
