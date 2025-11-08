@@ -1,7 +1,7 @@
 // src/styles/colors.ts
 
 export const colors = {
-  // Light Mode Colors
+  // Light Mode Colors - ORIGINAL PASTELS
   light: {
     // Primary Brand Colors
     primary: {
@@ -16,16 +16,17 @@ export const colors = {
     // Accent Colors (Pastels)
     accent: {
       blue: '#a5d8ff',
+      br:'#a5d8ff',
       blueLight: '#e7f5ff',
       yellow: '#ffec99',
       yellowBright: '#ffd43b',
       red: '#ffc9c9',
       pink: '#ff8787',
-      pinkLight: 'pink-200',
+      pinkLight: '#fbcfe8',
       orange: '#fff4e6',
-      green: 'green-200',
-      purple: 'purple-200',
-      orangeSection: 'orange-200',
+      green: '#bbf7d0',        // green-200 equivalent
+      purple: '#e9d5ff',       // purple-200 equivalent
+      orangeSection: '#fed8aa', // orange-200 equivalent
     },
 
     // Text Colors
@@ -33,12 +34,12 @@ export const colors = {
       primary: '#1e1e1e',
       secondary: '#495057',
       tertiary: '#6c757d',
-      light: 'text-gray-600',
-      lighter: 'text-gray-500',
-      lightest: 'text-gray-400',
+      light: '#4b5563',
+      lighter: '#6b7280',
+      lightest: '#9ca3af',
       white: '#ffffff',
-      dark: 'text-gray-900',
-      muted: 'text-gray-700',
+      dark: '#111827',
+      muted: '#374151',
     },
 
     // Background Colors
@@ -47,7 +48,7 @@ export const colors = {
       offWhite: '#f8f9fa',
       lightGray: '#e9ecef',
       beige: '#efe9e9ff',
-      black: '#000000ff',
+      black: '#000000',
       darkSection: '#1e1e1e',
     },
 
@@ -68,81 +69,80 @@ export const colors = {
     },
   },
 
-  // Dark Mode Colors - PREMIUM & REFINED
-  // Dark Mode Colors - POLISHED & VISUALLY BALANCED
-dark: {
-  // Primary Brand Colors
-  primary: {
-    black: '#f8fafc',         // near-white text
-    darkGray: '#cbd5e1',      // subtle secondary text
-    mediumGray: '#94a3b8',    // tertiary text
-    lightGray: '#2a3342',     // elevated surfaces
-    offWhite: '#0b0f17',      // base background
-    beige: '#1a1f2b',         // soft neutral surface
+  // Dark Mode Colors - VIBRANT on BLACK
+  dark: {
+    // Primary Brand Colors - Pure Black Foundation
+    primary: {
+      black: '#ffffff',           // Pure white for text
+      darkGray: '#e0e0e0',        // Light gray for secondary
+      mediumGray: '#b0b0b0',      // Medium gray for tertiary
+      lightGray: '#1a1a1a',       // Very dark gray for cards
+      offWhite: '#000000',        // Pure black for background
+      beige: '#121212',           // Near-black for sections
+    },
+
+    // Accent Colors - VIBRANT & COLORFUL on Black
+    accent: {
+      blue: '#3b82f6',            // Vibrant blue (blue-500)
+      br:'#f59e0b',
+      blueLight: '#1e3a8a',       // Deep blue for backgrounds
+      yellow: '#fbbf24',          // Rich gold (amber-400)
+      yellowBright: '#f59e0b',    // Warm amber (amber-500)
+      red: '#ef4444',             // Bright red (red-500)
+      pink: '#ec4899',            // Hot pink (pink-500)
+      pinkLight: '#3b82f6',       // Deep pink (pink-900)
+      orange: '#f97316',          // Vibrant orange (orange-500)
+      green: '#ef4444',           // Emerald green (green-500)
+      purple: '#a855f7',          // Rich purple (purple-500)
+      orangeSection: '#ea580c',   // Deep orange (orange-600)
+    },
+
+    // Text Colors - High Contrast on Black
+    text: {
+      primary: '#ffffff',         // Pure white
+      secondary: '#e0e0e0',       // Light gray
+      tertiary: '#b0b0b0',        // Medium gray
+      light: '#9ca3af',
+      lighter: '#6b7280',
+      lightest: '#4b5563',
+      white: '#000000',           // Black for inverted
+      dark: '#f9fafb',
+      muted: '#9ca3af',
+    },
+
+    // Background Colors - Black Base with Dark Layers
+    background: {
+      white: '#000000ff',           // Very dark gray for cards
+      offWhite: '#000000',        // Pure black for main bg
+      lightGray: '#121212',       // Near-black for sections
+      beige: '#1a1a1a',           // Very dark gray
+      black: '#ffffff',           // White for inverted
+      darkSection: '#0a0a0a',     // Deepest black
+    },
+
+    // Priority Colors - Vibrant & Distinguishable
+    priority: {
+      high: '#dc2626',       // Bright red (red-600)
+      medium: '#f59e0b',     // Amber (amber-500)
+      low: '#3b82f6',        // Blue (blue-500)
+      default: '#f97316',    // Orange (orange-500)
+    },
+
+    // Status Colors - Clear & Colorful
+    status: {
+      success: '#10b981',    // Emerald green (green-500)
+      warning: '#f59e0b',    // Amber (amber-500)
+      error: '#ef4444',      // Red (red-500)
+      info: '#3b82f6',       // Blue (blue-500)
+    },
   },
 
-  // Accent Colors - balanced vibrancy
-  accent: {
-    blue: '#60a5fa',          // calm blue (blue-400)
-    blueLight: '#1e3a8a',     // deep blue background
-    yellow: '#facc15',        // bright warm gold
-    yellowBright: '#eab308',  // richer amber
-    red: '#f87171',           // soft coral-red
-    pink: '#f472b6',          // soft magenta
-    pinkLight: '#9d174d',     // muted deep rose
-    orange: '#fb923c',        // gentle orange
-    green: '#34d399',         // emerald green
-    purple: '#a78bfa',        // elegant violet
-    orangeSection: '#ea580c', // deep orange
-  },
-
-  // Text Colors
-  text: {
-    primary: '#f8fafc',       // crisp white
-    secondary: '#d1d5db',     // clear gray
-    tertiary: '#9ca3af',      // subdued
-    light: 'text-slate-400',
-    lighter: 'text-slate-500',
-    lightest: 'text-slate-600',
-    white: '#0b0f17',         // inverted bg text
-    dark: 'text-slate-100',
-    muted: 'text-slate-400',
-  },
-
-  // Background Colors
-  background: {
-    white: '#1e2532',         // card surface
-    offWhite: '#0b0f17',      // main background
-    lightGray: '#151b26',     // sections
-    beige: '#1d2433',         // alt surface
-    black: '#f8fafc',         // inverted text
-    darkSection: '#0a0e14',   // deepest area
-  },
-
-  // Priority Colors (Dark Mode)
-  priority: {
-    high: '#b91c1c',     // vivid dark red
-    medium: '#b45309',   // amber brown
-    low: '#2563eb',      // vibrant blue
-    default: '#c2410c',  // rich orange
-  },
-
-  // Status Colors (Dark Mode)
-  status: {
-    success: '#16a34a',  // green-600
-    warning: '#b45309',  // amber-700
-    error: '#b91c1c',    // red-700
-    info: '#2563eb',     // blue-600
-  },
-},
-
-
-  // Gradients (work in both modes)
+  // Gradients - Vibrant in dark mode
   gradient: {
-    pinkToRed: 'from-pink-500 to-red-500',
-    pinkToRedBg: 'from-pink-400 to-red-400',
-    yellowToOrange: 'from-yellow-400 to-orange-400',
-    redToPink: 'from-red-400 to-pink-400',
+    pinkToRed: 'from-pink-500 to-red-500 dark:from-pink-600 dark:to-red-600',
+    pinkToRedBg: 'from-pink-400 to-red-400 dark:from-pink-500 dark:to-red-500',
+    yellowToOrange: 'from-yellow-400 to-orange-400 dark:from-amber-500 dark:to-orange-500',
+    redToPink: 'from-red-400 to-pink-400 dark:from-red-500 dark:to-pink-500',
     blueGradient: 'from-blue-200 to-blue-300 dark:from-blue-600 dark:to-blue-700',
     yellowGradient: 'from-yellow-200 to-yellow-300 dark:from-amber-600 dark:to-amber-700',
     redGradient: 'from-red-200 to-red-300 dark:from-red-600 dark:to-red-700',
@@ -152,55 +152,55 @@ dark: {
     darkGrayGradient: 'from-gray-800 to-gray-900',
   },
 
-  // UI Element Colors (mode-agnostic with Tailwind dark: classes)
+  // UI Element Colors
   ui: {
     border: {
-      black: 'border-black dark:border-slate-600',
-      white: 'border-white dark:border-slate-700',
-      gray: 'border-gray-300 dark:border-slate-600',
-      lightGray: 'border-gray-200 dark:border-slate-700',
+      black: 'border-black dark:border-gray-800',
+      white: 'border-white dark:border-gray-800',
+      gray: 'border-gray-300 dark:border-gray-800',
+      lightGray: 'border-gray-200 dark:border-gray-800',
     },
-    shadow: 'shadow-lg dark:shadow-slate-900/50',
-    shadowXl: 'shadow-xl dark:shadow-slate-900/60',
-    shadow2xl: 'shadow-2xl dark:shadow-slate-900/70',
+    shadow: 'shadow-lg dark:shadow-black/80',
+    shadowXl: 'shadow-xl dark:shadow-black/90',
+    shadow2xl: 'shadow-2xl dark:shadow-black',
   },
 
-  // Activity Type Colors with dark mode support
+  // Activity Type Colors - Colorful in dark mode
   activity: {
     course: 'text-blue-600 dark:text-blue-400',
-    community: 'text-green-600 dark:text-green-400',
+    community: 'text-green-600 dark:text-emerald-400',
     assignment: 'text-red-600 dark:text-red-400',
     session: 'text-purple-600 dark:text-purple-400',
     achievement: 'text-yellow-600 dark:text-amber-400',
     default: 'text-gray-600 dark:text-gray-400',
   },
 
-  // Event Type Colors with dark mode support
+  // Event Type Colors - Vibrant badges
   eventTypes: {
-    liveClass: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-    assignment: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700',
-    community: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700',
-    workshop: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700',
-    default: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600',
+    liveClass: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-700',
+    assignment: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-700',
+    community: 'bg-green-100 text-green-800 border-green-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-700',
+    workshop: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-700',
+    default: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700',
   },
 
   // Star/Rating Colors
   rating: {
     filled: 'fill-current text-yellow-500 dark:text-amber-400',
-    empty: 'text-gray-300 dark:text-slate-600',
+    empty: 'text-gray-300 dark:text-gray-700',
   },
 
   // Chatbot Colors
   chatbot: {
-    user: 'bg-green-50 dark:bg-green-900/20',
-    bot: 'bg-blue-50 dark:bg-blue-900/20',
+    user: 'bg-green-50 dark:bg-emerald-900/30',
+    bot: 'bg-blue-50 dark:bg-blue-900/30',
     button: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-500',
   },
 
   // Footer Social Icons
   social: {
-    icon: 'text-gray-400 dark:text-slate-400',
-    iconHover: 'hover:text-white dark:hover:text-slate-200',
+    icon: 'text-gray-400 dark:text-gray-500',
+    iconHover: 'hover:text-white dark:hover:text-gray-300',
   },
 } as const;
 
@@ -210,7 +210,7 @@ export const getThemeColors = (isDark: boolean) => {
 };
 
 // Helper function to get priority color - NOW THEME-AWARE
-export const getPriorityColor = (priority: string, isDark: boolean): string => {
+export const getPriorityColor = (priority: string, isDark?: boolean): string => {
   const theme = isDark ? colors.dark : colors.light;
   switch (priority) {
     case 'high': return theme.priority.high;
@@ -221,7 +221,7 @@ export const getPriorityColor = (priority: string, isDark: boolean): string => {
 };
 
 // Helper function to get status color - NOW THEME-AWARE
-export const getStatusColor = (status: string, isDark: boolean): string => {
+export const getStatusColor = (status: string, isDark?: boolean): string => {
   const theme = isDark ? colors.dark : colors.light;
   switch (status) {
     case 'confirmed': return theme.status.success;

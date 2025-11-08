@@ -151,15 +151,7 @@ export const LiveClassesPage: React.FC = () => {
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Welcome Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl p-3 sm:p-4 lg:p-6 xl:p-8 shadow-lg border-2 border-white dark:border-gray-700">
-        <div className="text-center mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">
-            Live Classes Dashboard
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm lg:text-base xl:text-lg">
-            Your central hub for all live learning activities
-          </p>
-        </div>
-
+        
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           <div style={{ backgroundColor: themeColors.accent.blue }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
@@ -292,7 +284,7 @@ export const LiveClassesPage: React.FC = () => {
           <div className="space-y-2 sm:space-y-3">
             <button 
               onClick={() => setCurrentSection('notes')}
-              className="w-full bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
+              className="w-full p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3" style={{ backgroundColor: themeColors.background.white }}
             >
               <BookOpen className="w-5 h-5 text-gray-900 dark:text-gray-100" />
               <div>
@@ -302,7 +294,7 @@ export const LiveClassesPage: React.FC = () => {
             </button>
             <button 
               onClick={() => setCurrentSection('recordings')}
-              className="w-full bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
+              className="w-full p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3" style={{ backgroundColor: themeColors.background.white }}
             >
               <Video className="w-5 h-5 text-gray-900 dark:text-gray-100" />
               <div>
@@ -312,7 +304,7 @@ export const LiveClassesPage: React.FC = () => {
             </button>
             <button 
               onClick={() => setCurrentSection('schedule')}
-              className="w-full bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3"
+              className="w-full p-3 rounded-xl shadow-sm text-left hover:shadow-md transition flex items-center gap-3" style={{ backgroundColor: themeColors.background.white }}
             >
               <Calendar className="w-5 h-5 text-gray-900 dark:text-gray-100" />
               <div>

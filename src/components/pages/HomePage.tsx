@@ -214,13 +214,13 @@ export const HomePage: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
       {/* Spacer for fixed navbar */}
       <div className="h-14 sm:h-16 md:h-20 lg:h-24"></div>
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Improved Greeting Section */}
-        <div className="bg-white dark:bg-gray-800 border-2 border-black dark:border-gray-700 rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8">
+        <div className="border-2 rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8" style={{ backgroundColor: themeColors.primary.lightGray, borderColor: themeColors.primary.black }}>
           <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6">
             <div className="flex items-stretch gap-3 sm:gap-4 lg:gap-6 w-full">
               {/* Left Button - Continue Learning */}
@@ -240,13 +240,13 @@ export const HomePage: React.FC = () => {
                 <div
                   className={`flex justify-center items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}
                 >
-                  <span className="text-sm sm:text-base lg:text-lg font-medium text-gray-700 dark:text-gray-300">
+                  <span className="text-sm sm:text-base lg:text-lg font-medium" style={{ color: themeColors.text.secondary }}>
                     {getCurrentGreeting()}
                   </span>
                 </div>
 
                 {/* Welcome Back Heading */}
-                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-gray-100">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4" style={{ color: themeColors.text.primary }}>
                   Welcome back
                   {typedName || userName ? ',' : ''}{' '}
                   {(typedName || userName) && (
@@ -257,7 +257,7 @@ export const HomePage: React.FC = () => {
                 </h1>
 
                 {/* Quote of the Day */}
-                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2 text-gray-700 dark:text-gray-300">
+                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2" style={{ color: themeColors.text.secondary }}>
                     "The beautiful thing about learning is that no one can take it away from you."
                   </p>
               </div>
@@ -272,9 +272,9 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Announcements */}
-        <div className="bg-pink-200 dark:bg-gray-800 py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6">
+        <div className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6" style={{ backgroundColor: themeColors.accent.pinkLight }}>
           {/* Header */}
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center" style={{ color: themeColors.text.primary }}>
             Announcements
           </h2>
 
@@ -297,26 +297,22 @@ export const HomePage: React.FC = () => {
                 announcements.map(a => (
                   <div
                     key={a.id}
-                    className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-5 rounded-lg shadow flex flex-col justify-between text-center flex-shrink-0"
-                    style={{ 
-                      minWidth: '220px',
-                      maxWidth: '280px',
-                      scrollSnapAlign: 'start'
-                    }}
+                    className="p-3 sm:p-4 lg:p-5 rounded-lg shadow flex flex-col justify-between text-center flex-shrink-0"
+                    style={{ backgroundColor: themeColors.background.white }}
                   >
                     {/* Title */}
-                    <h3 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 dark:text-gray-100 mb-1">
+                    <h3 className="font-bold text-sm sm:text-base lg:text-lg mb-1" style={{ color: themeColors.text.primary }}>
                       {a.title}
                     </h3>
 
                     {/* Content */}
-                    <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm lg:text-base">
+                    <p className="text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.secondary }}>
                       {a.content}
                     </p>
 
                     {/* Optional Active Badge */}
                     {a.is_active && (
-                      <span className="text-xs bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 px-2 py-0.5 rounded-full font-medium mt-2 inline-block">
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium mt-2 inline-block" style={{ backgroundColor: themeColors.accent.pinkLight, color: themeColors.text.primary }}>
                         Active
                       </span>
                     )}
@@ -329,14 +325,14 @@ export const HomePage: React.FC = () => {
 
         {/* Dashboard + To-Do */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <div className="bg-blue-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-gray-900 dark:text-gray-100">Dashboard</h2>
-            <p className="text-xs sm:text-sm lg:text-base text-gray-700 dark:text-gray-300">
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center" style={{ backgroundColor: themeColors.accent.br }}>
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.primary }}>Dashboard</h2>
+            <p className="text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.secondary }}>
               Includes graphs, details about study time, upcoming classes, etc.
             </p>
           </div>
-          <div className="bg-green-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-gray-900 dark:text-gray-100">To Do List</h2>
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center" style={{ backgroundColor: themeColors.accent.green }}>
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.primary }}>To Do List</h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
               <div className="flex gap-2 mb-2">
                 <input
@@ -344,17 +340,26 @@ export const HomePage: React.FC = () => {
                   value={newTodo}
                   onChange={(e) => setNewTodo(e.target.value)}
                   placeholder="Add a new task..."
-                  className="flex-1 border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="flex-1 border p-2 rounded"
+                  style={{ 
+                    borderColor: themeColors.primary.mediumGray,
+                    backgroundColor: themeColors.background.white,
+                    color: themeColors.text.primary
+                  }}
                 />
                 <button
                   onClick={addTodo}
-                  className="bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded"
+                  className="px-4 py-2 rounded hover:opacity-90 transition"
+                  style={{ 
+                    backgroundColor: themeColors.accent.blue,
+                    color: themeColors.text.white
+                  }}
                 >
                   Add
                 </button>
               </div>
               {todoItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between bg-white dark:bg-gray-700 p-2 sm:p-3 rounded-lg shadow-sm text-left">
+                <div key={item.id} className="flex items-center justify-between p-2 sm:p-3 rounded-lg shadow-sm text-left" style={{ backgroundColor: themeColors.background.white }}>
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -373,7 +378,10 @@ export const HomePage: React.FC = () => {
                       }}
                       className="mr-2 sm:mr-3 flex-shrink-0"
                     />
-                    <span className={`${item.status === 'done' ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'} text-xs sm:text-sm lg:text-base`}>
+                    <span 
+                      className={`${item.status === 'done' ? 'line-through' : ''} text-xs sm:text-sm lg:text-base`}
+                      style={{ color: item.status === 'done' ? themeColors.text.tertiary : themeColors.text.primary }}
+                    >
                       {item.title}
                     </span>
                   </div>
@@ -381,7 +389,8 @@ export const HomePage: React.FC = () => {
                   {/* Delete Button */}
                   <button
                     onClick={() => deleteTodo(item.id)}
-                    className="text-red-500 hover:text-red-700 ml-2 text-xs sm:text-sm"
+                    className="ml-2 text-xs sm:text-sm hover:opacity-70 transition"
+                    style={{ color: themeColors.accent.red }}
                   >
                     Delete
                   </button>
@@ -393,37 +402,37 @@ export const HomePage: React.FC = () => {
 
         {/* Recent Activity + Events */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <div className="bg-purple-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center text-gray-900 dark:text-gray-100">
+          <div className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow" style={{ backgroundColor: themeColors.accent.purple }}>
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center" style={{ color: themeColors.text.primary }}>
               <Activity className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Recent Activity
             </h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
               {recentActivities.map((a, i) => (
-                <div key={i} className="bg-white dark:bg-gray-700 p-2 sm:p-3 rounded-lg flex items-start shadow-sm">
+                <div key={i} className="p-2 sm:p-3 rounded-lg flex items-start shadow-sm" style={{ backgroundColor: themeColors.background.white }}>
                   <div className="mr-2 sm:mr-3 flex-shrink-0">{getActivityIcon(a.type)}</div>
                   <div>
-                    <p className="font-medium text-xs sm:text-sm lg:text-base text-gray-900 dark:text-gray-100">{a.title}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{a.time}</p>
+                    <p className="font-medium text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.primary }}>{a.title}</p>
+                    <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>{a.time}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-orange-200 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center text-gray-900 dark:text-gray-100">
+          <div className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow" style={{ backgroundColor: themeColors.accent.orangeSection }}>
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center" style={{ color: themeColors.text.primary }}>
               <Calendar className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Upcoming Events
             </h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">
               {upcomingEvents.map((e, i) => (
-                <div key={i} className="bg-white dark:bg-gray-700 p-2 sm:p-3 rounded-lg shadow-sm">
+                <div key={i} className="p-2 sm:p-3 rounded-lg shadow-sm" style={{ backgroundColor: themeColors.background.white }}>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-0">
-                    <p className="font-medium text-xs sm:text-sm lg:text-base text-gray-900 dark:text-gray-100">{e.title}</p>
+                    <p className="font-medium text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.primary }}>{e.title}</p>
                     <span className={`px-2 py-1 text-xs rounded-full border ${getEventColor(e.type)} self-start`}>
                       {e.type}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-xs mt-1" style={{ color: themeColors.text.tertiary }}>
                     {e.date} at {e.time}
                   </p>
                 </div>
@@ -522,25 +531,30 @@ export const HomePage: React.FC = () => {
             </div>
           </button>
         ) : (
-          <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-2xl w-64 sm:w-72 lg:w-80 border border-gray-200 dark:border-gray-700 max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)]">
+          <div className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-2xl w-64 sm:w-72 lg:w-80 border max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)]" style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.mediumGray }}>
             <div className="flex justify-between items-center mb-2 sm:mb-3 lg:mb-4">
-              <h3 className="font-bold text-sm sm:text-base text-gray-900 dark:text-gray-100">Chat Bot</h3>
+              <h3 className="font-bold text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Chat Bot</h3>
               <button onClick={() => setIsChatbotOpen(false)}>
                 <X className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
               </button>
             </div>
             <div className="space-y-1 sm:space-y-2 mb-2 sm:mb-3 lg:mb-4">
-              <div className="bg-blue-50 dark:bg-blue-900 p-2 sm:p-3 rounded text-xs sm:text-sm text-gray-900 dark:text-gray-100">Hello! How can I help you?</div>
-              <div className="bg-green-50 dark:bg-green-900 p-2 sm:p-3 rounded ml-3 sm:ml-4 lg:ml-6 text-xs sm:text-sm text-gray-900 dark:text-gray-100">Hi! I need help with my courses.</div>
+              <div className="p-2 sm:p-3 rounded text-xs sm:text-sm" style={{ backgroundColor: themeColors.accent.blue, color: themeColors.text.primary }}>Hello! How can I help you?</div>
+              <div className="p-2 sm:p-3 rounded ml-3 sm:ml-4 lg:ml-6 text-xs sm:text-sm" style={{ backgroundColor: themeColors.accent.green, color: themeColors.text.primary }}>Hi! I need help with my courses.</div>
             </div>
             <div className="flex">
               <input
                 type="text"
                 placeholder="Type message..."
-                className="flex-1 border border-gray-300 dark:border-gray-600 p-1 sm:p-2 rounded mr-1 sm:mr-2 text-xs sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="flex-1 border p-1 sm:p-2 rounded mr-1 sm:mr-2 text-xs sm:text-sm"
+                style={{
+                  borderColor: themeColors.primary.mediumGray,
+                  backgroundColor: themeColors.background.white,
+                  color: themeColors.text.primary
+                }}
               />
               
-              <button className="bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white p-1 sm:p-2 rounded flex-shrink-0">
+              <button className="p-1 sm:p-2 rounded flex-shrink-0 hover:opacity-90 transition" style={{ backgroundColor: themeColors.accent.blue, color: themeColors.text.white }}>
                 <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
             </div>
