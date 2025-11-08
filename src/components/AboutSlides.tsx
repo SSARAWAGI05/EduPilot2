@@ -689,7 +689,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                         }`}
                         style={{ 
                           backgroundColor: isDark 
-                            ? themeColors.accent.blue  // All FAQs get same gray in dark mode
+                            ? themeColors.primary.lightGray  // All FAQs get same gray in dark mode
                             : (index % 4 === 0 ? '#a5d8ff' : index % 4 === 1 ? '#ffec99' : index % 4 === 2 ? '#ffc9c9' : '#fff4e6')
                         }}
                         onClick={() => toggleFAQ(index)}
