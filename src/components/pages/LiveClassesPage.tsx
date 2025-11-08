@@ -14,12 +14,10 @@ import {
   Home,
   ChevronRight,
   AlertCircle,
-  CheckCircle,
-  Star,
-  MessageSquare
+  CheckCircle
 } from 'lucide-react';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
-import { colors, getPriorityColor, getStatusColor, getThemeColors } from '../../styles/colors';
+import { getPriorityColor, getStatusColor, getThemeColors } from '../../styles/colors';
 import { useTheme } from '../../contexts/ThemeContext';
 
 type SidebarSection = 'home' | 'upcoming' | 'notes' | 'recordings' | 'schedule';

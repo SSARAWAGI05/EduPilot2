@@ -220,7 +220,7 @@ export const HomePage: React.FC = () => {
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Improved Greeting Section */}
-        <div className="border-2 rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8" style={{ backgroundColor: themeColors.primary.lightGray, borderColor: themeColors.primary.black }}>
+        <div className="border-2 rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8" style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.black }}>
           <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6">
             <div className="flex items-stretch gap-3 sm:gap-4 lg:gap-6 w-full">
               {/* Left Button - Continue Learning */}
