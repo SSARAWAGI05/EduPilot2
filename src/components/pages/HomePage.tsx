@@ -272,50 +272,60 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Announcements */}
-        <div className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6" style={{ backgroundColor: themeColors.accent.pinkLight }}>
+        {/* Announcements */}
+        <div
+          className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6"
+          style={{ backgroundColor: themeColors.accent.pinkLight }}
+        >
           {/* Header */}
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center" style={{ color: themeColors.text.primary }}>
+          <h2
+            className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center"
+            style={{ color: themeColors.text.primary }}
+          >
             Announcements
           </h2>
 
-          {/* Horizontal Scrollable Container */}
+          {/* 3 columns, 1 visible row, vertical scroll */}
           <div className="relative px-2 sm:px-3 lg:px-4">
-            <div 
-              className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 scrollbar-hide"
-              style={{ 
-                scrollSnapType: 'x mandatory',
-                WebkitOverflowScrolling: 'touch'
+            <div
+              className="
+                grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
+                gap-3 sm:gap-4
+                overflow-y-auto
+                max-h-[220px] sm:max-h-[250px]
+                scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent
+                pr-2
+              "
+              style={{
+                scrollSnapType: 'y mandatory',
+                WebkitOverflowScrolling: 'touch',
               }}
             >
               {announcements.length === 0 ? (
-                <div className="w-full text-center py-8">
+                <div className="col-span-full text-center py-8">
                   <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                     No announcements at the moment.
                   </p>
                 </div>
               ) : (
-                announcements.map(a => (
+                announcements.map((a) => (
                   <div
                     key={a.id}
-                    className="p-3 sm:p-4 lg:p-5 rounded-lg shadow flex flex-col justify-between text-center flex-shrink-0"
+                    className="p-3 sm:p-4 lg:p-5 rounded-lg shadow text-center"
                     style={{ backgroundColor: themeColors.background.white }}
                   >
-                    {/* Title */}
-                    <h3 className="font-bold text-sm sm:text-base lg:text-lg mb-1" style={{ color: themeColors.text.primary }}>
+                    <h3
+                      className="font-bold text-sm sm:text-base lg:text-lg mb-1"
+                      style={{ color: themeColors.text.primary }}
+                    >
                       {a.title}
                     </h3>
-
-                    {/* Content */}
-                    <p className="text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.secondary }}>
+                    <p
+                      className="text-xs sm:text-sm lg:text-base"
+                      style={{ color: themeColors.text.secondary }}
+                    >
                       {a.content}
                     </p>
-
-                    {/* Optional Active Badge */}
-                    {a.is_active && (
-                      <span className="text-xs px-2 py-0.5 rounded-full font-medium mt-2 inline-block" style={{ backgroundColor: themeColors.accent.pinkLight, color: themeColors.text.primary }}>
-                        Active
-                      </span>
-                    )}
                   </div>
                 ))
               )}

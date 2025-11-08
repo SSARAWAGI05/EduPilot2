@@ -203,7 +203,7 @@ light: {
       yellowBright: '#f59e0b',    // Warm amber (amber-500)
       red: '#ef4444',             // Bright red (red-500)
       pink: '#ec4899',            // Hot pink (pink-500)
-      pinkLight: '#3b82f6',       // Deep pink (pink-900)
+      pinkLight: '#1e3a8a',       // Deep pink (pink-900)
       orange: '#f97316',          // Vibrant orange (orange-500)
       green: '#ef4444',           // Emerald green (green-500)
       purple: '#a855f7',          // Rich purple (purple-500)
