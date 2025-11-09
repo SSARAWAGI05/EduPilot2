@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { AboutSlides } from "./components/AboutSlides";
 import { AuthenticatedApp } from "./components/AuthenticatedApp";
 import LoginModal from "./components/LoginModal";
-import { ThemeProvider } from "./contexts/ThemeContext";  // ← ADD THIS
-import { ThemeToggle } from "./components/ThemeToggle";  // ← ADD THIS
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeControls } from "./components/ThemeControls";
 import { supabase } from "./supabaseClient";
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <ThemeToggle />
+      <ThemeControls />
       {session ? (
         <AuthenticatedApp onLogout={handleLogout} />
       ) : (

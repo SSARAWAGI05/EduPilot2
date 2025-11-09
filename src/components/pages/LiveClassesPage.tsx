@@ -23,8 +23,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 type SidebarSection = 'home' | 'upcoming' | 'notes' | 'recordings' | 'schedule';
 
 export const LiveClassesPage: React.FC = () => {
-  const { isDark } = useTheme();
-  const themeColors = getThemeColors(isDark);
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
   const [currentSection, setCurrentSection] = useState<SidebarSection>('home');
   const [countdown, setCountdown] = useState({
     days: 2,

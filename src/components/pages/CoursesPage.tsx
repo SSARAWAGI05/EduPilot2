@@ -5,8 +5,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { colors, getThemeColors } from '../../styles/colors';
 
 export const CoursesPage: React.FC = () => {
-  const { isDark } = useTheme();
-  const themeColors = getThemeColors(isDark);
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
   const courses = Array.from({ length: 12 }, (_, i) => ({
     id: i + 1,
     title: `Advanced ${['Web Development', 'AI Programming', 'Data Science', 'Mobile App', 'Cloud Computing'][i % 5]}`,

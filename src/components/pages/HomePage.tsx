@@ -28,8 +28,8 @@ import { colors, getActivityIconColor, getEventColorClasses, getThemeColors } fr
 import { useTheme } from '../../contexts/ThemeContext';  // ← ADD THIS LINE
 
 export const HomePage: React.FC = () => {
-  const { isDark } = useTheme();  // ← ADD THIS
-  const themeColors = getThemeColors(isDark);  // ← ADD THIS
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
   const [userName, setUserName] = useState<string | null>(null);
   const [jiggle, setJiggle] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -273,74 +273,129 @@ export const HomePage: React.FC = () => {
 
         {/* Announcements */}
         {/* Announcements */}
-        <div
-          className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6"
-          style={{ backgroundColor: themeColors.accent.pinkLight }}
-        >
-          {/* Header */}
-          <h2
-            className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center"
-            style={{ color: themeColors.text.primary }}
-          >
-            Announcements
-          </h2>
+        {/* Dashboard */}
+        {/* Dashboard */}
+<div
+  className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6"
+  style={{ backgroundColor: themeColors.accent.pinkLight }}
+>
+  <h2
+    className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center"
+    style={{ color: themeColors.text.primary }}
+  >
+    Dashboard
+  </h2>
+  
+  <div className="relative px-2 sm:px-3 lg:px-4">
+    {/* Analytics Grid */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4">
+      {/* Study Time */}
+      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
+        <Clock className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.blue }} />
+        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Study Time</p>
+        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>12.5h</p>
+        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>This Week</p>
+      </div>
 
-          {/* 3 columns, 1 visible row, vertical scroll */}
-          <div className="relative px-2 sm:px-3 lg:px-4">
-            <div
-              className="
-                grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-                gap-3 sm:gap-4
-                overflow-y-auto
-                max-h-[220px] sm:max-h-[250px]
-                scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent
-                pr-2
-              "
-              style={{
-                scrollSnapType: 'y mandatory',
-                WebkitOverflowScrolling: 'touch',
-              }}
-            >
-              {announcements.length === 0 ? (
-                <div className="col-span-full text-center py-8">
-                  <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
-                    No announcements at the moment.
-                  </p>
-                </div>
-              ) : (
-                announcements.map((a) => (
-                  <div
-                    key={a.id}
-                    className="p-3 sm:p-4 lg:p-5 rounded-lg shadow text-center"
-                    style={{ backgroundColor: themeColors.background.white }}
-                  >
-                    <h3
-                      className="font-bold text-sm sm:text-base lg:text-lg mb-1"
-                      style={{ color: themeColors.text.primary }}
-                    >
-                      {a.title}
-                    </h3>
-                    <p
-                      className="text-xs sm:text-sm lg:text-base"
-                      style={{ color: themeColors.text.secondary }}
-                    >
-                      {a.content}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+      {/* Courses Completed */}
+      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
+        <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.green }} />
+        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Completed</p>
+        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>8</p>
+        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Courses</p>
+      </div>
+
+      {/* Current Streak */}
+      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
+        <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.orangeSection }} />
+        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Streak</p>
+        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>15</p>
+        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Days</p>
+      </div>
+
+      {/* Achievements */}
+      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
+        <Award className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.yellowBright }} />
+        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Achievements</p>
+        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>23</p>
+        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Earned</p>
+      </div>
+    </div>
+
+    {/* Progress Bars Section */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+      {/* Current Course Progress */}
+      <div className="p-3 sm:p-4 rounded-lg shadow" style={{ backgroundColor: themeColors.background.white }}>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs sm:text-sm font-semibold" style={{ color: themeColors.text.primary }}>React Advanced Concepts</p>
+          <span className="text-xs font-bold" style={{ color: themeColors.accent.blue }}>75%</span>
         </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="h-2 rounded-full" style={{ width: '75%', backgroundColor: themeColors.accent.blue }}></div>
+        </div>
+        <p className="text-xs mt-1" style={{ color: themeColors.text.tertiary }}>15 of 20 lessons completed</p>
+      </div>
 
-        {/* Dashboard + To-Do */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center" style={{ backgroundColor: themeColors.accent.br }}>
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.primary }}>Dashboard</h2>
-            <p className="text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.secondary }}>
-              Includes graphs, details about study time, upcoming classes, etc.
+      {/* Weekly Goal */}
+      <div className="p-3 sm:p-4 rounded-lg shadow" style={{ backgroundColor: themeColors.background.white }}>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs sm:text-sm font-semibold" style={{ color: themeColors.text.primary }}>Weekly Learning Goal</p>
+          <span className="text-xs font-bold" style={{ color: themeColors.accent.green }}>83%</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="h-2 rounded-full" style={{ width: '83%', backgroundColor: themeColors.accent.green }}></div>
+        </div>
+        <p className="text-xs mt-1" style={{ color: themeColors.text.tertiary }}>10 of 12 hours completed</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+        {/* Announcements + To-Do */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+  <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow" style={{ backgroundColor: themeColors.accent.br }}>
+    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-center" style={{ color: themeColors.text.primary }}>
+      Announcements
+    </h2>
+    <div
+      className="
+        space-y-2 sm:space-y-3
+        overflow-y-auto
+        max-h-[220px] sm:max-h-[250px]
+        scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent
+        pr-2
+      "
+    >
+      {announcements.length === 0 ? (
+        <div className="text-center py-4">
+          <p className="text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.secondary }}>
+            No announcements at the moment.
+          </p>
+        </div>
+      ) : (
+        announcements.map((a) => (
+          <div
+            key={a.id}
+            className="p-3 sm:p-4 rounded-lg shadow text-center"
+            style={{ backgroundColor: themeColors.background.white }}
+          >
+            <h3
+              className="font-bold text-sm sm:text-base lg:text-lg mb-1"
+              style={{ color: themeColors.text.primary }}
+            >
+              {a.title}
+            </h3>
+            <p
+              className="text-xs sm:text-sm lg:text-base"
+              style={{ color: themeColors.text.secondary }}
+            >
+              {a.content}
             </p>
           </div>
+        ))
+      )}
+    </div>
+  </div>
           <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center" style={{ backgroundColor: themeColors.accent.green }}>
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.primary }}>To Do List</h2>
             <div className="space-y-1 sm:space-y-2 lg:space-y-3">

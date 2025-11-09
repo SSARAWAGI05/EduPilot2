@@ -196,18 +196,18 @@ light: {
 
     // Accent Colors - VIBRANT & COLORFUL on Black
     accent: {
-      blue: '#3b82f6',            // Vibrant blue (blue-500)
-      br:'#f59e0b',
-      blueLight: '#1e3a8a',       // Deep blue for backgrounds
-      yellow: '#fbbf24',          // Rich gold (amber-400)
+      blue: '#85093a',            // Vibrant blue (blue-500)
+      br:'#163591',
+      blueLight: '#ebb30b',       // Deep blue for backgrounds
+      yellow: '#ebb30b',          // Rich gold (amber-400)
       yellowBright: '#f59e0b',    // Warm amber (amber-500)
-      red: '#ef4444',             // Bright red (red-500)
+      red: '#8b0001',             // Bright red (red-500)
       pink: '#ec4899',            // Hot pink (pink-500)
-      pinkLight: '#1e3a8a',       // Deep pink (pink-900)
-      orange: '#f97316',          // Vibrant orange (orange-500)
-      green: '#ef4444',           // Emerald green (green-500)
-      purple: '#a855f7',          // Rich purple (purple-500)
-      orangeSection: '#ea580c',   // Deep orange (orange-600)
+      pinkLight: '#ebb30b',       // Deep pink (pink-900)
+      orange: '#163591',          // Vibrant orange (orange-500)
+      green: '#85093a',            // Emerald green (green-500)
+      purple: '#31076c',          // Rich purple (purple-500)
+      orangeSection: '#09656d',   // Deep orange (orange-600)
     },
 
     // Text Colors - High Contrast on Black
@@ -235,10 +235,10 @@ light: {
 
     // Priority Colors - Vibrant & Distinguishable
     priority: {
-      high: '#dc2626',       // Bright red (red-600)
-      medium: '#f59e0b',     // Amber (amber-500)
-      low: '#3b82f6',        // Blue (blue-500)
-      default: '#f97316',    // Orange (orange-500)
+      high: '#000000ff',       // Bright red (red-600)
+      medium: '#000000ff',     // Amber (amber-500)
+      low: '#000000ff',        // Blue (blue-500)
+      default: '#000000ff',    // Orange (orange-500)
     },
 
     // Status Colors - Clear & Colorful
@@ -317,8 +317,11 @@ light: {
   },
 } as const;
 
-// Helper function to get theme-aware colors
-export const getThemeColors = (isDark: boolean) => {
+// Helper function to get theme-aware colors with focus mode support
+export const getThemeColors = (isDark: boolean, isFocusMode: boolean = false) => {
+  if (isFocusMode) {
+    return isDark ? colors.darkMonochrome : colors.lightMonochrome;
+  }
   return isDark ? colors.dark : colors.light;
 };
 

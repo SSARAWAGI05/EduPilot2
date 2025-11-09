@@ -5,8 +5,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { getThemeColors } from '../../styles/colors';
 
 export const ContactPage: React.FC = () => {
-  const { isDark } = useTheme();
-  const themeColors = getThemeColors(isDark);
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
 
   const [formData, setFormData] = useState({
     name: '',

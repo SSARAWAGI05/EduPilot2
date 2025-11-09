@@ -11,8 +11,8 @@ interface AboutSlidesProps {
 }
 
 export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl, testimonialVideoUrl, thumbnailUrl }) => {
-  const { isDark } = useTheme();
-  const themeColors = getThemeColors(isDark);
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [typedText, setTypedText] = useState('');
   const fullText = "Hi! I am Rishika!";
