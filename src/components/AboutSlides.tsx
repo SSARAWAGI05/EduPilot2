@@ -353,7 +353,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             <div className="flex items-center justify-center mb-8 animate-fade-in-down">
               <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
                 <img
-                  src="/src/logo/De-Eco-logo.png"
+                  src="/logo/De-Eco-logo.png"
                   alt="DE-ECO Logo"
                   className="w-16 h-16 object-contain"
                 />
@@ -424,7 +424,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             <div className="flex items-center justify-center mb-8">
               <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
                 <img
-                  src="/src/logo/De-Eco-logo.png"
+                  src="/logo/De-Eco-logo.png"
                   alt="DE-ECO Logo"
                   className="w-16 h-16 object-contain"
                 />
@@ -678,7 +678,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             <div className="flex items-center justify-center mb-8">
               <div className="bg-white rounded-full p-3 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
                 <img
-                  src="/src/logo/De-Eco-logo.png"
+                  src="/logo/De-Eco-logo.png"
                   alt="DE-ECO Logo"
                   className="w-16 h-16 object-contain"
                 />
