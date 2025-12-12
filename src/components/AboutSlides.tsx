@@ -261,7 +261,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                 <div className="flex items-center justify-center mb-6 animate-fade-in-down">
                   <div className="bg-white rounded-full p-3 shadow-xl border-gray-900 dark:border-gray-100 transform hover:rotate-12 transition-transform duration-300 relative">
                     <img
-                      src="/src/logo/De-Eco-logo.png"
+                      src="/logo/De-Eco-logo.png"
                       alt="DE-ECO Logo"
                       className="w-20 h-20 object-contain"
                     />
