@@ -471,7 +471,7 @@ export const HomePage: React.FC = () => {
             {/* Task list */}
             <div className="space-y-3 max-h-[260px] overflow-y-auto pr-2">
               {todoItems.filter(t => (activeTab === 'completed' ? t.status === 'done' : t.status !== 'done')).length === 0 ? (
-                <div className="py-10 text-center text-sm" style={{ color: themeColors.text.tertiary }}>
+                <div className="py-10 text-center text-sm" style={{ color: '#000000' }}>
                   No tasks — add one!
                 </div>
               ) : (
