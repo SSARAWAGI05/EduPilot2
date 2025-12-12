@@ -1,166 +1,241 @@
 import React from 'react';
-import { Cpu, FileText, Image, MessageSquare } from 'lucide-react';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import {
+  Cpu,
+  BookOpen,
+  Calendar,
+  Play,
+  Globe,
+  Zap,
+  Search,
+  ArrowRight,
+  Users,
+  Mail,
+  Linkedin,
+  Twitter,
+  Facebook,
+  Instagram
+} from 'lucide-react';
+import { useTheme } from '../../contexts/ThemeContext';
+import { getThemeColors } from '../../styles/colors';
+
+type Course = {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  icon?: React.ComponentType<any>;
+};
+
 export const AIHubPage: React.FC = () => {
-  const aiTools = [
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
+
+  const featuredCourses: Course[] = [
     {
-      id: 1,
-      name: 'Code Assistant',
-      description: 'AI-powered coding help and debugging',
-      icon: <Cpu className="w-12 h-12" />,
-      color: 'bg-green-200',
+      id: 'ai-101',
+      title: 'Intro to AI & Machine Learning',
+      description: 'Foundations of ML, supervised/unsupervised learning, and practical workflows.',
+      duration: '6 weeks',
+      level: 'Beginner',
+      icon: Cpu
     },
     {
-      id: 2,
-      name: 'Essay Writer',
-      description: 'Generate and improve written content',
-      icon: <FileText className="w-12 h-12" />,
-      color: 'bg-yellow-200',
+      id: 'deep-learning',
+      title: 'Deep Learning Fundamentals',
+      description: 'Neural networks, training techniques, and hands-on model building.',
+      duration: '8 weeks',
+      level: 'Intermediate',
+      icon: Zap
     },
     {
-      id: 3,
-      name: 'Image Generator',
-      description: 'Create images from text descriptions',
-      icon: <Image className="w-12 h-12" />,
-      color: 'bg-pink-200',
-    },
-    {
-      id: 4,
-      name: 'Chat Assistant',
-      description: 'Conversational AI for learning support',
-      icon: <MessageSquare className="w-12 h-12" />,
-      color: 'bg-orange-200',
-    },
+      id: 'nlp',
+      title: 'NLP & Large Language Models',
+      description: 'From tokenization to transformers: build and evaluate language models.',
+      duration: '6 weeks',
+      level: 'Intermediate',
+      icon: BookOpen
+    }
+  ];
+
+  const resources = [
+    { title: 'Datasets', desc: 'Curated datasets for experimentation.' },
+    { title: 'Model Zoo', desc: 'Pretrained models to jump-start projects.' },
+    { title: 'Papers & Tutorials', desc: 'Handpicked reading list and guides.' },
+    { title: 'Community Projects', desc: 'Open-source projects to contribute to.' }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Add padding so content does not overlap with navbar */}
-      <div className="container mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-8 sm:pb-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900 px-4">
-          AI Hub
-        </h1>
+    <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
+      <div className="h-14 sm:h-16 md:h-20" />
 
-        {/* AI Tools Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-6xl mx-auto">
-          {aiTools.map((tool) => (
-            <div
-              key={tool.id}
-              className={`${tool.color} p-6 sm:p-8 rounded-3xl hover:shadow-lg transition-shadow cursor-pointer group`}
-            >
-              <div className="text-center">
-                <div className="text-gray-700 mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
-                  {tool.icon}
-                </div>
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">{tool.name}</h3>
-                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{tool.description}</p>
-              </div>
-
-              <div className="mt-6 sm:mt-8">
-                <button className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 sm:py-3 rounded-xl font-semibold transition-colors text-sm sm:text-base">
-                  Launch Tool
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Additional Info */}
-        <div className="mt-12 sm:mt-16 text-center">
-          <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-lg max-w-4xl mx-auto">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 px-4">
-              Unlock Your Potential with AI-Powered Learning
-            </h2>
-            <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6 sm:mb-8 px-4">
-              Our AI Hub provides cutting-edge tools to enhance your learning experience. 
-              From code assistance to content creation, these tools are designed to boost 
-              your productivity and help you master new skills faster than ever before.
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero */}
+        <section
+          className="mx-auto rounded-2xl shadow-lg mb-6 overflow-hidden border"
+          style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.black, maxWidth: '1200px' }}
+        >
+          <div className="px-6 sm:px-8 md:px-10 py-8 md:py-10 text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3" style={{ color: themeColors.text.primary }}>
+              AI Hub
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-5 leading-relaxed" style={{ color: themeColors.text.secondary }}>
+              A dedicated space for learners, researchers and builders to explore artificial intelligence —
+              courses, tools, datasets and community projects all in one place.
             </p>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-              <span className="px-3 sm:px-4 py-1 sm:py-2 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm">
-                24/7 Available
-              </span>
-              <span className="px-3 sm:px-4 py-1 sm:py-2 bg-green-100 text-green-800 rounded-full text-xs sm:text-sm">
-                Free for Students
-              </span>
-              <span className="px-3 sm:px-4 py-1 sm:py-2 bg-purple-100 text-purple-800 rounded-full text-xs sm:text-sm">
-                Regular Updates
-              </span>
+
+            <div className="flex flex-wrap gap-3 justify-center">
+              <button className="px-5 py-2 rounded-xl font-bold shadow flex items-center gap-2" style={{ backgroundColor: themeColors.accent.blue, color: themeColors.text.white }}>
+                <Play size={16} />
+                Start Learning
+              </button>
+              <button className="px-5 py-2 rounded-xl font-bold border-2 flex items-center gap-2" style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.black, color: themeColors.text.primary }}>
+                <Search size={16} />
+                Browse Resources
+              </button>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Featured Courses */}
+        <section className="mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4" style={{ color: themeColors.text.primary }}>Featured Courses</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {featuredCourses.map((c) => (
+              <article
+                key={c.id}
+                className="p-4 rounded-lg shadow transition-transform hover:scale-105"
+                style={{ backgroundColor: themeColors.background.white }}
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: themeColors.accent.blue }}>
+                    {c.icon ? React.createElement(c.icon, { className: 'w-5 h-5', color: '#fff' }) : <BookOpen className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-semibold" style={{ color: themeColors.text.primary }}>{c.title}</h3>
+                    <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>{c.level} · {c.duration}</p>
+                  </div>
+                </div>
+                <p className="text-sm" style={{ color: themeColors.text.secondary }}>{c.description}</p>
+
+                <div className="mt-4 flex justify-between items-center">
+                  <button className="px-4 py-2 rounded-md font-medium" style={{ backgroundColor: themeColors.accent.yellowBright, color: themeColors.text.primary }}>
+                    Enroll
+                  </button>
+                  <button className="text-sm font-semibold flex items-center gap-2" style={{ color: themeColors.accent.blue }}>
+                    View details
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Resources */}
+        <section className="mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4" style={{ color: themeColors.text.primary }}>Resources</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {resources.map((r) => (
+              <div key={r.title} className="p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
+                <h4 className="text-sm font-semibold mb-1" style={{ color: themeColors.text.primary }}>{r.title}</h4>
+                <p className="text-xs" style={{ color: themeColors.text.tertiary }}>{r.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Events & Workshops */}
+        <section className="mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4" style={{ color: themeColors.text.primary }}>Upcoming Events</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg shadow" style={{ backgroundColor: themeColors.background.white }}>
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-base font-semibold" style={{ color: themeColors.text.primary }}>Hands-on Workshop: Fine-tuning LLMs</h3>
+                  <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>Dec 18, 2024 · Online · 2 hours</p>
+                </div>
+                <div className="text-sm font-semibold text-right" style={{ color: themeColors.accent.blue }}>Register</div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-lg shadow" style={{ backgroundColor: themeColors.background.white }}>
+              <div className="flex items-start justify-between">
+                <div>
+                  <h3 className="text-base font-semibold" style={{ color: themeColors.text.primary }}>AI Research Talks: Ethics and Safety</h3>
+                  <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>Jan 12, 2025 · Hybrid · 90 mins</p>
+                </div>
+                <div className="text-sm font-semibold text-right" style={{ color: themeColors.accent.blue }}>Learn more</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Newsletter CTA */}
+        <section className="p-6 rounded-2xl shadow mb-6 text-center" style={{ backgroundColor: themeColors.accent.blue }}>
+          <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: '#fff' }}>Stay updated with AI Hub</h3>
+          <p className="text-sm sm:text-base mb-4 max-w-2xl mx-auto" style={{ color: '#fff' }}>Get curated content, tutorials and event invites delivered to your inbox.</p>
+
+          <div className="mx-auto max-w-md flex gap-2">
+            <input className="flex-1 rounded-lg px-4 py-2" placeholder="Your email" style={{ border: 'none' }} />
+            <button className="px-4 py-2 rounded-lg font-semibold" style={{ backgroundColor: themeColors.accent.yellowBright, color: themeColors.text.primary }}>
+              Subscribe
+            </button>
+          </div>
+        </section>
       </div>
-      {/* Footer */}
-      <footer className="bg-[#1e1e1e] text-white border-2 border-black rounded-3xl shadow-2xl mx-6 my-10">
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10 xl:py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {/* Company Info */}
-            <div className="space-y-2 sm:space-y-3 lg:space-y-4 text-center sm:text-left">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">LearnHub</h3>
-              <p className="text-gray-300 text-xs sm:text-sm lg:text-sm">
-                Empowering learners worldwide with innovative educational experiences and cutting-edge technology.
-              </p>
-              <div className="flex space-x-3 sm:space-x-4 justify-center sm:justify-start">
-                <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
-                <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
-                <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
-                <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-white cursor-pointer transition" />
+
+      {/* Footer matching site */}
+      <footer className="text-white rounded-2xl shadow-lg mx-4 mb-6 mt-8" style={{ backgroundColor: '#000', borderColor: '#000' }}>
+        <div className="container mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="space-y-2 text-center sm:text-left">
+              <h3 className="text-lg font-bold text-white">AI Hub · DE-ECO</h3>
+              <p className="text-gray-300 text-xs">Resources, courses and community for AI learners and builders.</p>
+              <div className="flex space-x-3 justify-center sm:justify-start mt-2">
+                <Facebook className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
+                <Twitter className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
+                <Instagram className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
+                <Linkedin className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
               </div>
             </div>
 
-            {/* Quick Links */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4">Quick Links</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm lg:text-sm">
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Courses</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Dashboard</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Community</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Certificates</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Help Center</a></li>
+              <h4 className="text-sm font-semibold mb-2">Quick Links</h4>
+              <ul className="space-y-1 text-xs">
+                <li><a href="#" className="text-gray-300 hover:text-white">Courses</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">Resources</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">Events</a></li>
               </ul>
             </div>
 
-            {/* Support */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4">Support</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm lg:text-sm">
-                <li><a href="#" className="text-gray-300 hover:text-white transition">FAQ</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Contact Us</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Technical Support</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white transition">Terms of Service</a></li>
+              <h4 className="text-sm font-semibold mb-2">Support</h4>
+              <ul className="space-y-1 text-xs">
+                <li><a href="#" className="text-gray-300 hover:text-white">FAQ</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">Contact Us</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white">Help Center</a></li>
               </ul>
             </div>
 
-            {/* Contact Info */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4">Contact</h4>
-              <div className="space-y-1 sm:space-y-2 lg:space-y-3 text-xs sm:text-sm lg:text-sm">
+              <h4 className="text-sm font-semibold mb-2">Contact</h4>
+              <div className="text-xs">
                 <div className="flex items-center justify-center sm:justify-start">
-                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
-                  <span className="text-gray-300">support@learnhub.com</span>
+                  <Mail className="w-3 h-3 mr-2 text-gray-400" />
+                  <span className="text-gray-300">aihub@de-eco.com</span>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
-                  <span className="text-gray-300">+1 (555) 123-4567</span>
-                </div>
-                <div className="flex items-center justify-center sm:justify-start">
-                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-gray-400" />
-                  <span className="text-gray-300">San Francisco, CA</span>
-                </div>
+                <p className="text-gray-300 mt-2">Subscribe for updates and job opportunities</p>
               </div>
             </div>
           </div>
 
-          {/* Bottom Bar */}
-          <div className="border-t border-gray-700 mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 flex flex-col md:flex-row justify-between items-center text-center">
-            <p className="text-gray-400 text-xs sm:text-sm">
-              © 2024 LearnHub. All rights reserved.
-            </p>
-            <div className="flex space-x-3 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm text-gray-400 mt-2 sm:mt-3 md:mt-0">
-              <a href="#" className="hover:text-white transition">Privacy</a>
-              <a href="#" className="hover:text-white transition">Terms</a>
-              <a href="#" className="hover:text-white transition">Accessibility</a>
+          <div className="border-t border-gray-700 mt-4 pt-3 flex flex-col md:flex-row justify-between items-center text-center">
+            <p className="text-gray-400 text-xs">© 2024 DE-ECO · AI Hub. All rights reserved.</p>
+            <div className="flex space-x-3 text-xs text-gray-400 mt-2 md:mt-0">
+              <a href="#" className="hover:text-white">Privacy</a>
+              <a href="#" className="hover:text-white">Terms</a>
+              <a href="#" className="hover:text-white">Accessibility</a>
             </div>
           </div>
         </div>
@@ -168,3 +243,5 @@ export const AIHubPage: React.FC = () => {
     </div>
   );
 };
+
+export default AIHubPage;
