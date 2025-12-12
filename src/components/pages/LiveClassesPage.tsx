@@ -148,7 +148,7 @@ export const LiveClassesPage: React.FC = () => {
   const renderHomeContent = () => (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Welcome Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl lg:rounded-3xl p-3 sm:p-4 lg:p-6 xl:p-8 shadow-lg border-2 border-white dark:border-gray-700">
+      <div className="bg-white dark:bg-black rounded-xl sm:rounded-2xl lg:rounded-3xl p-3 sm:p-4 lg:p-6 xl:p-8 shadow-lg border-2 border-white dark:border-gray-700">
         
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
@@ -194,7 +194,7 @@ export const LiveClassesPage: React.FC = () => {
             { label: 'Minutes', value: countdown.minutes },
             { label: 'Seconds', value: countdown.seconds },
           ].map((item, idx) => (
-            <div key={idx} className="bg-white dark:bg-gray-700 rounded-xl px-3 sm:px-5 py-3 sm:py-4 shadow-md text-center">
+            <div key={idx} className="bg-white dark:bg-black rounded-xl px-3 sm:px-5 py-3 sm:py-4 shadow-md text-center">
               <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {item.value.toString().padStart(2, '0')}
               </div>

@@ -16,6 +16,18 @@
   font-family: 'Comic Sans MS', cursive, sans-serif;
 }
 
+/* ✅ Fix white bar at bottom - ensure body/html cover full viewport */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #020202; /* Dark gray - adjust to match your theme */
+}
+
+body {
+  overflow-x: hidden;
+}
+
 /* ✅ Testimonial train animation */
 @keyframes slide {
   0% { transform: translateX(0); }

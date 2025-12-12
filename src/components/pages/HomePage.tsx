@@ -10,16 +10,14 @@ import {
   Award,
   Users,
   Play,
-  Star,
-  ArrowRight,
   Activity,
-  Sparkles,
-  ChevronRight,
   Mail,
   Phone,
   MapPin,
   Facebook,
   Twitter,
+  CheckCircle,
+  Plus,
   Instagram,
   Linkedin
 } from 'lucide-react';
@@ -28,15 +26,29 @@ import { colors, getActivityIconColor, getEventColorClasses, getThemeColors } fr
 import { useTheme } from '../../contexts/ThemeContext';  // ← ADD THIS LINE
 
 export const HomePage: React.FC = () => {
-  const { isDark, isFocusMode } = useTheme();
+    const [userName, setUserName] = useState<string | null>(null);
+    const [jiggle, setJiggle] = useState(false);
+    const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [typedName, setTypedName] = useState('');
+    const [newTodo, setNewTodo] = useState('');
+    // moved state declarations for todos & announcements (MUST be above useEffects)
+    const [todoItems, setTodoItems] = useState<{ 
+      id: string; 
+      title: string; 
+      description: string | null; 
+      status: string; 
+      date?: string;
+      due_date?: string;
+      created_at?: string;
+    }[]>([]);
+    const [announcements, setAnnouncements] = useState<{ id: string; title: string; content: string; is_active: boolean }[]>([]);
+    // UI state for the improved todo card
+    const [activeTab, setActiveTab] = useState<'incomplete' | 'completed'>('incomplete');
+    const [isAdding, setIsAdding] = useState(false);
+    const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [jiggle, setJiggle] = useState(false);
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [typedText, setTypedText] = useState('');
-  const [typedName, setTypedName] = useState('');
-  const [newTodo, setNewTodo] = useState('');
+
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,7 +96,7 @@ export const HomePage: React.FC = () => {
 
       const { data, error } = await supabase
         .from('todos')
-        .select('id, title, description, status')
+        .select('id, title, description, status, due_date, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: true });
 
@@ -150,8 +162,6 @@ export const HomePage: React.FC = () => {
     }
   };
 
-  const [todoItems, setTodoItems] = useState<{ id: string; title: string; description: string | null; status: string; }[]>([]);
-
   const recentActivities = [
     { title: 'Completed JavaScript Basics', time: '2 hours ago', type: 'course' },
     { title: 'Joined AI Study Group', time: '1 day ago', type: 'community' },
@@ -204,13 +214,6 @@ export const HomePage: React.FC = () => {
     if (hour < 17) return 'Good Afternoon';
     return 'Good Evening';
   };
-
-  const [announcements, setAnnouncements] = useState<{ 
-    id: string; 
-    title: string; 
-    content: string; 
-    is_active: boolean; 
-  }[]>([]);
 
 
   return (
@@ -277,7 +280,7 @@ export const HomePage: React.FC = () => {
         {/* Dashboard */}
 <div
   className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6"
-  style={{ backgroundColor: themeColors.accent.pinkLight }}
+  style={{ backgroundColor: themeColors.accent.orangeSection }}
 >
   <h2
     className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center"
@@ -307,7 +310,7 @@ export const HomePage: React.FC = () => {
 
       {/* Current Streak */}
       <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
-        <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.orangeSection }} />
+        <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.pinkLight }} />
         <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Streak</p>
         <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>15</p>
         <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Days</p>
@@ -396,73 +399,147 @@ export const HomePage: React.FC = () => {
       )}
     </div>
   </div>
-          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow text-center" style={{ backgroundColor: themeColors.accent.green }}>
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.primary }}>To Do List</h2>
-            <div className="space-y-1 sm:space-y-2 lg:space-y-3">
-              <div className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={newTodo}
-                  onChange={(e) => setNewTodo(e.target.value)}
-                  placeholder="Add a new task..."
-                  className="flex-1 border p-2 rounded"
-                  style={{ 
-                    borderColor: themeColors.primary.mediumGray,
-                    backgroundColor: themeColors.background.white,
-                    color: themeColors.text.primary
-                  }}
-                />
+          {/* === START: Improved To-Do Card (replace old block) === */}
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-2xl shadow" style={{ backgroundColor: themeColors.card?.bg ?? themeColors.accent.green }}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: themeColors.text.primary }}>
+                To Do List
+              </h2>
+
+              {/* Tabs */}
+              <div className="flex gap-2">
                 <button
-                  onClick={addTodo}
-                  className="px-4 py-2 rounded hover:opacity-90 transition"
-                  style={{ 
-                    backgroundColor: themeColors.accent.blue,
-                    color: themeColors.text.white
+                  onClick={() => setActiveTab('incomplete')}
+                  className="px-3 py-1 rounded-xl text-sm font-medium transition"
+                  style={{
+                    background: activeTab === 'incomplete' ? themeColors.background.elevated : 'transparent',
+                    color: activeTab === 'incomplete' ? themeColors.text.primary : themeColors.text.tertiary,
+                    border: `1px solid ${activeTab === 'incomplete' ? (themeColors.primary.mediumGray ?? 'rgba(0,0,0,0.06)') : 'transparent'}`
                   }}
                 >
-                  Add
+                  Incomplete
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('completed')}
+                  className="px-3 py-1 rounded-xl text-sm font-medium transition"
+                  style={{
+                    background: activeTab === 'completed' ? themeColors.accent.brown : 'transparent',
+                    color: activeTab === 'completed' ? themeColors.accent.orange : themeColors.text.tertiary,
+                    border: `1px solid ${activeTab === 'completed' ? (themeColors.primary.mediumGray ?? 'rgba(0,0,0,0.06)') : 'transparent'}`
+                  }}
+                >
+                  Completed
                 </button>
               </div>
-              {todoItems.map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-2 sm:p-3 rounded-lg shadow-sm text-left" style={{ backgroundColor: themeColors.background.white }}>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={item.status === 'done'}
-                      onChange={async () => {
-                        const newStatus = item.status === 'done' ? 'pending' : 'done';
-                        const { error } = await supabase
-                          .from('todos')
-                          .update({ status: newStatus })
-                          .eq('id', item.id);
-                        if (!error) {
-                          setTodoItems(prev =>
-                            prev.map(t => t.id === item.id ? { ...t, status: newStatus } : t)
-                          );
-                        }
-                      }}
-                      className="mr-2 sm:mr-3 flex-shrink-0"
-                    />
-                    <span 
-                      className={`${item.status === 'done' ? 'line-through' : ''} text-xs sm:text-sm lg:text-base`}
-                      style={{ color: item.status === 'done' ? themeColors.text.tertiary : themeColors.text.primary }}
-                    >
-                      {item.title}
-                    </span>
-                  </div>
+            </div>
 
-                  {/* Delete Button */}
-                  <button
-                    onClick={() => deleteTodo(item.id)}
-                    className="ml-2 text-xs sm:text-sm hover:opacity-70 transition"
-                    style={{ color: themeColors.accent.red }}
-                  >
-                    Delete
-                  </button>
+            {/* Add Control */}
+            <div className="flex gap-3 items-center mb-4">
+              <input
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') addTodo(); }}
+                placeholder="Add a new task..."
+                className="flex-1 px-3 py-2 rounded-lg text-sm focus:outline-none"
+                style={{
+                  backgroundColor: themeColors.background.white,
+                  color: themeColors.text.primary,
+                  border: `1px solid ${themeColors.primary.mediumGray}`
+                }}
+              />
+              <button
+                onClick={async () => {
+                  if (!newTodo.trim()) return;
+                  setIsAdding(true);
+                  await addTodo();
+                  setIsAdding(false);
+                }}
+                disabled={isAdding}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-transform transform hover:-translate-y-0.5"
+                style={{
+                  background: themeColors.accent.blue,
+                  color: themeColors.text.white,
+                  opacity: isAdding ? 0.7 : 1
+                }}
+              >
+                <Plus size={14} />
+                Add
+              </button>
+            </div>
+
+            {/* Task list */}
+            <div className="space-y-3 max-h-[260px] overflow-y-auto pr-2">
+              {todoItems.filter(t => (activeTab === 'completed' ? t.status === 'done' : t.status !== 'done')).length === 0 ? (
+                <div className="py-10 text-center text-sm" style={{ color: themeColors.text.tertiary }}>
+                  No tasks — add one!
                 </div>
-              ))}
+              ) : (
+                todoItems
+                  .filter(t => (activeTab === 'completed' ? t.status === 'done' : t.status !== 'done'))
+                  .map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between gap-3 p-3 rounded-xl"
+                      style={{
+                        background: themeColors.background.white,
+                        border: `1px solid ${themeColors.primary.mediumGray}`
+                      }}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Circular toggle */}
+                        <button
+                          onClick={async () => {
+                            const newStatus = item.status === 'done' ? 'pending' : 'done';
+                            const { error } = await supabase
+                              .from('todos')
+                              .update({ status: newStatus })
+                              .eq('id', item.id);
+                            if (!error) {
+                              setTodoItems(prev => prev.map(t => t.id === item.id ? { ...t, status: newStatus } : t));
+                            }
+                          }}
+                          className="flex items-center justify-center w-9 h-9 rounded-full transition-transform hover:scale-105"
+                          style={{
+                            background: item.status === 'done' ? themeColors.accent.orange : 'transparent',
+                            border: `2px solid ${themeColors.accent.orange}`
+                          }}
+                          aria-label="toggle complete"
+                        >
+                          {item.status === 'done' ? <CheckCircle size={16} style={{ color: '#ffffff' }} /> : <div style={{ width: 10, height: 10, borderRadius: 999 }} />}
+                        </button>
+
+                        <div className="min-w-0">
+                          <div className={`font-medium truncate ${item.status === 'done' ? 'line-through' : ''}`} style={{ color: item.status === 'done' ? themeColors.text.tertiary : themeColors.text.primary }}>
+                            {item.title}
+                          </div>
+                          <div className="flex items-center gap-2 text-xs mt-1" style={{ color: themeColors.text.tertiary }}>
+                            <Calendar className="w-3 h-3" />
+                            <span>{item.date ?? item.due_date ?? (item.created_at ? new Date(item.created_at).toLocaleDateString() : 'No date')}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={async () => {
+                            const { error } = await supabase.from('todos').delete().eq('id', item.id);
+                            if (!error) setTodoItems(prev => prev.filter(t => t.id !== item.id));
+                          }}
+                          className="p-2 rounded-md hover:opacity-80 transition"
+                          style={{ color: themeColors.accent.red }}
+                          title="Delete"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+              )}
             </div>
           </div>
+          {/* === END: Improved To-Do Card === */}
+
         </div>
 
         {/* Recent Activity + Events */}
@@ -484,7 +561,7 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow" style={{ backgroundColor: themeColors.accent.orangeSection }}>
+          <div className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow" style={{ backgroundColor: themeColors.accent.pinkLight }}>
             <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center" style={{ color: themeColors.text.primary }}>
               <Calendar className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Upcoming Events
             </h2>
@@ -508,12 +585,12 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#1e1e1e] text-white border-2 border-black rounded-3xl shadow-2xl mx-6 my-10">
+      <footer className="bg-black text-white border-2 border-black rounded-3xl shadow-2xl mx-6 my-10">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10 xl:py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* Company Info */}
             <div className="space-y-2 sm:space-y-3 lg:space-y-4 text-center sm:text-left">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">LearnHub</h3>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">DE-ECO</h3>
               <p className="text-gray-300 text-xs sm:text-sm lg:text-sm">
                 Empowering learners worldwide with innovative educational experiences and cutting-edge technology.
               </p>

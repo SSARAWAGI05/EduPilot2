@@ -100,7 +100,7 @@ export const CoursesPage: React.FC = () => {
                 {/* Course Image */}
                 <div 
                   className="relative h-24 sm:h-32 lg:h-40 rounded-lg sm:rounded-xl mb-2 sm:mb-3 lg:mb-4 overflow-hidden flex items-center justify-center"
-                  style={{ backgroundColor: getLevelColor(course.level) }}
+                  style={{ backgroundColor: ',#6B7280' }}
                 >
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
                   <PlayCircle className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 text-white opacity-80 group-hover:opacity-100 transition-opacity" />

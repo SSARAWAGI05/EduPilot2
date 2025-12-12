@@ -1,256 +1,271 @@
 // src/styles/colors.ts
 
 export const colors = {
-  // Light Mode Colors - ORIGINAL PASTELS
-    // Light Monochrome Mode - Minimal & Neutral
+  // Light Mode Colors - SOFT PASTELS & NEUTRALS
   lightMonochrome: {
     primary: {
       black: '#1a1a1a',
       darkGray: '#333333',
       mediumGray: '#666666',
-      lightGray: '#b3b3b3',
-      offWhite: '#f2f2f2',
-      beige: '#e6e6e6',
+      lightGray: '#bfbfbf',
+      offWhite: '#f7f7f7',
+      beige: '#f2f2f2',
     },
     accent: {
       blue: '#9ca3af',
       br: '#9ca3af',
       blueLight: '#d1d5db',
-      yellow: '#a3a3a3',
-      yellowBright: '#737373',
-      red: '#a1a1aa',
-      pink: '#cfcfcf',
-      pinkLight: '#e5e5e5',
-      orange: '#bdbdbd',
-      green: '#a3a3a3',
-      purple: '#b8b8b8',
-      orangeSection: '#d4d4d4',
+      yellow: '#f3e8b0',
+      yellowBright: '#f1c40f',
+      red: '#d1a1a1',
+      pink: '#e6cbd3',
+      pinkLight: '#f3e9ec',
+      orange: '#e7d6c8',
+      green: '#cfe8d8',
+      purple: '#d9cfe6',
+      orangeSection: '#ece6de',
+      brown: '#d4c4b0',
     },
     text: {
       primary: '#1a1a1a',
-      secondary: '#333333',
-      tertiary: '#4b4b4b',
-      light: '#666666',
-      lighter: '#7d7d7d',
-      lightest: '#999999',
+      secondary: '#343a40',
+      tertiary: '#4b5563',
+      light: '#6b7280',
+      lighter: '#889096',
+      lightest: '#a3a3a3',
       white: '#ffffff',
       dark: '#000000',
-      muted: '#6b6b6b',
+      muted: '#6b7280',
     },
     background: {
       white: '#ffffff',
-      offWhite: '#f2f2f2',
-      lightGray: '#e6e6e6',
-      beige: '#f5f5f5',
+      offWhite: '#f7f7f7',
+      lightGray: '#f2f2f2',
+      beige: '#fbf8f6',
       black: '#000000',
-      darkSection: '#dcdcdc',
+      darkSection: '#efefef',
+      elevated: '#fafafa',
+    },
+    card: {
+      bg: '#cfe8d8',
+      border: '#bfbfbf',
     },
     priority: {
-      high: '#999999',
-      medium: '#bfbfbf',
-      low: '#d9d9d9',
-      default: '#f0f0f0',
+      high: '#ffd6d6',
+      medium: '#fff4cc',
+      low: '#d6ebff',
+      default: '#f8f9fa',
     },
     status: {
-      success: '#a3a3a3',
-      warning: '#b3b3b3',
-      error: '#8c8c8c',
-      info: '#d4d4d4',
+      success: '#d1f7e0',
+      warning: '#fff4d6',
+      error: '#ffd6d6',
+      info: '#e6f2ff',
     },
   },
 
-  // Dark Monochrome Mode - Sleek & Focused
+  // Dark Monochrome Mode - Minimal & Muted for focus
   darkMonochrome: {
     primary: {
       black: '#ffffff',
       darkGray: '#d4d4d4',
-      mediumGray: '#a3a3a3',
-      lightGray: '#404040',
-      offWhite: '#000000',
-      beige: '#1a1a1a',
+      mediumGray: '#9ca3af',
+      lightGray: '#6b7280',
+      offWhite: '#0b0b0b',
+      beige: '#141414',
     },
     accent: {
-      blue: '#737373',
-      br: '#a3a3a3',
-      blueLight: '#525252',
-      yellow: '#a1a1a1',
-      yellowBright: '#7d7d7d',
-      red: '#8c8c8c',
-      pink: '#999999',
-      pinkLight: '#4b4b4b',
-      orange: '#6b6b6b',
-      green: '#808080',
-      purple: '#a3a3a3',
+      blue: '#9ca3af',
+      br: '#9ca3af',
+      blueLight: '#6b7280',
+      yellow: '#cfcfcf',
+      yellowBright: '#a3a3a3',
+      red: '#bfbfbf',
+      pink: '#b8b8b8',
+      pinkLight: '#7d7d7d',
+      orange: '#9ca3af',
+      green: '#9ca3af',
+      purple: '#9ca3af',
       orangeSection: '#525252',
+      brown: '#5a5a5a',
     },
     text: {
       primary: '#ffffff',
-      secondary: '#d4d4d4',
-      tertiary: '#a3a3a3',
-      light: '#808080',
-      lighter: '#666666',
-      lightest: '#4b4b4b',
-      white: '#000000',
-      dark: '#f9f9f9',
+      secondary: '#e6e6e6',
+      tertiary: '#bfbfbf',
+      light: '#9ca3af',
+      lighter: '#80838f',
+      lightest: '#6b7280',
+      white: '#ffffff',
+      dark: '#0a0a0a',
       muted: '#9ca3af',
     },
     background: {
-      white: '#000000',
-      offWhite: '#0a0a0a',
-      lightGray: '#1a1a1a',
-      beige: '#262626',
-      black: '#ffffff',
-      darkSection: '#121212',
+      white: '#0a0a0a',
+      offWhite: '#050505',
+      lightGray: '#111111',
+      beige: '#1a1a1a',
+      black: '#000000',
+      darkSection: '#0d0d0d',
+      elevated: '#1a1a1a',
+    },
+    card: {
+      bg: '#9ca3af',
+      border: '#4b4b4b',
     },
     priority: {
-      high: '#737373',
-      medium: '#8c8c8c',
-      low: '#a3a3a3',
+      high: '#4b4b4b',
+      medium: '#6b6b6b',
+      low: '#8c8c8c',
       default: '#bfbfbf',
     },
     status: {
-      success: '#808080',
-      warning: '#999999',
-      error: '#666666',
-      info: '#a1a1a1',
+      success: '#2f855a',
+      warning: '#d69e2e',
+      error: '#e53e3e',
+      info: '#3182ce',
     },
   },
-light: {
-    // Primary Brand Colors
+
+  // Light Theme - Friendly Pastels & Clear Contrast
+  light: {
     primary: {
       black: '#1e1e1e',
       darkGray: '#495057',
       mediumGray: '#6c757d',
       lightGray: '#e9ecef',
       offWhite: '#f8f9fa',
-      beige: '#efe9e9ff',
+      beige: '#f6f2f0',
     },
 
-    // Accent Colors (Pastels)
     accent: {
-      blue: '#a5d8ff',
-      br:'#a5d8ff',
-      blueLight: '#e7f5ff',
-      yellow: '#ffec99',
+      blue: '#7cc0ff',
+      br: '#7cc0ff',
+      blueLight: '#e6f6ff',
+      yellow: '#ffecb5',
       yellowBright: '#ffd43b',
       red: '#ffc9c9',
-      pink: '#ff8787',
-      pinkLight: '#fbcfe8',
+      pink: '#ff8fa3',
+      pinkLight: '#fde7ef',
       orange: '#fff4e6',
-      green: '#bbf7d0',        // green-200 equivalent
-      purple: '#e9d5ff',       // purple-200 equivalent
-      orangeSection: '#fed8aa', // orange-200 equivalent
+      green: '#bbf7d0',
+      purple: '#e9d5ff',
+      orangeSection: '#fed8aa',
+      brown: '#d4a574',
     },
 
-    // Text Colors
     text: {
-      primary: '#1e1e1e',
-      secondary: '#495057',
+      primary: '#0f1724',
+      secondary: '#374151',
       tertiary: '#6c757d',
       light: '#4b5563',
       lighter: '#6b7280',
       lightest: '#9ca3af',
       white: '#ffffff',
-      dark: '#111827',
-      muted: '#374151',
+      dark: '#0b1220',
+      muted: '#6b7280',
     },
 
-    // Background Colors
     background: {
       white: '#ffffff',
       offWhite: '#f8f9fa',
-      lightGray: '#e9ecef',
-      beige: '#efe9e9ff',
+      lightGray: '#f1f5f9',
+      beige: '#fbf7f5',
       black: '#000000',
-      darkSection: '#1e1e1e',
+      darkSection: '#f3f4f6',
+      elevated: '#f8f9fa',
     },
 
-    // Priority Colors (Light Mode)
+    card: {
+      bg: '#bbf7d0',
+      border: '#e9ecef',
+    },
+
     priority: {
-      high: '#ffc9c9',      // Light red
-      medium: '#ffec99',    // Light yellow
-      low: '#a5d8ff',       // Light blue
-      default: '#fff4e6',   // Light orange
+      high: '#ffc9c9',
+      medium: '#ffec99',
+      low: '#a5d8ff',
+      default: '#fff4e6',
     },
 
-    // Status Colors (Light Mode)
     status: {
-      success: '#a5d8ff',   // Light blue
-      warning: '#ffec99',   // Light yellow
-      error: '#ffc9c9',     // Light red
-      info: '#fff4e6',      // Light orange
+      success: '#34d399',
+      warning: '#f59e0b',
+      error: '#ef4444',
+      info: '#60a5fa',
     },
   },
 
-  // Dark Mode Colors - VIBRANT on BLACK
+  // Dark Theme - High contrast, consistent accent hues
   dark: {
-    // Primary Brand Colors - Pure Black Foundation
     primary: {
-      black: '#ffffff',           // Pure white for text
-      darkGray: '#e0e0e0',        // Light gray for secondary
-      mediumGray: '#b0b0b0',      // Medium gray for tertiary
-      lightGray: '#1a1a1a',       // Very dark gray for cards
-      offWhite: '#000000',        // Pure black for background
-      beige: '#121212',           // Near-black for sections
+      black: '#000000',
+      darkGray: '#e6e6e6',
+      mediumGray: '#bdbdbd',
+      lightGray: '#1f2937',
+      offWhite: '#0b0b0b',
+      beige: '#121212',
     },
 
-    // Accent Colors - VIBRANT & COLORFUL on Black
     accent: {
-      blue: '#85093a',            // Vibrant blue (blue-500)
-      br:'#163591',
-      blueLight: '#ebb30b',       // Deep blue for backgrounds
-      yellow: '#ebb30b',          // Rich gold (amber-400)
-      yellowBright: '#f59e0b',    // Warm amber (amber-500)
-      red: '#8b0001',             // Bright red (red-500)
-      pink: '#ec4899',            // Hot pink (pink-500)
-      pinkLight: '#ebb30b',       // Deep pink (pink-900)
-      orange: '#163591',          // Vibrant orange (orange-500)
-      green: '#85093a',            // Emerald green (green-500)
-      purple: '#31076c',          // Rich purple (purple-500)
-      orangeSection: '#09656d',   // Deep orange (orange-600)
+      blue: '#163591',
+      br: '#163591',
+      blueLight: '#164e63',
+      yellow: '#f59e0b',
+      yellowBright: '#fbbf24',
+      red: '#ef4444',
+      pink: '#ec4899',
+      pinkLight: '#ef4444',
+      orange: '#fb923c',
+      green: '#10b981',
+      purple: '#7c3aed',
+      orangeSection: '#f59e0b',
+      brown: '#78350f',
     },
 
-    // Text Colors - High Contrast on Black
     text: {
-      primary: '#ffffff',         // Pure white
-      secondary: '#e0e0e0',       // Light gray
-      tertiary: '#b0b0b0',        // Medium gray
+      primary: '#ffffff',
+      secondary: '#d1d5db',
+      tertiary: '#9ca3af',
       light: '#9ca3af',
       lighter: '#6b7280',
       lightest: '#4b5563',
-      white: '#000000',           // Black for inverted
-      dark: '#f9fafb',
+      white: '#ffffff',
+      dark: '#000000',
       muted: '#9ca3af',
     },
 
-    // Background Colors - Black Base with Dark Layers
     background: {
-      white: '#000000ff',           // Very dark gray for cards
-      offWhite: '#000000',        // Pure black for main bg
-      lightGray: '#121212',       // Near-black for sections
-      beige: '#1a1a1a',           // Very dark gray
-      black: '#ffffff',           // White for inverted
-      darkSection: '#0a0a0a',     // Deepest black
+      white: '#0b0b0b',
+      offWhite: '#000000',
+      lightGray: '#0f1724',
+      beige: '#0b1220',
+      black: '#000000',
+      darkSection: '#060606',
+      elevated: '#1f2937',
     },
 
-    // Priority Colors - Vibrant & Distinguishable
+    card: {
+      bg: '#10b981',
+      border: '#374151',
+    },
+
     priority: {
-      high: '#000000ff',       // Bright red (red-600)
-      medium: '#000000ff',     // Amber (amber-500)
-      low: '#000000ff',        // Blue (blue-500)
-      default: '#000000ff',    // Orange (orange-500)
+      high: '#ef4444',
+      medium: '#f59e0b',
+      low: '#0ea5e9',
+      default: '#374151',
     },
 
-    // Status Colors - Clear & Colorful
     status: {
-      success: '#10b981',    // Emerald green (green-500)
-      warning: '#f59e0b',    // Amber (amber-500)
-      error: '#ef4444',      // Red (red-500)
-      info: '#3b82f6',       // Blue (blue-500)
+      success: '#10b981',
+      warning: '#f59e0b',
+      error: '#ef4444',
+      info: '#3b82f6',
     },
   },
 
-  // Gradients - Vibrant in dark mode
+  // Gradients
   gradient: {
     pinkToRed: 'from-pink-500 to-red-500 dark:from-pink-600 dark:to-red-600',
     pinkToRedBg: 'from-pink-400 to-red-400 dark:from-pink-500 dark:to-red-500',
@@ -278,7 +293,7 @@ light: {
     shadow2xl: 'shadow-2xl dark:shadow-black',
   },
 
-  // Activity Type Colors - Colorful in dark mode
+  // Activity Type Colors
   activity: {
     course: 'text-blue-600 dark:text-blue-400',
     community: 'text-green-600 dark:text-emerald-400',
@@ -288,7 +303,7 @@ light: {
     default: 'text-gray-600 dark:text-gray-400',
   },
 
-  // Event Type Colors - Vibrant badges
+  // Event Type Colors
   eventTypes: {
     liveClass: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-700',
     assignment: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-700',
@@ -297,13 +312,13 @@ light: {
     default: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700',
   },
 
-  // Star/Rating Colors
+  // Rating
   rating: {
     filled: 'fill-current text-yellow-500 dark:text-amber-400',
     empty: 'text-gray-300 dark:text-gray-700',
   },
 
-  // Chatbot Colors
+  // Chatbot
   chatbot: {
     user: 'bg-green-50 dark:bg-emerald-900/30',
     bot: 'bg-blue-50 dark:bg-blue-900/30',
@@ -325,7 +340,7 @@ export const getThemeColors = (isDark: boolean, isFocusMode: boolean = false) =>
   return isDark ? colors.dark : colors.light;
 };
 
-// Helper function to get priority color - NOW THEME-AWARE
+// Helper function to get priority color - theme-aware
 export const getPriorityColor = (priority: string, isDark?: boolean): string => {
   const theme = isDark ? colors.dark : colors.light;
   switch (priority) {
@@ -336,7 +351,7 @@ export const getPriorityColor = (priority: string, isDark?: boolean): string => 
   }
 };
 
-// Helper function to get status color - NOW THEME-AWARE
+// Helper function to get status color - theme-aware
 export const getStatusColor = (status: string, isDark?: boolean): string => {
   const theme = isDark ? colors.dark : colors.light;
   switch (status) {

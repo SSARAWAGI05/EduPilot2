@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, User } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
-import { getThemeColors } from '../styles/colors';
+import React, { useState, useEffect } from "react";
+import { Menu, X, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { useTheme } from "../contexts/ThemeContext";
+import { getThemeColors } from "../styles/colors";
 
 interface NavigationProps {
   currentPage: string;
@@ -9,30 +10,30 @@ interface NavigationProps {
   onLogout: () => void;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange, onLogout }) => {
+export const Navigation: React.FC<NavigationProps> = ({
+  currentPage,
+  onPageChange,
+  onLogout,
+}) => {
   const { isDark } = useTheme();
   const themeColors = getThemeColors(isDark);
-  
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'courses', label: 'Courses' },
-    { id: 'live-classes', label: 'Live Classes' },
-    { id: 'ai-hub', label: 'AI Hub' },
-    { id: 'about', label: 'About Us' },
-    { id: 'contact', label: 'Contact Us' },
+    { id: "home", label: "Home" },
+    { id: "courses", label: "Courses" },
+    { id: "live-classes", label: "Live Classes" },
+    { id: "ai-hub", label: "AI Hub" },
+    { id: "about", label: "About Us" },
+    { id: "contact", label: "Contact Us" },
   ];
 
   const handlePageChange = (page: string) => {
@@ -40,138 +41,220 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
     setIsMobileMenuOpen(false);
   };
 
+  const pillBg = (active: boolean) =>
+    active
+      ? isScrolled
+        ? `${themeColors.background.white}f2`
+        : themeColors.background.white
+      : "transparent";
+
+  const pillColor = (active: boolean) =>
+    active
+      ? themeColors.text.primary
+      : isScrolled
+      ? `${themeColors.text.white}e6`
+      : themeColors.text.white;
+
+  const navItemVariants = {
+    hidden: { opacity: 0, y: -6 },
+    visible: (i = 1) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.03 },
+    }),
+    hover: { scale: 1.04 },
+  };
+
   return (
     <>
-      {/* Desktop Navigation */}
-      <div className="fixed top-3 sm:top-4 lg:top-6 left-3 sm:left-4 lg:left-6 right-3 sm:right-4 lg:right-6 z-50 hidden md:block">
+      {/* DESKTOP NAV */}
+      <div className="fixed top-4 left-4 right-4 z-50 hidden md:block">
         <div className="flex items-center justify-between">
-          {/* Site Logo and Name - Left Side */}
-          <div className={`flex items-center gap-3 transition-opacity duration-300 ${
-            isScrolled ? 'opacity-60' : 'opacity-100'
-          }`}>
-            <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: themeColors.primary.black }}>
-              <User className="w-3 h-3 lg:w-4 lg:h-4" style={{ color: themeColors.text.white }} />
-            </div>
-            <span className="text-sm lg:text-base xl:text-lg font-bold" style={{ color: themeColors.primary.black }}>DE-ECO</span>
-          </div>
-
-          {/* Navigation Pills - Right Side */}
-          <nav 
-            className={`rounded-full px-3 lg:px-4 xl:px-6 py-2 lg:py-3 shadow-lg transition-all duration-300 ${
-              isScrolled ? 'backdrop-blur-md' : ''
-            }`}
-            style={{ 
-              backgroundColor: isScrolled ? `${themeColors.primary.black}b3` : themeColors.primary.black,
-              border: isScrolled ? `1px solid ${themeColors.primary.darkGray}80` : 'none'
-            }}
+          {/* LOGO LEFT */}
+          <motion.div
+            initial={{ y: -8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 120, damping: 16 }}
+            className="flex items-center gap-3"
           >
-            <div className="flex items-center gap-1 lg:gap-2">
-              {navItems.map((item) => (
-                <button
+            <div
+              className="bg-white rounded-full p-2 lg:p-3 shadow-lg border-2 transition-opacity duration-300"
+              style={{ 
+                borderColor: themeColors.primary.black,
+                opacity: isScrolled ? 0.85 : 1
+              }}
+            >
+              <img
+                src="/src/logo/De-Eco-logo.png"
+                alt="DE-ECO Logo"
+                className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
+              />
+            </div>
+
+            <div 
+              className="leading-tight transition-opacity duration-300 overflow-hidden"
+              style={{ 
+                opacity: isScrolled ? 0 : 1,
+                maxWidth: isScrolled ? '0px' : '200px',
+                transition: 'opacity 0.3s ease, max-width 0.3s ease'
+              }}
+            >
+              <div
+                className="text-lg lg:text-xl font-extrabold tracking-tight whitespace-nowrap"
+                style={{ color: themeColors.text.primary }}
+              >
+                DE-ECO
+              </div>
+              <div
+                className="text-xs whitespace-nowrap"
+                style={{ color: `${themeColors.text.primary}cc` }}
+              >
+                Education • Sustainability
+              </div>
+            </div>
+          </motion.div>
+
+          {/* NAVBAR RIGHT */}
+          <motion.nav
+            className="rounded-full px-4 py-2 shadow-2xl transition-all duration-300 flex items-center gap-3"
+            style={{
+              background: isScrolled
+                ? `linear-gradient(90deg, ${themeColors.primary.black}dd, ${themeColors.primary.darkGray}bb)`
+                : themeColors.primary.black,
+              border: isScrolled
+                ? `1px solid ${themeColors.primary.darkGray}55`
+                : "none",
+            }}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="flex items-center gap-2">
+              {navItems.map((item, idx) => (
+                <motion.button
                   key={item.id}
+                  custom={idx}
+                  variants={navItemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover="hover"
                   onClick={() => handlePageChange(item.id)}
-                  className="px-2 lg:px-3 xl:px-4 py-1 lg:py-2 text-xs lg:text-sm font-bold rounded-full transition-all duration-200 hover:opacity-80"
+                  className="relative px-4 py-2 text-sm font-semibold rounded-full transition-all"
                   style={{
-                    backgroundColor: currentPage === item.id 
-                      ? isScrolled 
-                        ? `${themeColors.background.white}e6`
-                        : themeColors.background.white
-                      : 'transparent',
-                    color: currentPage === item.id
-                      ? themeColors.text.primary
-                      : isScrolled
-                        ? `${themeColors.text.white}e6`
-                        : themeColors.text.white
+                    backgroundColor: pillBg(currentPage === item.id),
+                    color: pillColor(currentPage === item.id),
                   }}
                 >
                   {item.label}
-                </button>
+
+                  {/* ACTIVE UNDERLINE */}
+                  <span
+                    className={`absolute left-1/2 -translate-x-1/2 bottom-1 h-0.5 rounded-full transition-all ${
+                      currentPage === item.id ? "w-10 opacity-100" : "w-0 opacity-0"
+                    }`}
+                    style={{
+                      background: `linear-gradient(90deg, ${themeColors.primary.black}, ${themeColors.primary.darkGray})`,
+                    }}
+                  />
+                </motion.button>
               ))}
-              
-              <button
+
+              {/* Logout */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
                 onClick={onLogout}
-                className="px-2 lg:px-3 xl:px-4 py-1 lg:py-2 text-xs lg:text-sm font-bold rounded-full transition-all duration-200 hover:opacity-80"
+                className="px-3 py-2 text-sm font-semibold rounded-full flex items-center gap-2"
                 style={{
-                  backgroundColor: 'transparent',
-                  color: isScrolled ? `${themeColors.text.white}e6` : themeColors.text.white
+                  color: isScrolled
+                    ? `${themeColors.text.white}e6`
+                    : themeColors.text.white,
                 }}
               >
-                Logout
-              </button>
+                <User className="w-4 h-4" />
+                <span className="hidden lg:inline">Logout</span>
+              </motion.button>
             </div>
-          </nav>
+          </motion.nav>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <nav className="fixed top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 z-50 md:hidden">
+      {/* MOBILE NAV */}
+      <nav className="fixed top-3 left-3 right-3 z-50 md:hidden">
         <div
-          className={`rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 shadow-lg transition-all duration-300 ${
-            isScrolled ? 'backdrop-blur-md' : ''
-          }`}
+          className="rounded-2xl px-4 py-3 shadow-2xl flex items-center justify-between backdrop-blur-sm transition-colors"
           style={{
-            backgroundColor: isScrolled ? `${themeColors.primary.black}cc` : themeColors.primary.black,
-            border: isScrolled ? `1px solid ${themeColors.primary.darkGray}4d` : 'none'
+            backgroundColor: isScrolled
+              ? `${themeColors.primary.black}dd`
+              : `${themeColors.primary.black}ee`,
+            border: `1px solid ${themeColors.primary.darkGray}44`,
           }}
         >
-          <div className="flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
             <div
-              className={`flex items-center gap-2 sm:gap-3 transition-opacity duration-300 ${
-                isScrolled ? 'opacity-80' : 'opacity-100'
-              }`}
+              className="bg-white rounded-full p-1.5 shadow-md border-2"
+              style={{ borderColor: themeColors.primary.black }}
             >
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: themeColors.background.white }}>
-                <User className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: themeColors.primary.black }} />
-              </div>
-              <span
-                className="text-xs sm:text-sm font-bold transition-colors duration-300"
-                style={{ color: isScrolled ? `${themeColors.text.white}e6` : themeColors.text.white }}
-              >
-                DE-ECO
-              </span>
+              <img
+                src="/src/logo/De-Eco-logo.png"
+                alt="DE-ECO Logo"
+                className="w-9 h-9 object-contain"
+              />
             </div>
 
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 transition-colors duration-300"
-              style={{ color: isScrolled ? `${themeColors.text.white}e6` : themeColors.text.white }}
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
-              )}
-            </button>
+            <div className="hidden sm:block">
+              <div
+                className="text-sm font-bold"
+                style={{ color: themeColors.text.primary }}
+              >
+                DE-ECO
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Mobile Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div
-            className={`mt-1 sm:mt-2 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 shadow-lg transition-all duration-300 ${
-              isScrolled ? 'backdrop-blur-md' : ''
-            }`}
+          {/* Hamburger */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-lg"
             style={{
-              backgroundColor: isScrolled ? `${themeColors.primary.black}e6` : themeColors.primary.black
+              color: isScrolled
+                ? `${themeColors.text.white}e6`
+                : themeColors.text.white,
             }}
           >
-            <div className="space-y-1">
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Dropdown */}
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-3 rounded-2xl px-4 py-3 shadow-2xl"
+            style={{
+              backgroundColor: `${themeColors.primary.black}ee`,
+              border: `1px solid ${themeColors.primary.darkGray}40`,
+            }}
+          >
+            <div className="grid gap-2">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handlePageChange(item.id)}
-                  className="block w-full text-left px-2 sm:px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 hover:opacity-80"
+                  className="w-full text-left px-4 py-2 rounded-lg font-semibold"
                   style={{
-                    backgroundColor: currentPage === item.id
-                      ? isScrolled
-                        ? `${themeColors.background.white}e6`
-                        : themeColors.background.white
-                      : 'transparent',
-                    color: currentPage === item.id
-                      ? themeColors.text.primary
-                      : isScrolled
-                        ? `${themeColors.text.white}e6`
-                        : themeColors.text.white
+                    backgroundColor:
+                      currentPage === item.id
+                        ? `${themeColors.background.white}f2`
+                        : "transparent",
+                    color:
+                      currentPage === item.id
+                        ? themeColors.text.primary
+                        : `${themeColors.text.white}e6`,
                   }}
                 >
                   {item.label}
@@ -180,21 +263,19 @@ export const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChang
 
               <button
                 onClick={onLogout}
-                className="block w-full text-left px-2 sm:px-3 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all duration-200 hover:opacity-80"
-                style={{
-                  backgroundColor: 'transparent',
-                  color: isScrolled ? `${themeColors.text.white}e6` : themeColors.text.white
-                }}
+                className="w-full text-left px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
+                style={{ color: `${themeColors.text.white}e6` }}
               >
+                <User className="w-4 h-4" />
                 Logout
               </button>
             </div>
-          </div>
+          </motion.div>
         )}
       </nav>
 
-      {/* Spacer for mobile floating navbar */}
-      <div className="h-16 sm:h-18 md:hidden"></div>
+      {/* Spacer for mobile */}
+      <div className="h-16 md:hidden" />
     </>
   );
 };

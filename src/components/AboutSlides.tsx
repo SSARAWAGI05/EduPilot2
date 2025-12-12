@@ -258,12 +258,14 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             {/* Right: Enhanced Content */}
             <div className="w-full lg:w-3/5">
               {/* Floating EduPilot Branding */}
-              <div className="flex items-center justify-center gap-3 mb-6 animate-fade-in-down">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl transform hover:rotate-12 transition-transform duration-300 bg-gradient-to-br from-pink-400 to-red-400">
-                  <span className="text-white font-bold text-xl">R</span>
-                  <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-yellow-400 animate-pulse" />
+                <div className="flex items-center justify-center mb-6 animate-fade-in-down">
+                  <div className="bg-white rounded-full p-3 shadow-xl border-gray-900 dark:border-gray-100 transform hover:rotate-12 transition-transform duration-300 relative">
+                    <img
+                      src="/src/logo/De-Eco-logo.png"
+                      alt="DE-ECO Logo"
+                      className="w-20 h-20 object-contain"
+                    />
                 </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">DE-ECO</span>
               </div>
 
               <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-12 shadow-2xl border-4 border-white dark:border-gray-700 transform hover:scale-[1.02] transition-all duration-300">
@@ -284,8 +286,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                         Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
                         technologies and AI tools. With years of industry experience and a proven track record in 
                         education, I've created a comprehensive learning            ecosystem that combines theoretical knowledge 
-                        with practical applications. passionate about helping students master cutting-edge 
-                        technologies and AI tools. With years of industry tools. With years of industry ecosystem that combines theoretical 
+                        with practical applications. passionate about helping students master cutting-edge.
                       </p>
                     </div>
                   </div>
@@ -325,8 +326,13 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                     </button>
                     <button
                       onClick={onLogin}
-                      className="flex-1 px-8 py-4 rounded-xl font-bold text-lg border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden group"
-                      style={{ borderColor: themeColors.primary.black, color: themeColors.primary.black, backgroundColor: themeColors.background.white }}
+                      className="
+                        flex-1 px-8 py-4 rounded-xl font-bold text-lg border-3 transition-all duration-300 
+                        hover:scale-105 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden group
+
+                        bg-black text-white border-black               // Light mode
+                        dark:bg-white dark:text-black dark:border-white // Dark mode
+                      "
                     >
                       <span className="relative z-10">Learn More</span>
                       <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-5 transition-opacity"></div>
@@ -344,11 +350,14 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12">
           {/* Header */}
           <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in-down">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
-                <span className="text-white font-bold text-lg">R</span>
+            <div className="flex items-center justify-center mb-8 animate-fade-in-down">
+              <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
+                <img
+                  src="/src/logo/De-Eco-logo.png"
+                  alt="DE-ECO Logo"
+                  className="w-16 h-16 object-contain"
+                />
               </div>
-              <span className="text-xl font-bold" style={{ color: themeColors.primary.black }}>DE-ECO</span>
             </div>
             
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-gray-100">
@@ -412,11 +421,14 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12 relative z-10">
           {/* Header - Centered above everything */}
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
-                <span className="text-white font-bold text-lg">R</span>
+            <div className="flex items-center justify-center mb-8">
+              <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
+                <img
+                  src="/src/logo/De-Eco-logo.png"
+                  alt="DE-ECO Logo"
+                  className="w-16 h-16 object-contain"
+                />
               </div>
-              <span className="text-xl font-bold" style={{ color: themeColors.primary.black }}>DE-ECO</span>
             </div>
 
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-gray-100">
@@ -663,12 +675,15 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
       <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: themeColors.background.white }}>
         <div className="w-full max-w-7xl px-4">
           <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg bg-gradient-to-br from-pink-400 to-red-400">
-                <span className="text-white font-bold text-xl">R</span>
+            <div className="flex items-center justify-center mb-8">
+              <div className="bg-white rounded-full p-3 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
+                <img
+                  src="/src/logo/De-Eco-logo.png"
+                  alt="DE-ECO Logo"
+                  className="w-16 h-16 object-contain"
+                />
               </div>
-                      <span className="text-2xl font-bold" style={{ color: themeColors.primary.black }}>DE-ECO</span>
-                    </div>
+            </div>
                     
                     <h2 className="text-4xl lg:text-6xl font-black mb-4 text-gray-900 dark:text-gray-100">
                       Frequently Asked Questions
