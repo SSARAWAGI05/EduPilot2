@@ -85,7 +85,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               }}
             >
               <img
-                src="/src/logo/De-Eco-logo.png"
+                src="/logo/De-Eco-logo.png"
                 alt="DE-ECO Logo"
                 className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
               />
@@ -195,7 +195,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               style={{ borderColor: themeColors.primary.black }}
             >
               <img
-                src="/src/logo/De-Eco-logo.png"
+                src="/logo/De-Eco-logo.png"
                 alt="DE-ECO Logo"
                 className="w-9 h-9 object-contain"
               />
