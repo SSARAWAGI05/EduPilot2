@@ -342,318 +342,318 @@ const resetFocusTimer = () => {
         </div>
 
         {/* Dashboard Section - Improved Design */}
-<div className="mb-6 sm:mb-8">
-  {/* Main Container Card */}
-  <div 
-  className="rounded-3xl shadow-xl border-0 p-6 sm:p-8 lg:p-10"
-  style={{
-    backgroundColor: themeColors.primary.lG,
-    borderColor: themeColors.primary.black
-  }}
->
-
-
-    {/* Stats Grid - 4 Cards in a row */}
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
-      
-      {/* Current Streak */}
-      <div 
-        className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
-        style={{
-          backgroundColor: themeColors.accent.purple,
-          borderColor: themeColors.primary.black
-        }}
-      >
-        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-        <div className="relative">
-          <div className="flex justify-between items-start mb-3">
-            <Activity className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-            </div>
-          <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>12</p>
-          <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Day Streak 🔥</p>
-        </div>
-      </div>
-
-      {/* Courses Registered */}
-      <div 
-        className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
-        style={{
-          backgroundColor: themeColors.accent.blue,
-          borderColor: themeColors.primary.black
-        }}
-      >
-        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-        <div className="relative">
-          <div className="flex justify-between items-start mb-3">
-            <BookOpen className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-          </div>
-          <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>7</p>
-          <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Active Courses 📚</p>
-        </div>
-      </div>
-
-      {/* Upcoming Classes */}
-      <div 
-        className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
-        style={{
-          backgroundColor: themeColors.accent.yellow,
-          borderColor: themeColors.primary.black
-        }}
-      >
-        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-        <div className="relative">
-          <div className="flex justify-between items-start mb-3">
-            <Calendar className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-          </div>
-          <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>3</p>
-          <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Classes Today 📅</p>
-        </div>
-      </div>
-
-      {/* Focus Timer */}
-      <div 
-        className="rounded-2xl p-6 shadow-lg transition-all hover:shadow-xl"
-        style={{
-          backgroundColor: themeColors.accent.red,
-          borderColor: themeColors.primary.black
-        }}
-      >
-        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-        <div className="relative">
-          <div className="flex justify-between items-start mb-2">
-            <Timer className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-            <span className="text-xs px-2 py-1 rounded-full font-semibold" style={{ backgroundColor: 'rgba(0,0,0,0.1)', color: themeColors.text.primary }}>{isFocusRunning ? 'Running' : 'Idle'}</span>
-          </div>
-          <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: themeColors.text.primary }}>
-            {String(focusMinutes).padStart(2, '0')}:{String(focusSeconds).padStart(2, '0')}
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setIsFocusRunning(!isFocusRunning)}
-              className="flex-1 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
+          <div className="mb-6 sm:mb-8">
+            {/* Main Container Card */}
+            <div 
+              className="rounded-3xl shadow-xl border-0 p-4 sm:p-5 lg:p-6"
               style={{
-                backgroundColor: themeColors.primary.black,
-                color: themeColors.text.white
+                backgroundColor: themeColors.primary.lG,
+                borderColor: themeColors.primary.black
               }}
             >
-              {isFocusRunning ? 'Pause' : 'Start'}
-            </button>
-            <button
-              onClick={resetFocusTimer}
-              className="px-3 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
-              style={{
-                backgroundColor: themeColors.primary.black,
-                color: themeColors.text.white
-              }}
-            >
-              ↻
-            </button>
-          </div>
-        </div>
-      </div>
 
-    </div>
 
-    {/* Daily Planner Section */}
-    <div 
-      className="rounded-2xl p-6 sm:p-7 border-2 shadow-lg"
-      style={{
-        backgroundColor: themeColors.background.white,
-        borderColor: themeColors.primary.black
-      }}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ 
-              background: `linear-gradient(135deg, ${themeColors.accent.orange}, ${themeColors.accent.yellowBright})`
-            }}
-          >
-            <CheckCircle className="w-5 h-5" style={{ color: themeColors.text.primary }} />
-          </div>
-          <div>
-            <h3 className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>
-              Daily Planner
-            </h3>
-            <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>
-              {dailyTasks.filter(t => t.status === 'pending').length} pending · {dailyTasks.filter(t => t.status === 'done').length} completed
-            </p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2" style={{ backgroundColor: themeColors.accent.green, borderColor: themeColors.primary.black }}>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}>
-            <span className="text-sm font-bold" style={{ color: themeColors.text.primary }}>
-              {dailyTasks.length > 0 ? Math.round((dailyTasks.filter(t => t.status === 'done').length / dailyTasks.length) * 100) : 0}%
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Add Task Input */}
-      <div className="flex gap-3 mb-6">
-        <input
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') addDailyTask(); }}
-          placeholder="✨ What's on your agenda today?"
-          className="flex-1 px-5 py-3.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 border-2 transition-all shadow-sm"
-          style={{
-            backgroundColor: themeColors.background.white,
-            borderColor: themeColors.primary.lightGray,
-            color: themeColors.text.primary
-          }}
-        />
-        <button
-          onClick={async () => {
-            if (!newTask.trim()) return;
-            setIsAddingTask(true);
-            await addDailyTask();
-            setIsAddingTask(false);
-          }}
-          disabled={isAddingTask || !newTask.trim()}
-          className="px-5 sm:px-7 py-3.5 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2"
-          style={{ 
-            backgroundColor: themeColors.accent.yellowBright,
-            color: themeColors.text.primary,
-            opacity: (!newTask.trim() || isAddingTask) ? 0.5 : 1,
-            borderWidth: '2px',
-            borderColor: themeColors.primary.black
-          }}
-        >
-          <Plus size={18} />
-          <span className="hidden sm:inline">Add Task</span>
-        </button>
-      </div>
-
-      {/* Two Column Layout - NO FIXED HEIGHT */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        
-        {/* Assigned Tasks Column */}
-        <div 
-          className="rounded-xl p-5"
-          style={{
-            backgroundColor: themeColors.accent.orange,
-            borderColor: themeColors.primary.black
-          }}
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5" style={{ color: themeColors.text.primary }} />
-            <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
-              Assigned ({dailyTasks.filter(t => t.status === 'pending').length})
-            </h4>
-          </div>
-          
-          {dailyTasks.filter(t => t.status === 'pending').length === 0 ? (
-            <div className="text-center py-0">
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
-                <CheckCircle className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
+            {/* Stats Grid - 4 Cards in a row */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
+              
+              {/* Current Streak */}
+              <div 
+                className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+                style={{
+                  backgroundColor: themeColors.accent.purple,
+                  borderColor: themeColors.primary.black
+                }}
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+                <div className="relative">
+                  <div className="flex justify-between items-start mb-3">
+                    <Activity className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+                    </div>
+                  <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>12</p>
+                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Day Streak 🔥</p>
+                </div>
               </div>
+
+              {/* Courses Registered */}
+              <div 
+                className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+                style={{
+                  backgroundColor: themeColors.accent.blue,
+                  borderColor: themeColors.primary.black
+                }}
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+                <div className="relative">
+                  <div className="flex justify-between items-start mb-3">
+                    <BookOpen className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+                  </div>
+                  <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>7</p>
+                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Active Courses 📚</p>
+                </div>
+              </div>
+
+              {/* Upcoming Classes */}
+              <div 
+                className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+                style={{
+                  backgroundColor: themeColors.accent.yellow,
+                  borderColor: themeColors.primary.black
+                }}
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+                <div className="relative">
+                  <div className="flex justify-between items-start mb-3">
+                    <Calendar className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+                  </div>
+                  <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>3</p>
+                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Classes Today 📅</p>
+                </div>
+              </div>
+
+              {/* Focus Timer */}
+              <div 
+                className="rounded-2xl p-6 shadow-lg transition-all hover:shadow-xl"
+                style={{
+                  backgroundColor: themeColors.accent.red,
+                  borderColor: themeColors.primary.black
+                }}
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+                <div className="relative">
+                  <div className="flex justify-between items-start mb-2">
+                    <Timer className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+                    <span className="text-xs px-2 py-1 rounded-full font-semibold" style={{ backgroundColor: 'rgba(0,0,0,0.1)', color: themeColors.text.primary }}>{isFocusRunning ? 'Running' : 'Idle'}</span>
+                  </div>
+                  <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: themeColors.text.primary }}>
+                    {String(focusMinutes).padStart(2, '0')}:{String(focusSeconds).padStart(2, '0')}
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setIsFocusRunning(!isFocusRunning)}
+                      className="flex-1 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
+                      style={{
+                        backgroundColor: themeColors.primary.black,
+                        color: themeColors.text.white
+                      }}
+                    >
+                      {isFocusRunning ? 'Pause' : 'Start'}
+                    </button>
+                    <button
+                      onClick={resetFocusTimer}
+                      className="px-3 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
+                      style={{
+                        backgroundColor: themeColors.primary.black,
+                        color: themeColors.text.white
+                      }}
+                    >
+                      ↻
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
-          ) : (
-            <div className="space-y-2.5">
-              {dailyTasks.filter(t => t.status === 'pending').map((task) => (
-                <div
-                  key={task.id}
-                  className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+
+            {/* Daily Planner Section */}
+            <div 
+              className="rounded-2xl p-6 sm:p-7 shadow-lg"
+              style={{
+                backgroundColor: themeColors.background.white,
+                borderColor: themeColors.primary.black
+              }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${themeColors.accent.orange}, ${themeColors.accent.yellowBright})`
+                    }}
+                  >
+                    <CheckCircle className="w-5 h-5" style={{ color: themeColors.text.primary }} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>
+                      Daily Planner
+                    </h3>
+                    <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>
+                      {dailyTasks.filter(t => t.status === 'pending').length} pending · {dailyTasks.filter(t => t.status === 'done').length} completed
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2" style={{ backgroundColor: themeColors.accent.green, borderColor: themeColors.primary.black }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}>
+                    <span className="text-sm font-bold" style={{ color: themeColors.text.primary }}>
+                      {dailyTasks.length > 0 ? Math.round((dailyTasks.filter(t => t.status === 'done').length / dailyTasks.length) * 100) : 0}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Add Task Input */}
+              <div className="flex gap-3 mb-6">
+                <input
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') addDailyTask(); }}
+                  placeholder="✨ What's on your agenda today?"
+                  className="flex-1 px-5 py-3.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 border-2 transition-all shadow-sm"
                   style={{
                     backgroundColor: themeColors.background.white,
+                    borderColor: themeColors.primary.lightGray,
+                    color: themeColors.text.primary
+                  }}
+                />
+                <button
+                  onClick={async () => {
+                    if (!newTask.trim()) return;
+                    setIsAddingTask(true);
+                    await addDailyTask();
+                    setIsAddingTask(false);
+                  }}
+                  disabled={isAddingTask || !newTask.trim()}
+                  className="px-5 sm:px-7 py-3.5 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2"
+                  style={{ 
+                    backgroundColor: themeColors.accent.yellowBright,
+                    color: themeColors.text.primary,
+                    opacity: (!newTask.trim() || isAddingTask) ? 0.5 : 1,
+                    borderWidth: '2px',
                     borderColor: themeColors.primary.black
                   }}
                 >
-                  <button
-                    onClick={() => toggleTaskStatus(task.id, task.status)}
-                    className="flex-shrink-0 w-5 h-5 rounded border-2 transition-all hover:scale-110"
-                    style={{
-                      borderColor: themeColors.accent.blue
-                    }}
-                  ></button>
-                  <span 
-                    className="flex-1 text-sm font-medium"
-                    style={{ color: themeColors.text.primary }}
-                  >
-                    {task.title}
-                  </span>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
-                    style={{ color: themeColors.accent.red }}
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Completed Tasks Column */}
-        <div 
-          className="rounded-xl p-5"
-          style={{
-            backgroundColor: themeColors.accent.green,
-            borderColor: themeColors.primary.black
-          }}
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <CheckCircle className="w-5 h-5" style={{ color: themeColors.text.primary }} />
-            <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
-              Completed ({dailyTasks.filter(t => t.status === 'done').length})
-            </h4>
-          </div>
-          
-          {dailyTasks.filter(t => t.status === 'done').length === 0 ? (
-            <div className="text-center py-0">
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
-                <Activity className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
+                  <Plus size={18} />
+                  <span className="hidden sm:inline">Add Task</span>
+                </button>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-2.5">
-              {dailyTasks.filter(t => t.status === 'done').map((task) => (
-                <div
-                  key={task.id}
-                  className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+
+              {/* Two Column Layout - NO FIXED HEIGHT */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                
+                {/* Assigned Tasks Column */}
+                <div 
+                  className="rounded-xl p-5"
                   style={{
-                    backgroundColor: themeColors.background.white,
+                    backgroundColor: themeColors.accent.orange,
                     borderColor: themeColors.primary.black
                   }}
                 >
-                  <button
-                    onClick={() => toggleTaskStatus(task.id, task.status)}
-                    className="flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all hover:scale-110"
-                    style={{
-                      backgroundColor: themeColors.accent.blue,
-                      borderColor: themeColors.accent.blue
-                    }}
-                  >
-                    <CheckCircle size={12} style={{ color: themeColors.text.white }} />
-                  </button>
-                  <span 
-                    className="flex-1 text-sm font-medium line-through opacity-60"
-                    style={{ color: themeColors.text.primary }}
-                  >
-                    {task.title}
-                  </span>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
-                    style={{ color: themeColors.accent.red }}
-                  >
-                    <X size={16} />
-                  </button>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Clock className="w-5 h-5" style={{ color: themeColors.text.primary }} />
+                    <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
+                      Assigned ({dailyTasks.filter(t => t.status === 'pending').length})
+                    </h4>
+                  </div>
+                  
+                  {dailyTasks.filter(t => t.status === 'pending').length === 0 ? (
+                    <div className="text-center py-0">
+                      <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
+                        <CheckCircle className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {dailyTasks.filter(t => t.status === 'pending').map((task) => (
+                        <div
+                          key={task.id}
+                          className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+                          style={{
+                            backgroundColor: themeColors.background.white,
+                            borderColor: themeColors.primary.black
+                          }}
+                        >
+                          <button
+                            onClick={() => toggleTaskStatus(task.id, task.status)}
+                            className="flex-shrink-0 w-5 h-5 rounded border-2 transition-all hover:scale-110"
+                            style={{
+                              borderColor: themeColors.accent.blue
+                            }}
+                          ></button>
+                          <span 
+                            className="flex-1 text-sm font-medium"
+                            style={{ color: themeColors.text.primary }}
+                          >
+                            {task.title}
+                          </span>
+                          <button
+                            onClick={() => deleteTask(task.id)}
+                            className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
+                            style={{ color: themeColors.accent.red }}
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ))}
+
+                {/* Completed Tasks Column */}
+                <div 
+                  className="rounded-xl p-5"
+                  style={{
+                    backgroundColor: themeColors.accent.green,
+                    borderColor: themeColors.primary.black
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <CheckCircle className="w-5 h-5" style={{ color: themeColors.text.primary }} />
+                    <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
+                      Completed ({dailyTasks.filter(t => t.status === 'done').length})
+                    </h4>
+                  </div>
+                  
+                  {dailyTasks.filter(t => t.status === 'done').length === 0 ? (
+                    <div className="text-center py-0">
+                      <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
+                        <Activity className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {dailyTasks.filter(t => t.status === 'done').map((task) => (
+                        <div
+                          key={task.id}
+                          className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+                          style={{
+                            backgroundColor: themeColors.background.white,
+                            borderColor: themeColors.primary.black
+                          }}
+                        >
+                          <button
+                            onClick={() => toggleTaskStatus(task.id, task.status)}
+                            className="flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all hover:scale-110"
+                            style={{
+                              backgroundColor: themeColors.accent.blue,
+                              borderColor: themeColors.accent.blue
+                            }}
+                          >
+                            <CheckCircle size={12} style={{ color: themeColors.text.white }} />
+                          </button>
+                          <span 
+                            className="flex-1 text-sm font-medium line-through opacity-60"
+                            style={{ color: themeColors.text.primary }}
+                          >
+                            {task.title}
+                          </span>
+                          <button
+                            onClick={() => deleteTask(task.id)}
+                            className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
+                            style={{ color: themeColors.accent.red }}
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+              </div>
             </div>
-          )}
+
+          </div>
         </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
 
         {/* Featured Courses Section */}
         <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
