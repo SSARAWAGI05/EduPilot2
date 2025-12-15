@@ -207,7 +207,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
     { url: "/graphics/testimonial3.mp4", title: "Student Success Story 3" },
     { url: "/graphics/testimonial4.mp4", title: "Student Success Story 4" },
     { url: "/graphics/testimonial5.mp4", title: "Student Success Story 5" },
-    { url: "/graphics/rs.mp4", title: "Student Success Story 6" },
+    { url: "/graphics/testimonial6.mp4", title: "Student Success Story 6" },
   ];
 
   const finalTestimonialVideos = testimonialVideos || defaultTestimonialVideos;
