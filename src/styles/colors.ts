@@ -4,6 +4,7 @@ export const colors = {
   // Light Mode Colors - SOFT PASTELS & NEUTRALS
   lightMonochrome: {
     primary: {
+      w: '#ffffff',
       black: '#1a1a1a',
       darkGray: '#333333',
       mediumGray: '#666666',
@@ -68,6 +69,7 @@ export const colors = {
   // Dark Monochrome Mode - Minimal & Muted for focus
   darkMonochrome: {
     primary: {
+      w: '#000000ff',
       black: '#ffffff',
       darkGray: '#d4d4d4',
       mediumGray: '#9ca3af',
@@ -132,6 +134,7 @@ export const colors = {
   // Light Theme - Friendly Pastels & Clear Contrast
   light: {
     primary: {
+      w: '#ffffff',
       black: '#1e1e1e',
       darkGray: '#495057',
       mediumGray: '#6c757d',
@@ -202,6 +205,7 @@ export const colors = {
   // Dark Theme - High contrast, consistent accent hues
   dark: {
     primary: {
+      w: '#000000ff',
       black: '#000000',
       darkGray: '#e6e6e6',
       mediumGray: '#bdbdbd',

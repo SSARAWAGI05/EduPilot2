@@ -25,6 +25,8 @@ interface VideoCarouselProps {
 
 const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
   const [mutedStates, setMutedStates] = useState<boolean[]>(videos.map(() => true));
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
@@ -128,7 +130,12 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
                 }`}
               >
                 <div 
-                  className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white cursor-pointer"
+                  className="relative rounded-2xl overflow-hidden shadow-2xl border-4 cursor-pointer"
+                  style={{
+                      borderColor: isDark
+                        ? themeColors.primary.w
+                        : themeColors.primary.w
+                    }}
                   onClick={() => handleVideoClick(index)}
                 >
                   <div className="aspect-[9/16] bg-black">
@@ -633,7 +640,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                       backgroundColor: index % 3 === 0 
                         ? themeColors.accent.yellow 
                         : index % 3 === 1 
-                        ? 'white' 
+                        ? themeColors.accent.blueLight
                         : themeColors.accent.red 
                     }}
                   >
@@ -675,7 +682,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                       backgroundColor: index % 3 === 0 
                         ? themeColors.accent.yellow 
                         : index % 3 === 1 
-                        ? 'white' 
+                        ? themeColors.accent.blueLight
                         : themeColors.accent.red 
                     }}
                   >
@@ -752,9 +759,17 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
                             : 'shadow-lg border-white dark:border-gray-700 hover:shadow-xl'
                         }`}
                         style={{ 
-                          backgroundColor: isDark 
-                            ? themeColors.primary.lightGray  // All FAQs get same gray in dark mode
-                            : (index % 4 === 0 ? '#a5d8ff' : index % 4 === 1 ? '#ffec99' : index % 4 === 2 ? '#ffc9c9' : '#fff4e6')
+                          backgroundColor: isDark
+                            ? themeColors.primary.lightGray
+                            : (
+                                index % 4 === 0
+                                  ? themeColors.accent.blue
+                                  : index % 4 === 1
+                                  ? themeColors.accent.yellow
+                                  : index % 4 === 2
+                                  ? themeColors.accent.red
+                                  : themeColors.accent.orange
+                              )
                         }}
                         onClick={() => toggleFAQ(index)}
                       >
