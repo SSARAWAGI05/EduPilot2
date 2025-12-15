@@ -767,81 +767,81 @@ const resetFocusTimer = () => {
           </div>
           
           {/* Horizontally Scrollable Container */}
-<div className="overflow-x-auto pb-4">
-  <div className="flex gap-4 sm:gap-6" style={{ minWidth: 'max-content' }}>
-    {aiToolsData.map((tool, index) => {
-      // Assign colors from themeColors in a rotating pattern
-      const colorOptions = [
-        themeColors.accent.yellow,
-        themeColors.accent.green,
-        themeColors.accent.purple,
-        themeColors.accent.orange,
-        themeColors.accent.yellow,
-        themeColors.accent.red
-      ];
-      const toolColor = colorOptions[index % colorOptions.length];
-      
-      return (
-        <div
-          key={tool.id}
-          className="rounded-2xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer p-6 flex-shrink-0"
-          style={{ 
-            backgroundColor: toolColor, 
-            width: '320px',
-          }}
-        >
-          {/* Icon */}
-          <div 
-            className="w-14 h-14 rounded-xl flex items-center justify-center mb-4" 
-            style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
-          >
-            <tool.icon className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+          <div className="overflow-x-auto pb-4">
+            <div className="flex gap-4 sm:gap-6" style={{ minWidth: 'max-content' }}>
+              {aiToolsData.map((tool, index) => {
+                // Assign colors from themeColors in a rotating pattern
+                const colorOptions = [
+                  themeColors.accent.yellow,
+                  themeColors.accent.green,
+                  themeColors.accent.purple,
+                  themeColors.accent.orange,
+                  themeColors.accent.yellow,
+                  themeColors.accent.red
+                ];
+                const toolColor = colorOptions[index % colorOptions.length];
+                
+                return (
+                  <div
+                    key={tool.id}
+                    className="rounded-2xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer p-6 flex-shrink-0"
+                    style={{ 
+                      backgroundColor: toolColor, 
+                      width: '320px',
+                    }}
+                  >
+                      {/* Icon */}
+                      <div 
+                        className="w-14 h-14 rounded-xl flex items-center justify-center mb-4" 
+                        style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
+                      >
+                        <tool.icon className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-xl font-bold mb-3" style={{ color: themeColors.text.primary }}>
+                        {tool.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-sm mb-4 line-clamp-3" style={{ color: themeColors.text.primary, opacity: 0.85 }}>
+                        {tool.description}
+                      </p>
+
+                      {/* Features */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {tool.features.map((feature, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
+                            style={{ 
+                              backgroundColor: 'rgba(0,0,0,0.15)', 
+                              color: themeColors.text.primary 
+                            }}
+                          >
+                            <CheckCircle className="w-3 h-3" />
+                            {feature}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Launch Button */}
+                      <button 
+                        className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2 border-2" 
+                        style={{ 
+                          backgroundColor: themeColors.primary.black, 
+                          color: themeColors.text.white,
+                          borderColor: themeColors.primary.black
+                        }}
+                      >
+                        Launch Tool
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  );
+                })}
+            </div>  
           </div>
-
-          {/* Title */}
-          <h3 className="text-xl font-bold mb-3" style={{ color: themeColors.text.primary }}>
-            {tool.title}
-          </h3>
-
-          {/* Description */}
-          <p className="text-sm mb-4 line-clamp-3" style={{ color: themeColors.text.primary, opacity: 0.85 }}>
-            {tool.description}
-          </p>
-
-          {/* Features */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tool.features.map((feature, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
-                style={{ 
-                  backgroundColor: 'rgba(0,0,0,0.15)', 
-                  color: themeColors.text.primary 
-                }}
-              >
-                <CheckCircle className="w-3 h-3" />
-                {feature}
-              </span>
-            ))}
-          </div>
-
-          {/* Launch Button */}
-          <button 
-            className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2 border-2" 
-            style={{ 
-              backgroundColor: themeColors.primary.black, 
-              color: themeColors.text.white,
-              borderColor: themeColors.primary.black
-            }}
-          >
-            Launch Tool
-            <ChevronRight size={16} />
-          </button>
-        </div>
-      );
-    })}
-  </div>
-</div>
 
           {/* Scroll Indicator */}
           <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more tools →</p>

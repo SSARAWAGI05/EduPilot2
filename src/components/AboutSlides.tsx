@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; // Add useRef here
+import React, { useState, useEffect, useRef, useMemo } from 'react'; // Add useRef here
 import { Play, Plus, Star, ChevronRight, ChevronLeft, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react'; // Add ChevronLeft here
 import { colors, getPriorityColor, getThemeColors } from '../styles/colors';
 import { useTheme } from '../contexts/ThemeContext';
@@ -45,16 +45,18 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
     const actualIndex = index % videos.length;
     
     if (mutedStates[actualIndex]) {
-      // Unmuting: mute ALL videos (including duplicates), unmute only this one
-      videoRefs.current.forEach((video, i) => {
-        if (video) {
-          if (i === index) {
-            video.muted = false;
-          } else {
-            video.muted = true;
-          }
+    // Unmuting: mute ALL videos (including duplicates), unmute only this one
+    videoRefs.current.forEach((video, i) => {
+      if (video) {
+        if (i === index) {
+          video.currentTime = 0; // ← RESET TO BEGINNING
+          video.muted = false;
+          video.play().catch(err => console.log('Play error:', err)); // ← RESTART PLAYBACK
+        } else {
+          video.muted = true;
         }
-      });
+      }
+    });
       
       const newMutedStates = mutedStates.map(() => true);
       newMutedStates[actualIndex] = false;
@@ -95,7 +97,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
       videoRefs.current.forEach((video, i) => {
         if (video) {
           if (i === index) {
+            video.currentTime = 0; // ← RESET TO BEGINNING
             video.muted = false;
+            video.play().catch(err => console.log('Play error:', err)); // ← RESTART PLAYBACK
           } else {
             video.muted = true;
           }
@@ -109,16 +113,19 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
     }
   };
 
+          // Add this BEFORE the return statement in VideoCarousel component
+  const duplicatedVideos = useMemo(() => [...videos, ...videos], [videos]);
+
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-visible py-8">
       {/* Auto-scrolling Video Container */}
-      <div className="overflow-hidden">
+      <div className="overflow-visible">
         <div 
           className={`flex gap-4 animate-slide-horizontal-smooth ${selectedIndex !== null ? 'paused' : ''}`}
           style={{ width: `${videos.length * 2 * 224}px` }}
         >
           {/* Duplicate videos for seamless loop */}
-          {[...videos, ...videos].map((video, index) => {
+          {duplicatedVideos.map((video, index) => {
             const actualIndex = index % videos.length;
             const isSelected = selectedIndex === index;
             
@@ -126,8 +133,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
               <div
                 key={index}
                 className={`flex-shrink-0 w-[220px] transition-all duration-300 ${
-                  isSelected ? 'scale-110 z-10' : 'scale-100'
+                  isSelected ? 'scale-110 z-50' : 'scale-100 z-10'
                 }`}
+                style={{ position: 'relative' }}
               >
                 <div 
                   className="relative rounded-2xl overflow-hidden shadow-2xl border-4 cursor-pointer"
@@ -193,7 +201,6 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const defaultHeroVideoUrl = "/graphics/hero-video.mp4";
   const defaultTestimonialVideoUrl = "/graphics/rs.mp4";
 
@@ -211,15 +218,6 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   ];
 
   const finalTestimonialVideos = testimonialVideos || defaultTestimonialVideos;
-
-  // Mouse movement effect for subtle interactivity
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const handlePlayPause = () => {
     if (videoRef) {
@@ -249,26 +247,26 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
     }
   }, [currentSlide]);
 
-  const testimonials = [
-    { text: "Amazing courses that helped me land my dream job!", rating: 5, highlight: "dream job" },
-    { text: "The AI tools are incredibly helpful for learning.", rating: 5, highlight: "AI tools" },
-    { text: "Rishika's teaching style is exceptional and engaging.", rating: 4, highlight: "exceptional" },
-    { text: "Best investment I made for my career development.", rating: 5, highlight: "best investment" }
-  ];
+  const testimonials = useMemo(() => [
+  { text: "Amazing courses that helped me land my dream job!", rating: 5, highlight: "dream job" },
+  { text: "The AI tools are incredibly helpful for learning.", rating: 5, highlight: "AI tools" },
+  { text: "Rishika's teaching style is exceptional and engaging.", rating: 4, highlight: "exceptional" },
+  { text: "Best investment I made for my career development.", rating: 5, highlight: "best investment" }
+], []);
 
-  const testimonialsRow2 = [
-    { text: "The personalized mentoring changed my career path completely!", rating: 5, highlight: "career path" },
-    { text: "Interactive coding environments made learning so much easier.", rating: 4, highlight: "much easier" },
-    { text: "Live classes are engaging and well-structured.", rating: 5, highlight: "well-structured" },
-    { text: "The community support is incredible and motivating.", rating: 4, highlight: "incredible" }
-  ];
+const testimonialsRow2 = useMemo(() => [
+  { text: "The personalized mentoring changed my career path completely!", rating: 5, highlight: "career path" },
+  { text: "Interactive coding environments made learning so much easier.", rating: 4, highlight: "much easier" },
+  { text: "Live classes are engaging and well-structured.", rating: 5, highlight: "well-structured" },
+  { text: "The community support is incredible and motivating.", rating: 4, highlight: "incredible" }
+], []);
 
-  const testimonialsRow3 = [
-    { text: "Certificates helped me get recognition at my workplace.", rating: 5, highlight: "recognition" },
-    { text: "The AI Hub tools boosted my productivity significantly.", rating: 4, highlight: "productivity" },
-    { text: "Offline access feature is perfect for my schedule.", rating: 5, highlight: "perfect" },
-    { text: "30-day guarantee shows confidence in their quality.", rating: 5, highlight: "confidence" }
-  ];
+const testimonialsRow3 = useMemo(() => [
+  { text: "Certificates helped me get recognition at my workplace.", rating: 5, highlight: "recognition" },
+  { text: "The AI Hub tools boosted my productivity significantly.", rating: 4, highlight: "productivity" },
+  { text: "Offline access feature is perfect for my schedule.", rating: 5, highlight: "perfect" },
+  { text: "30-day guarantee shows confidence in their quality.", rating: 5, highlight: "confidence" }
+], []);
 
   const services = [
   {
@@ -864,19 +862,3 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
