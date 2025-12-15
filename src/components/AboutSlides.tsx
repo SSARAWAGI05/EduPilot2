@@ -1,16 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Plus, Star, ChevronRight, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react'; // Add useRef here
+import { Play, Plus, Star, ChevronRight, ChevronLeft, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react'; // Add ChevronLeft here
 import { colors, getPriorityColor, getThemeColors } from '../styles/colors';
 import { useTheme } from '../contexts/ThemeContext';
+
+
+interface Video {
+  url: string;
+  thumbnail?: string;
+  title?: string;
+}
+
 
 interface AboutSlidesProps {
   onLogin: () => void;
   heroVideoUrl?: string;
-  testimonialVideoUrl?: string;
+  testimonialVideos?: Video[]; // 👈 ADD THIS LINE
+  testimonialVideoUrl?: string; // Keep this for backward compatibility
   thumbnailUrl?: string;
 }
+// 👇 ADD THIS ENTIRE COMPONENT HERE (before AboutSlides)
+interface VideoCarouselProps {
+  videos: Video[];
+}
 
-export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl, testimonialVideoUrl, thumbnailUrl }) => {
+const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
+  const [mutedStates, setMutedStates] = useState<boolean[]>(videos.map(() => true));
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  useEffect(() => {
+    // Auto-play all videos on mount
+    videoRefs.current.forEach(video => {
+      if (video) {
+        video.play().catch(err => console.log('Auto-play prevented:', err));
+      }
+    });
+  }, []);
+
+  const toggleMute = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    const actualIndex = index % videos.length;
+    
+    if (mutedStates[actualIndex]) {
+      // Unmuting: mute ALL videos (including duplicates), unmute only this one
+      videoRefs.current.forEach((video, i) => {
+        if (video) {
+          if (i === index) {
+            video.muted = false;
+          } else {
+            video.muted = true;
+          }
+        }
+      });
+      
+      const newMutedStates = mutedStates.map(() => true);
+      newMutedStates[actualIndex] = false;
+      setMutedStates(newMutedStates);
+      setSelectedIndex(index); // This pauses the animation
+    } else {
+      // Muting: mute this video and its duplicate
+      videoRefs.current.forEach((video, i) => {
+        if (video && i % videos.length === actualIndex) {
+          video.muted = true;
+        }
+      });
+      
+      const newMutedStates = [...mutedStates];
+      newMutedStates[actualIndex] = true;
+      setMutedStates(newMutedStates);
+      setSelectedIndex(null); // This resumes the animation
+    }
+  };
+
+  const handleVideoClick = (index: number) => {
+    const actualIndex = index % videos.length;
+    
+    if (selectedIndex === index) {
+      // Mute this video and its duplicate
+      videoRefs.current.forEach((video, i) => {
+        if (video && i % videos.length === actualIndex) {
+          video.muted = true;
+        }
+      });
+      
+      const newMutedStates = [...mutedStates];
+      newMutedStates[actualIndex] = true;
+      setMutedStates(newMutedStates);
+      setSelectedIndex(null);
+    } else {
+      // Mute ALL videos, unmute only this specific one
+      videoRefs.current.forEach((video, i) => {
+        if (video) {
+          if (i === index) {
+            video.muted = false;
+          } else {
+            video.muted = true;
+          }
+        }
+      });
+      
+      const newMutedStates = mutedStates.map(() => true);
+      newMutedStates[actualIndex] = false;
+      setMutedStates(newMutedStates);
+      setSelectedIndex(index);
+    }
+  };
+
+  return (
+    <div className="relative overflow-hidden">
+      {/* Auto-scrolling Video Container */}
+      <div className="overflow-hidden">
+        <div 
+          className={`flex gap-4 animate-slide-horizontal-smooth ${selectedIndex !== null ? 'paused' : ''}`}
+          style={{ width: `${videos.length * 2 * 224}px` }}
+        >
+          {/* Duplicate videos for seamless loop */}
+          {[...videos, ...videos].map((video, index) => {
+            const actualIndex = index % videos.length;
+            const isSelected = selectedIndex === index;
+            
+            return (
+              <div
+                key={index}
+                className={`flex-shrink-0 w-[220px] transition-all duration-300 ${
+                  isSelected ? 'scale-110 z-10' : 'scale-100'
+                }`}
+              >
+                <div 
+                  className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white cursor-pointer"
+                  onClick={() => handleVideoClick(index)}
+                >
+                  <div className="aspect-[9/16] bg-black">
+                    <video
+                      ref={el => videoRefs.current[index] = el}
+                      className="w-full h-full object-cover"
+                      src={video.url}
+                      loop
+                      playsInline
+                      muted={mutedStates[actualIndex]}
+                      autoPlay
+                    />
+
+                    {/* Mute/Unmute Button */}
+                    <button
+                      onClick={(e) => toggleMute(actualIndex, e)}
+                      className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-black/70 hover:bg-black/90 flex items-center justify-center transition-all hover:scale-110 z-20"
+                    >
+                      {mutedStates[actualIndex] ? (
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+
+                    {/* Video Title Overlay */}
+                    {video.title && (
+                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+                        <p className="text-white text-sm font-semibold">{video.title}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 👇 THEN YOUR EXISTING AboutSlides STARTS HERE
+export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl, testimonialVideos, testimonialVideoUrl, thumbnailUrl }) => {
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -23,9 +189,21 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const defaultHeroVideoUrl = "/graphics/hero-video.mp4";
   const defaultTestimonialVideoUrl = "/graphics/rs.mp4";
-    
+
   const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
   const finalTestimonialVideoUrl = testimonialVideoUrl || defaultTestimonialVideoUrl;
+
+  // 👇 ADD THESE LINES HERE
+  const defaultTestimonialVideos: Video[] = [
+    { url: "/graphics/testimonial1.mp4", title: "Ananya, USA" },
+    { url: "/graphics/testimonial2.mp4", title: "Amir, Australia" },
+    { url: "/graphics/testimonial3.mp4", title: "Student Success Story 3" },
+    { url: "/graphics/testimonial4.mp4", title: "Student Success Story 4" },
+    { url: "/graphics/testimonial5.mp4", title: "Student Success Story 5" },
+    { url: "/graphics/rs.mp4", title: "Student Success Story 6" },
+  ];
+
+  const finalTestimonialVideos = testimonialVideos || defaultTestimonialVideos;
 
   // Mouse movement effect for subtle interactivity
   useEffect(() => {
@@ -410,16 +588,19 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
         </div>
       </div>
 
-      {/* Slide 3: Enhanced Testimonials */}
-      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: themeColors.primary.lightGray }}>
+      {/* Slide 3: Enhanced Video Testimonials */}
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" 
+          style={{ backgroundColor: themeColors.primary.lightGray }}>
+        
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 dark:bg-gray-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-200 dark:bg-gray-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
         </div>
-
+        
         <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12 relative z-10">
-          {/* Header - Centered above everything */}
+          
+          {/* Header */}
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-8">
               <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
@@ -439,224 +620,90 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             </p>
           </div>
 
-          {/* Content - Video and Testimonials side by side */}
-          <div className="flex flex-col lg:flex-row items-start gap-12 mb-12">
-            {/* Left 1/3 - Vertical Video Card */}
-            <div className="w-full lg:w-1/3 transform hover:scale-105 transition-all duration-500">
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-3xl blur-lg opacity-75"></div>
-                <div 
-                  className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-gray-700 backdrop-blur-sm"
-                  style={{ backgroundColor: themeColors.background.black }}
-                >
-                <div className="aspect-[9/16] relative">
-                  <video
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    muted={isMuted}
-                    playsInline
-                    webkit-playsinline="true"
+          {/* Top 2 Horizontal Rows */}
+          <div className="space-y-6 mb-8">
+            {/* Top Row 1 - Scrolling Right */}
+            <div className="overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+              <div className="flex animate-slide-horizontal space-x-4">
+                {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
+                  <div 
+                    key={index} 
+                    className="flex-shrink-0 w-[280px] p-5 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700"
+                    style={{ 
+                      backgroundColor: index % 3 === 0 
+                        ? themeColors.accent.yellow 
+                        : index % 3 === 1 
+                        ? 'white' 
+                        : themeColors.accent.red 
+                    }}
                   >
-                    <source src={finalTestimonialVideoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-
-                  {/* Mute/Unmute button */}
-                  <button
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/90 dark:bg-gray-800/90 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 z-10"
-                  >
-                    {isMuted ? (
-                      <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                      </svg>
-                    ) : (
-                      <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-                </div>
+                    <div className="flex mb-3">
+                      {renderStars(testimonial.rating)}
+                    </div>
+                    <p className="text-gray-800 dark:text-gray-200 mb-3 italic text-sm leading-relaxed line-clamp-3">
+                      "{testimonial.text}"
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-red-400 flex items-center justify-center text-white font-bold">
+                        {(index % testimonials.length) + 1}
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
+                        Student {(index % testimonials.length) + 1}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right 2/3 - Testimonials Content */}
-            <div className="w-full lg:w-2/3 flex items-stretch">
-              {/* Enhanced Testimonial Columns - Horizontal on Mobile, Vertical on Desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full h-[600px] md:h-[600px] h-[400px]">
-                {/* First Column */}
-                <div className="overflow-hidden h-full relative md:block hidden" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
-                  <div className="flex flex-col animate-slide-vertical space-y-6 absolute w-full">
-                    {[...testimonials, ...testimonials].map((testimonial, index) => (
-                      <div
-                        key={index}
-                        className="flex-shrink-0 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700 hover:scale-105 transition-transform duration-300"
-                      >
-                        <div className="flex mb-4">
-                          {renderStars(testimonial.rating)}
-                        </div>
-                        <p className="text-gray-800 dark:text-gray-200 mb-4 italic text-sm leading-relaxed">
-                          "{testimonial.text}"
-                        </p>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-red-400 flex items-center justify-center text-white font-bold">
-                            {index % testimonials.length + 1}
-                          </div>
-                          <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                            Student {index % testimonials.length + 1}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            
+          {/* Video Carousel */}
+          <div className="mb-8">
+            <VideoCarousel videos={finalTestimonialVideos} />
+          </div>
 
-                {/* Second Column */}
-                <div className="overflow-hidden h-full relative md:block hidden" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
-                  <div className="flex flex-col animate-slide-vertical-reverse space-y-6 absolute w-full">
-                    {[...testimonialsRow2, ...testimonialsRow2].map((testimonial, index) => (
-                      <div
-                        key={index}
-                        className="flex-shrink-0 p-6 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700 hover:scale-105 transition-transform duration-300 bg-yellow-200 dark:bg-gray-700"                      >
-                        <div className="flex mb-4">
-                          {renderStars(testimonial.rating)}
-                        </div>
-                        <p className="text-gray-800 dark:text-gray-200 mb-4 italic text-sm leading-relaxed">
-                          "{testimonial.text}"
-                        </p>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
-                            {index % testimonialsRow2.length + 5}
-                          </div>
-                          <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                            Student {index % testimonialsRow2.length + 5}
-                          </p>
-                        </div>
+          {/* Bottom 2 Horizontal Rows */}
+          <div className="space-y-6">
+            {/* Bottom Row 1 - Scrolling Right */}
+            <div className="overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+              <div className="flex animate-slide-horizontal space-x-4">
+                {[...testimonialsRow3, ...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
+                  <div 
+                    key={index} 
+                    className="flex-shrink-0 w-[280px] p-5 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700"
+                    style={{ 
+                      backgroundColor: index % 3 === 0 
+                        ? themeColors.accent.yellow 
+                        : index % 3 === 1 
+                        ? 'white' 
+                        : themeColors.accent.red 
+                    }}
+                  >
+                    <div className="flex mb-3">
+                      {renderStars(testimonial.rating)}
+                    </div>
+                    <p className="text-gray-800 dark:text-gray-200 mb-3 italic text-sm leading-relaxed line-clamp-3">
+                      "{testimonial.text}"
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
+                        {(index % testimonialsRow3.length) + 9}
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Third Column */}
-                <div className="overflow-hidden h-full relative md:block hidden" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)' }}>
-                  <div className="flex flex-col animate-slide-vertical space-y-6 absolute w-full">
-                    {[...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
-                      <div
-                        key={index}
-                        className="flex-shrink-0 p-6 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700 hover:scale-105 transition-transform duration-300 bg-yellow-200 dark:bg-gray-700"                      >
-                        <div className="flex mb-4">
-                          {renderStars(testimonial.rating)}
-                        </div>
-                        <p className="text-gray-800 dark:text-gray-200 mb-4 italic text-sm leading-relaxed">
-                          "{testimonial.text}"
-                        </p>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                            {index % testimonialsRow3.length + 9}
-                          </div>
-                          <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                            Student {index % testimonialsRow3.length + 9}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mobile Horizontal Scroll - 3 Rows */}
-                <div className="md:hidden flex flex-col gap-6 w-full">
-                  {/* First Row - Scroll Right */}
-                  <div className="overflow-hidden relative w-full h-[200px]" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
-                    <div className="flex animate-slide-horizontal space-x-4 absolute">
-                      {[...testimonials, ...testimonials].map((testimonial, index) => (
-                        <div
-                          key={index}
-                          className="flex-shrink-0 w-[280px] bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700"
-                        >
-                          <div className="flex mb-3">
-                            {renderStars(testimonial.rating)}
-                          </div>
-                          <p className="text-gray-800 dark:text-gray-200 mb-3 italic text-sm leading-relaxed line-clamp-3">
-                            "{testimonial.text}"
-                          </p>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-red-400 flex items-center justify-center text-white font-bold">
-                              {(index % testimonials.length) + 1}
-                            </div>
-                            <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                              Student {(index % testimonials.length) + 1}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                      <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
+                        Student {(index % testimonialsRow3.length) + 9}
+                      </p>
                     </div>
                   </div>
-
-                  {/* Second Row - Scroll Left */}
-                  <div className="overflow-hidden relative w-full h-[200px]" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
-                    <div className="flex animate-slide-horizontal-reverse space-x-4 absolute">
-                      {[...testimonialsRow2, ...testimonialsRow2].map((testimonial, index) => (
-                        <div
-                          key={index}
-                          className="flex-shrink-0 w-[280px] p-5 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700 bg-yellow-200 dark:bg-gray-700"
-
-                        >
-                          <div className="flex mb-3">
-                            {renderStars(testimonial.rating)}
-                          </div>
-                          <p className="text-gray-800 dark:text-gray-200 mb-3 italic text-sm leading-relaxed line-clamp-3">
-                            "{testimonial.text}"
-                          </p>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
-                              {(index % testimonialsRow2.length) + 5}
-                            </div>
-                            <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                              Student {(index % testimonialsRow2.length) + 5}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Third Row - Scroll Right */}
-                  <div className="overflow-hidden relative w-full h-[200px]" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
-                    <div className="flex animate-slide-horizontal space-x-4 absolute">
-                      {[...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
-                        <div
-                          key={index}
-                          className="flex-shrink-0 w-[280px] p-5 rounded-2xl shadow-xl border-3 border-white dark:border-gray-700 bg-yellow-200 dark:bg-gray-700"
-
-                        >
-                          <div className="flex mb-3">
-                            {renderStars(testimonial.rating)}
-                          </div>
-                          <p className="text-gray-800 dark:text-gray-200 mb-3 italic text-sm leading-relaxed line-clamp-3">
-                            "{testimonial.text}"
-                          </p>
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                              {(index % testimonialsRow3.length) + 9}
-                            </div>
-                            <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                              Student {(index % testimonialsRow3.length) + 9}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
+            </div>
+
+            
             </div>
           </div>
 
-          {/* CTA - Centered below both video and testimonials */}
-          <div className="text-center">
+          {/* CTA Button */}
+          <div className="text-center mt-12">
             <button 
               onClick={onLogin}
               className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
@@ -671,6 +718,8 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
           </div>
         </div>
       </div>
+
+
       {/* Enhanced FAQ Section */}
       <section className="min-h-screen flex items-center justify-center py-20" style={{ backgroundColor: themeColors.background.white }}>
         <div className="w-full max-w-7xl px-4">
@@ -773,6 +822,10 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
             0% { transform: translateX(-50%); }
             100% { transform: translateX(0); }
           }
+          @keyframes slide-horizontal-smooth {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+          }
           .animate-slide-vertical {
             animation: slide-vertical 20s linear infinite;
           }
@@ -785,8 +838,30 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
           .animate-slide-horizontal-reverse {
             animation: slide-horizontal-reverse 30s linear infinite;
           }
+          .animate-slide-horizontal-smooth {
+            animation: slide-horizontal-smooth 40s linear infinite;
+          }
+          .animate-slide-horizontal-smooth.paused {
+            animation-play-state: paused;
+          }
         `
       }} />
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

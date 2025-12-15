@@ -238,25 +238,25 @@ export const LiveClassesPage: React.FC = () => {
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">
               {userStats?.classes_attended || 0}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Classes Attended</div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-white">Classes Attended</div>
           </div>
           <div style={{ backgroundColor: themeColors.accent.yellow }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">
               {upcomingClasses.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Upcoming</div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-white">Upcoming</div>
           </div>
           <div style={{ backgroundColor: themeColors.accent.red }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">
               {recentNotes.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Notes Available</div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-white">Notes Available</div>
           </div>
           <div style={{ backgroundColor: themeColors.accent.orange }} className="p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl text-center">
             <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-gray-100">
               {recentRecordings.length}
             </div>
-            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Recordings</div>
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-white">Recordings</div>
           </div>
         </div>
       </div>
@@ -410,7 +410,7 @@ export const LiveClassesPage: React.FC = () => {
 
   const renderUpcomingClasses = () => (
     <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-      <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
+      <div className="bg-white dark:bg-black p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 lg:mb-6">Upcoming Classes</h2>
         
         <div className="space-y-4">
@@ -471,7 +471,7 @@ export const LiveClassesPage: React.FC = () => {
 
   const renderClassNotes = () => (
     <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-      <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
+      <div className="bg-white dark:bg-black p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 lg:mb-6">Class Notes</h2>
         
         <div className="grid gap-4">
@@ -511,7 +511,7 @@ export const LiveClassesPage: React.FC = () => {
 
   const renderRecordings = () => (
     <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-      <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
+      <div className="bg-white dark:bg-black p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 lg:mb-6">Recordings & Transcripts</h2>
         
         <div className="grid gap-4">
@@ -551,7 +551,7 @@ export const LiveClassesPage: React.FC = () => {
 
   const renderSchedule = () => (
     <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-      <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
+      <div className="bg-white dark:bg-black p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 lg:mb-6">This Week's Schedule</h2>
         
         <div style={{ backgroundColor: themeColors.accent.blueLight }} className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl">

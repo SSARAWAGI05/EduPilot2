@@ -102,9 +102,6 @@ export const AboutUsPage: React.FC = () => {
           style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.black, maxWidth: '1200px' }}
         >
           <div className="px-6 sm:px-8 md:px-10 py-8 md:py-10 text-center">
-            <div className="inline-block px-3 py-1 rounded-full mb-4" style={{ backgroundColor: themeColors.accent.yellowBright }}>
-              <span className="text-sm font-bold" style={{ color: themeColors.text.primary }}>About Us</span>
-            </div>
 
             {/* Reduced heading sizes to avoid 'zoomed' look and added maxWidth to text */}
             <h1

@@ -16,40 +16,133 @@ import {
   MapPin,
   Facebook,
   Twitter,
-  CheckCircle,
+  CheckCircle, MessageSquare,
   Plus,
   Instagram,
-  Linkedin
+  Linkedin,
+  Timer,
+  ChevronRight,
+  PenTool,
+  Map,
+  ListChecks,
+  FileText
 } from 'lucide-react';
 import { supabase } from "../../supabaseClient";
 import { colors, getActivityIconColor, getEventColorClasses, getThemeColors } from '../../styles/colors';
-import { useTheme } from '../../contexts/ThemeContext';  // ← ADD THIS LINE
+import { useTheme } from '../../contexts/ThemeContext';
 
 export const HomePage: React.FC = () => {
-    const [userName, setUserName] = useState<string | null>(null);
-    const [jiggle, setJiggle] = useState(false);
-    const [isChatbotOpen, setIsChatbotOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [typedName, setTypedName] = useState('');
-    const [newTodo, setNewTodo] = useState('');
-    // moved state declarations for todos & announcements (MUST be above useEffects)
-    const [todoItems, setTodoItems] = useState<{ 
-      id: string; 
-      title: string; 
-      description: string | null; 
-      status: string; 
-      date?: string;
-      due_date?: string;
-      created_at?: string;
-    }[]>([]);
-    const [announcements, setAnnouncements] = useState<{ id: string; title: string; content: string; is_active: boolean }[]>([]);
-    // UI state for the improved todo card
-    const [activeTab, setActiveTab] = useState<'incomplete' | 'completed'>('incomplete');
-    const [isAdding, setIsAdding] = useState(false);
-    const { isDark, isFocusMode } = useTheme();
+  const [userName, setUserName] = useState<string | null>(null);
+  const [jiggle, setJiggle] = useState(false);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [typedName, setTypedName] = useState('');
+  const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
+  // Focus Timer States
+  const [focusMinutes, setFocusMinutes] = useState(25);
+  const [focusSeconds, setFocusSeconds] = useState(0);
+  const [isFocusRunning, setIsFocusRunning] = useState(false);
 
-  
+  // Daily Planner States (same as old todo)
+  const [newTask, setNewTask] = useState('');
+  const [dailyTasks, setDailyTasks] = useState<{ 
+    id: string; 
+    title: string; 
+    status: string; 
+    created_at?: string;
+  }[]>([]);
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [activeTaskTab, setActiveTaskTab] = useState<'incomplete' | 'completed'>('incomplete');
+
+  const aiToolsData = [
+  {
+    id: 1,
+    title: 'Chat with Document',
+    description: 'Upload any document and have intelligent conversations about its content. Ask questions, get summaries, and extract key insights instantly.',
+    icon: MessageSquare,
+    color: '#14b8a6',
+    features: ['PDF Support', 'Real-time Analysis', 'Multi-language']
+  },
+  {
+    id: 2,
+    title: 'Essay Writer',
+    description: 'Generate well-structured, original essays on any topic. Perfect for research papers, assignments, and creative writing projects.',
+    icon: PenTool,
+    color: '#f87171',
+    features: ['Multiple Styles', 'Citation Support', 'Plagiarism Free']
+  },
+  {
+    id: 3,
+    title: 'Learning Roadmap',
+    description: 'Create personalized learning paths tailored to your goals. Get step-by-step guidance from beginner to expert level.',
+    icon: Map,
+    color: '#a78bfa',
+    features: ['Personalized Plans', 'Progress Tracking', 'Resource Links']
+  },
+  {
+    id: 4,
+    title: 'Quiz Generator',
+    description: 'Automatically create quizzes from any topic or document. Perfect for self-assessment and exam preparation.',
+    icon: ListChecks,
+    color: '#fbbf24',
+    features: ['Multiple Choice', 'True/False', 'Instant Feedback']
+  },
+  {
+    id: 5,
+    title: 'Smart Study Planner',
+    description: 'AI-powered study schedules that adapt to your learning style and availability. Optimize your study time effectively.',
+    icon: Target,
+    color: '#34d399',
+    features: ['Auto-scheduling', 'Break Reminders', 'Goal Setting']
+  },
+  {
+    id: 6,
+    title: 'Content Summarizer',
+    description: 'Condense long articles, papers, and documents into concise summaries. Save time while retaining key information.',
+    icon: FileText,
+    color: '#fb923c',
+    features: ['Quick Summaries', 'Key Points', 'Adjustable Length']
+  }
+];
+
+  const [courses] = useState([
+  {
+    id: 1,
+    title: 'React Advanced Patterns',
+    instructor: 'Sarah Johnson',
+    duration: '8 weeks',
+    students: 1234,
+    image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=300&fit=crop'
+  },
+  {
+    id: 2,
+    title: 'JavaScript ES6+',
+    instructor: 'Mike Chen',
+    duration: '6 weeks',
+    students: 2341,
+    image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=300&fit=crop'
+  },
+  {
+    id: 3,
+    title: 'Node.js Mastery',
+    instructor: 'Emma Wilson',
+    duration: '10 weeks',
+    students: 987,
+    image: 'https://images.unsplash.com/photo-1618477247222-acbdb0e159b3?w=400&h=300&fit=crop'
+  },
+  {
+    id: 4,
+    title: 'TypeScript Deep Dive',
+    instructor: 'David Park',
+    duration: '7 weeks',
+    students: 1567,
+    image: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&h=300&fit=crop'
+  }
+]);
+
+
+
   useEffect(() => {
     const interval = setInterval(() => {
       setJiggle(true);
@@ -66,7 +159,7 @@ export const HomePage: React.FC = () => {
       } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        setLoading(false);  // stop loading even if no user
+        setLoading(false);
         return;
       }
 
@@ -80,133 +173,69 @@ export const HomePage: React.FC = () => {
         setUserName(data.first_name);
       }
 
-      setLoading(false);  // done loading
+      setLoading(false);
     };
 
     fetchProfile();
   }, []);
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('todos')
-        .select('id, title, description, status, due_date, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true });
-
-      if (!error && data) {
-        setTodoItems(data);
-      }
-    };
-
-    fetchTodos();
-  }, []);
-
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      const { data, error } = await supabase
-        .from('announcements')
-        .select('id, title, content, is_active')
-        .eq('is_active', true) // only active announcements
-        .order('created_at', { ascending: false }); // latest first
-
-      if (!error && data) {
-        setAnnouncements(data);
-      }
-    };
-
-    fetchAnnouncements();
-  }, []);
-
-
-  useEffect(() => {
-    if (!loading && userName) { // start only if we have a userName
+    if (!loading && userName) {
       let index = 0;
       const interval = setInterval(() => {
         setTypedName(userName.slice(0, index + 1));
         index++;
         if (index === userName.length) clearInterval(interval);
-      }, 150); // adjust typing speed here
+      }, 150);
       return () => clearInterval(interval);
     }
   }, [loading, userName]);
 
-
-  const addTodo = async () => {
-    if (!newTodo.trim()) return;  // don't allow empty tasks
-
-    // Get current user
-    const {
-      data: { user },
-      error: userError
-    } = await supabase.auth.getUser();
-
-    if (!user || userError) return;
-
-    // Insert new todo into the DB
-    const { data, error } = await supabase
-      .from('todos')
-      .insert([{ title: newTodo, user_id: user.id }])
-      .select()
-      .single(); // return the inserted row
-
-    if (!error && data) {
-      setTodoItems(prev => [...prev, data]);  // update UI
-      setNewTodo('');  // clear input field
+  // Focus Timer Effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (isFocusRunning) {
+      interval = setInterval(() => {
+        if (focusSeconds === 0) {
+          if (focusMinutes === 0) {
+            setIsFocusRunning(false);
+            // Timer completed - could add notification here
+          } else {
+            setFocusMinutes(focusMinutes - 1);
+            setFocusSeconds(59);
+          }
+        } else {
+          setFocusSeconds(focusSeconds - 1);
+        }
+      }, 1000);
     }
-  };
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isFocusRunning, focusMinutes, focusSeconds]);
 
-  const recentActivities = [
-    { title: 'Completed JavaScript Basics', time: '2 hours ago', type: 'course' },
-    { title: 'Joined AI Study Group', time: '1 day ago', type: 'community' },
-  ];
+  // Fetch Daily Tasks
+  useEffect(() => {
+    const fetchDailyTasks = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-  const upcomingEvents = [
-    { title: 'React Advanced Concepts', date: 'Tomorrow', time: '10:00 AM', type: 'Live Class' },
-    { title: 'AI Project Presentation', date: 'Dec 15', time: '2:00 PM', type: 'Assignment' },
-  ];
+      const { data, error } = await supabase
+        .from('todos')
+        .select('id, title, status, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
 
-  const getActivityIcon = (type: string) => {
-    const colorClass = getActivityIconColor(type);
+      if (!error && data) {
+        setDailyTasks(data);
+      }
+    };
 
-    switch (type) {
-      case 'course':
-        return <BookOpen className={`w-4 h-4 ${colorClass}`} />;
-      case 'community':
-        return <Users className={`w-4 h-4 ${colorClass}`} />;
-      case 'assignment':
-        return <Target className={`w-4 h-4 ${colorClass}`} />;
-      case 'session':
-        return <Play className={`w-4 h-4 ${colorClass}`} />;
-      case 'achievement':
-        return <Award className={`w-4 h-4 ${colorClass}`} />;
-      default:
-        return <Activity className={`w-4 h-4 ${colorClass}`} />;
-    }
-  };
-
-  const deleteTodo = async (id: string) => {
-    const { error } = await supabase
-      .from('todos')
-      .delete()
-      .eq('id', id);
-
-    if (!error) {
-      // Remove the deleted todo from the UI
-      setTodoItems(prev => prev.filter(t => t.id !== id));
-    }
-  };
-
-
-  const getEventColor = (type: string) => {
-     return getEventColorClasses(type);
-   };
+    fetchDailyTasks();
+  }, []);
 
   const getCurrentGreeting = () => {
     const hour = new Date().getHours();
@@ -215,6 +244,67 @@ export const HomePage: React.FC = () => {
     return 'Good Evening';
   };
 
+  const addDailyTask = async () => {
+  if (!newTask.trim()) return;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data, error } = await supabase
+    .from('todos')
+    .insert([{ title: newTask, user_id: user.id, status: 'pending' }])
+    .select()
+    .single();
+
+  if (!error && data) {
+    setDailyTasks(prev => [data, ...prev]);
+    setNewTask('');
+  }
+};
+
+const toggleTaskStatus = async (taskId: string, currentStatus: string) => {
+  const newStatus = currentStatus === 'done' ? 'pending' : 'done';
+  
+  const { error } = await supabase
+    .from('todos')
+    .update({ status: newStatus })
+    .eq('id', taskId);
+
+  if (!error) {
+    setDailyTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: newStatus } : t));
+  }
+};
+
+const deleteTask = async (taskId: string) => {
+  const { error } = await supabase
+    .from('todos')
+    .delete()
+    .eq('id', taskId);
+
+  if (!error) {
+    setDailyTasks(prev => prev.filter(t => t.id !== taskId));
+  }
+};
+
+const resetFocusTimer = () => {
+  setFocusMinutes(25);
+  setFocusSeconds(0);
+  setIsFocusRunning(false);
+};
+
+  const featuredCourses = [
+    { id: 1, title: 'React Basics', color: themeColors.accent.blue },
+    { id: 2, title: 'JavaScript ES6', color: themeColors.accent.green },
+    { id: 3, title: 'Node.js', color: themeColors.accent.purple },
+    { id: 4, title: 'TypeScript', color: themeColors.accent.orange }
+  ];
+
+  const aiTools = [
+    { id: 1, title: 'Chat AI', color: themeColors.accent.green },
+    { id: 2, title: 'Essay Writer', color: themeColors.accent.pink },
+    { id: 3, title: 'Quiz Gen', color: themeColors.accent.purple },
+    { id: 4, title: 'Roadmap', color: themeColors.accent.yellowBright }
+  ];
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
@@ -222,33 +312,17 @@ export const HomePage: React.FC = () => {
       <div className="h-14 sm:h-16 md:h-20 lg:h-24"></div>
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
-        {/* Improved Greeting Section */}
+        {/* Top Welcome Section - KEPT SAME */}
         <div className="border-2 rounded-2xl sm:rounded-3xl shadow-lg mb-6 sm:mb-8" style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.black }}>
           <div className="px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-5 lg:py-6 xl:py-6">
             <div className="flex items-stretch gap-3 sm:gap-4 lg:gap-6 w-full">
-              {/* Left Button - Continue Learning */}
-              {/*
-              <button
-                className="flex-1 flex flex-col items-center justify-center text-black dark:text-white font-bold border-2 border-black dark:border-white rounded-2xl sm:rounded-3xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:opacity-90 text-sm sm:text-base lg:text-lg"
-                style={{ backgroundColor: themeColors.accent.yellowBright }}
-              >
-                <Play className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 mb-2" />
-                <span className="text-center leading-tight">Continue<br />Learning</span>
-              </button>
-              */}
-
-              {/* Center - Welcome and Quote */}
               <div className="flex-[2] flex flex-col items-center justify-center text-center px-2 sm:px-4">
-                {/* Greeting */}
-                <div
-                  className={`flex justify-center items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}
-                >
+                <div className={`flex justify-center items-center mb-4 ${jiggle ? 'animate-pulse' : ''}`}>
                   <span className="text-sm sm:text-base lg:text-lg font-medium" style={{ color: themeColors.text.secondary }}>
                     {getCurrentGreeting()}
                   </span>
                 </div>
 
-                {/* Welcome Back Heading */}
                 <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4" style={{ color: themeColors.text.primary }}>
                   Welcome back
                   {typedName || userName ? ',' : ''}{' '}
@@ -259,333 +333,523 @@ export const HomePage: React.FC = () => {
                   )}
                 </h1>
 
-                {/* Quote of the Day */}
-                  <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2" style={{ color: themeColors.text.secondary }}>
-                    "The beautiful thing about learning is that no one can take it away from you."
-                  </p>
+                <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2" style={{ color: themeColors.text.secondary }}>
+                  "The beautiful thing about learning is that no one can take it away from you."
+                </p>
               </div>
-
-              {/* Right Button - Take Platform Tour */}
-              {/*<button className="flex-1 flex flex-col items-center justify-center bg-black dark:bg-white text-white dark:text-black border-2 border-black dark:border-white rounded-2xl sm:rounded-3xl font-bold transition-all duration-300 transform hover:scale-105 hover:bg-white dark:hover:bg-gray-800 hover:text-black dark:hover:text-white text-sm sm:text-base lg:text-lg shadow-lg">
-                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 mb-2" />
-                <span className="text-center leading-tight">Take<br />Platform<br />Tour</span>
-              </button>*/}
             </div>
           </div>
         </div>
 
-        {/* Announcements */}
-        {/* Announcements */}
-        {/* Dashboard */}
-        {/* Dashboard */}
-<div
-  className="py-3 sm:py-4 lg:py-6 rounded-lg sm:rounded-xl shadow mb-4 sm:mb-6"
-  style={{ backgroundColor: themeColors.accent.orangeSection }}
+        {/* Dashboard Section - Improved Design */}
+<div className="mb-6 sm:mb-8">
+  {/* Main Container Card */}
+  <div 
+  className="rounded-3xl shadow-xl border-0 p-6 sm:p-8 lg:p-10"
+  style={{
+    backgroundColor: themeColors.primary.lG,
+    borderColor: themeColors.primary.black
+  }}
 >
-  <h2
-    className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 text-center"
-    style={{ color: themeColors.text.primary }}
-  >
-    Dashboard
-  </h2>
-  
-  <div className="relative px-2 sm:px-3 lg:px-4">
-    {/* Analytics Grid */}
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4">
-      {/* Study Time */}
-      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
-        <Clock className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.blue }} />
-        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Study Time</p>
-        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>12.5h</p>
-        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>This Week</p>
-      </div>
 
-      {/* Courses Completed */}
-      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
-        <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.green }} />
-        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Completed</p>
-        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>8</p>
-        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Courses</p>
-      </div>
 
+    {/* Stats Grid - 4 Cards in a row */}
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
+      
       {/* Current Streak */}
-      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
-        <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.pinkLight }} />
-        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Streak</p>
-        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>15</p>
-        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Days</p>
+      <div 
+        className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+        style={{
+          backgroundColor: themeColors.accent.purple,
+          borderColor: themeColors.primary.black
+        }}
+      >
+        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+        <div className="relative">
+          <div className="flex justify-between items-start mb-3">
+            <Activity className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+            </div>
+          <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>12</p>
+          <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Day Streak 🔥</p>
+        </div>
       </div>
 
-      {/* Achievements */}
-      <div className="p-3 sm:p-4 rounded-lg shadow text-center" style={{ backgroundColor: themeColors.background.white }}>
-        <Award className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: themeColors.accent.yellowBright }} />
-        <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>Achievements</p>
-        <p className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>23</p>
-        <p className="text-xs" style={{ color: themeColors.text.tertiary }}>Earned</p>
+      {/* Courses Registered */}
+      <div 
+        className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+        style={{
+          backgroundColor: themeColors.accent.blue,
+          borderColor: themeColors.primary.black
+        }}
+      >
+        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+        <div className="relative">
+          <div className="flex justify-between items-start mb-3">
+            <BookOpen className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+          </div>
+          <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>7</p>
+          <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Active Courses 📚</p>
+        </div>
+      </div>
+
+      {/* Upcoming Classes */}
+      <div 
+        className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+        style={{
+          backgroundColor: themeColors.accent.yellow,
+          borderColor: themeColors.primary.black
+        }}
+      >
+        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+        <div className="relative">
+          <div className="flex justify-between items-start mb-3">
+            <Calendar className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+          </div>
+          <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>3</p>
+          <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Classes Today 📅</p>
+        </div>
+      </div>
+
+      {/* Focus Timer */}
+      <div 
+        className="rounded-2xl p-6 shadow-lg transition-all hover:shadow-xl"
+        style={{
+          backgroundColor: themeColors.accent.red,
+          borderColor: themeColors.primary.black
+        }}
+      >
+        <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
+        <div className="relative">
+          <div className="flex justify-between items-start mb-2">
+            <Timer className="w-7 h-7" style={{ color: themeColors.text.primary }} />
+            <span className="text-xs px-2 py-1 rounded-full font-semibold" style={{ backgroundColor: 'rgba(0,0,0,0.1)', color: themeColors.text.primary }}>{isFocusRunning ? 'Running' : 'Idle'}</span>
+          </div>
+          <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: themeColors.text.primary }}>
+            {String(focusMinutes).padStart(2, '0')}:{String(focusSeconds).padStart(2, '0')}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setIsFocusRunning(!isFocusRunning)}
+              className="flex-1 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
+              style={{
+                backgroundColor: themeColors.primary.black,
+                color: themeColors.text.white
+              }}
+            >
+              {isFocusRunning ? 'Pause' : 'Start'}
+            </button>
+            <button
+              onClick={resetFocusTimer}
+              className="px-3 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
+              style={{
+                backgroundColor: themeColors.primary.black,
+                color: themeColors.text.white
+              }}
+            >
+              ↻
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    {/* Daily Planner Section */}
+    <div 
+      className="rounded-2xl p-6 sm:p-7 border-2 shadow-lg"
+      style={{
+        backgroundColor: themeColors.background.white,
+        borderColor: themeColors.primary.black
+      }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div 
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ 
+              background: `linear-gradient(135deg, ${themeColors.accent.orange}, ${themeColors.accent.yellowBright})`
+            }}
+          >
+            <CheckCircle className="w-5 h-5" style={{ color: themeColors.text.primary }} />
+          </div>
+          <div>
+            <h3 className="text-xl sm:text-2xl font-bold" style={{ color: themeColors.text.primary }}>
+              Daily Planner
+            </h3>
+            <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>
+              {dailyTasks.filter(t => t.status === 'pending').length} pending · {dailyTasks.filter(t => t.status === 'done').length} completed
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2" style={{ backgroundColor: themeColors.accent.green, borderColor: themeColors.primary.black }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}>
+            <span className="text-sm font-bold" style={{ color: themeColors.text.primary }}>
+              {dailyTasks.length > 0 ? Math.round((dailyTasks.filter(t => t.status === 'done').length / dailyTasks.length) * 100) : 0}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Add Task Input */}
+      <div className="flex gap-3 mb-6">
+        <input
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') addDailyTask(); }}
+          placeholder="✨ What's on your agenda today?"
+          className="flex-1 px-5 py-3.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 border-2 transition-all shadow-sm"
+          style={{
+            backgroundColor: themeColors.background.white,
+            borderColor: themeColors.primary.lightGray,
+            color: themeColors.text.primary
+          }}
+        />
+        <button
+          onClick={async () => {
+            if (!newTask.trim()) return;
+            setIsAddingTask(true);
+            await addDailyTask();
+            setIsAddingTask(false);
+          }}
+          disabled={isAddingTask || !newTask.trim()}
+          className="px-5 sm:px-7 py-3.5 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2"
+          style={{ 
+            backgroundColor: themeColors.accent.yellowBright,
+            color: themeColors.text.primary,
+            opacity: (!newTask.trim() || isAddingTask) ? 0.5 : 1,
+            borderWidth: '2px',
+            borderColor: themeColors.primary.black
+          }}
+        >
+          <Plus size={18} />
+          <span className="hidden sm:inline">Add Task</span>
+        </button>
+      </div>
+
+      {/* Two Column Layout - NO FIXED HEIGHT */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        {/* Assigned Tasks Column */}
+        <div 
+          className="rounded-xl p-5"
+          style={{
+            backgroundColor: themeColors.accent.orange,
+            borderColor: themeColors.primary.black
+          }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Clock className="w-5 h-5" style={{ color: themeColors.text.primary }} />
+            <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
+              Assigned ({dailyTasks.filter(t => t.status === 'pending').length})
+            </h4>
+          </div>
+          
+          {dailyTasks.filter(t => t.status === 'pending').length === 0 ? (
+            <div className="text-center py-0">
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
+                <CheckCircle className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {dailyTasks.filter(t => t.status === 'pending').map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+                  style={{
+                    backgroundColor: themeColors.background.white,
+                    borderColor: themeColors.primary.black
+                  }}
+                >
+                  <button
+                    onClick={() => toggleTaskStatus(task.id, task.status)}
+                    className="flex-shrink-0 w-5 h-5 rounded border-2 transition-all hover:scale-110"
+                    style={{
+                      borderColor: themeColors.accent.blue
+                    }}
+                  ></button>
+                  <span 
+                    className="flex-1 text-sm font-medium"
+                    style={{ color: themeColors.text.primary }}
+                  >
+                    {task.title}
+                  </span>
+                  <button
+                    onClick={() => deleteTask(task.id)}
+                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
+                    style={{ color: themeColors.accent.red }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Completed Tasks Column */}
+        <div 
+          className="rounded-xl p-5"
+          style={{
+            backgroundColor: themeColors.accent.green,
+            borderColor: themeColors.primary.black
+          }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <CheckCircle className="w-5 h-5" style={{ color: themeColors.text.primary }} />
+            <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
+              Completed ({dailyTasks.filter(t => t.status === 'done').length})
+            </h4>
+          </div>
+          
+          {dailyTasks.filter(t => t.status === 'done').length === 0 ? (
+            <div className="text-center py-0">
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
+                <Activity className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {dailyTasks.filter(t => t.status === 'done').map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+                  style={{
+                    backgroundColor: themeColors.background.white,
+                    borderColor: themeColors.primary.black
+                  }}
+                >
+                  <button
+                    onClick={() => toggleTaskStatus(task.id, task.status)}
+                    className="flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all hover:scale-110"
+                    style={{
+                      backgroundColor: themeColors.accent.blue,
+                      borderColor: themeColors.accent.blue
+                    }}
+                  >
+                    <CheckCircle size={12} style={{ color: themeColors.text.white }} />
+                  </button>
+                  <span 
+                    className="flex-1 text-sm font-medium line-through opacity-60"
+                    style={{ color: themeColors.text.primary }}
+                  >
+                    {task.title}
+                  </span>
+                  <button
+                    onClick={() => deleteTask(task.id)}
+                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
+                    style={{ color: themeColors.accent.red }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
 
-    {/* Progress Bars Section */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-      {/* Current Course Progress */}
-      <div className="p-3 sm:p-4 rounded-lg shadow" style={{ backgroundColor: themeColors.background.white }}>
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs sm:text-sm font-semibold" style={{ color: themeColors.text.primary }}>React Advanced Concepts</p>
-          <span className="text-xs font-bold" style={{ color: themeColors.accent.blue }}>75%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div className="h-2 rounded-full" style={{ width: '75%', backgroundColor: themeColors.accent.blue }}></div>
-        </div>
-        <p className="text-xs mt-1" style={{ color: themeColors.text.tertiary }}>15 of 20 lessons completed</p>
-      </div>
-
-      {/* Weekly Goal */}
-      <div className="p-3 sm:p-4 rounded-lg shadow" style={{ backgroundColor: themeColors.background.white }}>
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs sm:text-sm font-semibold" style={{ color: themeColors.text.primary }}>Weekly Learning Goal</p>
-          <span className="text-xs font-bold" style={{ color: themeColors.accent.green }}>83%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div className="h-2 rounded-full" style={{ width: '83%', backgroundColor: themeColors.accent.green }}></div>
-        </div>
-        <p className="text-xs mt-1" style={{ color: themeColors.text.tertiary }}>10 of 12 hours completed</p>
-      </div>
-    </div>
   </div>
 </div>
 
-        {/* Announcements + To-Do */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-  <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-lg sm:rounded-xl shadow" style={{ backgroundColor: themeColors.accent.br }}>
-    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-center" style={{ color: themeColors.text.primary }}>
-      Announcements
-    </h2>
-    <div
-      className="
-        space-y-2 sm:space-y-3
-        overflow-y-auto
-        max-h-[220px] sm:max-h-[250px]
-        scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent
-        pr-2
-      "
-    >
-      {announcements.length === 0 ? (
-        <div className="text-center py-4">
-          <p className="text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.secondary }}>
-            No announcements at the moment.
-          </p>
-        </div>
-      ) : (
-        announcements.map((a) => (
-          <div
-            key={a.id}
-            className="p-3 sm:p-4 rounded-lg shadow text-center"
-            style={{ backgroundColor: themeColors.background.white }}
-          >
-            <h3
-              className="font-bold text-sm sm:text-base lg:text-lg mb-1"
-              style={{ color: themeColors.text.primary }}
-            >
-              {a.title}
-            </h3>
-            <p
-              className="text-xs sm:text-sm lg:text-base"
-              style={{ color: themeColors.text.secondary }}
-            >
-              {a.content}
-            </p>
-          </div>
-        ))
-      )}
-    </div>
-  </div>
-          {/* === START: Improved To-Do Card (replace old block) === */}
-          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 rounded-2xl shadow" style={{ backgroundColor: themeColors.card?.bg ?? themeColors.accent.green }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: themeColors.text.primary }}>
-                To Do List
-              </h2>
-
-              {/* Tabs */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setActiveTab('incomplete')}
-                  className="px-3 py-1 rounded-xl text-sm font-medium transition"
-                  style={{
-                    background: activeTab === 'incomplete' ? themeColors.background.elevated : 'transparent',
-                    color: activeTab === 'incomplete' ? themeColors.text.primary : themeColors.text.tertiary,
-                    border: `1px solid ${activeTab === 'incomplete' ? (themeColors.primary.mediumGray ?? 'rgba(0,0,0,0.06)') : 'transparent'}`
-                  }}
-                >
-                  Incomplete
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('completed')}
-                  className="px-3 py-1 rounded-xl text-sm font-medium transition"
-                  style={{
-                    background: activeTab === 'completed' ? themeColors.accent.brown : 'transparent',
-                    color: activeTab === 'completed' ? themeColors.accent.orange : themeColors.text.tertiary,
-                    border: `1px solid ${activeTab === 'completed' ? (themeColors.primary.mediumGray ?? 'rgba(0,0,0,0.06)') : 'transparent'}`
-                  }}
-                >
-                  Completed
-                </button>
+        {/* Featured Courses Section */}
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
+          <div className="mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
+                  Featured Courses
+                </h2>
+                <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
+                </svg>
               </div>
-            </div>
-
-            {/* Add Control */}
-            <div className="flex gap-3 items-center mb-4">
-              <input
-                value={newTodo}
-                onChange={(e) => setNewTodo(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') addTodo(); }}
-                placeholder="Add a new task..."
-                className="flex-1 px-3 py-2 rounded-lg text-sm focus:outline-none"
-                style={{
-                  backgroundColor: themeColors.background.white,
-                  color: themeColors.text.primary,
-                  border: `1px solid ${themeColors.primary.mediumGray}`
-                }}
-              />
-              <button
-                onClick={async () => {
-                  if (!newTodo.trim()) return;
-                  setIsAdding(true);
-                  await addTodo();
-                  setIsAdding(false);
-                }}
-                disabled={isAdding}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-transform transform hover:-translate-y-0.5"
-                style={{
-                  background: themeColors.accent.blue,
-                  color: themeColors.text.white,
-                  opacity: isAdding ? 0.7 : 1
-                }}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {courses.map((course) => (
+              <div
+                key={course.id}
+                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+                style={{ backgroundColor: themeColors.background.white }}
               >
-                <Plus size={14} />
-                Add
+                {/* Course Image */}
+                <div className="h-40 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
+                  <img 
+                    src={course.image} 
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/400x300/4F46E5/ffffff?text=Course';
+                    }}
+                  />
+                </div>
+
+                {/* Course Content */}
+                <div className="p-4">
+                  <h3 className="font-bold text-base mb-2 line-clamp-2" style={{ color: themeColors.text.primary }}>
+                    {course.title}
+                  </h3>
+                  <p className="text-xs mb-1" style={{ color: themeColors.text.secondary }}>
+                    by {course.instructor}
+                  </p>
+                  <div className="flex items-center gap-3 text-xs mb-3" style={{ color: themeColors.text.tertiary }}>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {course.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {course.students}
+                    </span>
+                  </div>
+                  
+                  <button className="w-full py-2 rounded-lg font-bold text-sm transition-transform transform hover:scale-105" style={{ backgroundColor: themeColors.accent.blue, color: '#ffffff' }}>
+                    Register Now
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Live Classes Section */}
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.red }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left - Content */}
+            <div className="flex flex-col justify-center">
+              <div className="mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
+                  Live Classes
+                </h2>
+                <svg className="w-56 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
+                </svg>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                <p className="text-base sm:text-lg leading-relaxed" style={{ color: themeColors.text.primary }}>
+                  Join interactive live sessions with expert instructors from around the world.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed" style={{ color: themeColors.text.primary }}>
+                  Get real-time feedback, ask questions, and collaborate with peers in our virtual classroom.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed" style={{ color: themeColors.text.primary }}>
+                  Access recordings and transcripts after each session for future reference.
+                </p>
+              </div>
+              
+              <button className="px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-105 shadow-lg inline-block w-fit" style={{ backgroundColor: themeColors.accent.yellowBright, color: themeColors.text.primary }}>
+                Register Now
               </button>
             </div>
 
-            {/* Task list */}
-            <div className="space-y-3 max-h-[260px] overflow-y-auto pr-2">
-              {todoItems.filter(t => (activeTab === 'completed' ? t.status === 'done' : t.status !== 'done')).length === 0 ? (
-                <div className="py-10 text-center text-sm" style={{ color: '#000000' }}>
-                  No tasks — add one!
+            {/* Right - Video Placeholder */}
+            <div className="flex items-center justify-center rounded-2xl cursor-pointer transition-transform transform hover:scale-105" style={{ backgroundColor: themeColors.primary.black, minHeight: '300px' }}>
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform transform hover:scale-110" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                  <Play className="w-10 h-10" style={{ color: themeColors.text.white }} fill="white" />
                 </div>
-              ) : (
-                todoItems
-                  .filter(t => (activeTab === 'completed' ? t.status === 'done' : t.status !== 'done'))
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between gap-3 p-3 rounded-xl"
-                      style={{
-                        background: themeColors.background.white,
-                        border: `1px solid ${themeColors.primary.mediumGray}`
-                      }}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        {/* Circular toggle */}
-                        <button
-                          onClick={async () => {
-                            const newStatus = item.status === 'done' ? 'pending' : 'done';
-                            const { error } = await supabase
-                              .from('todos')
-                              .update({ status: newStatus })
-                              .eq('id', item.id);
-                            if (!error) {
-                              setTodoItems(prev => prev.map(t => t.id === item.id ? { ...t, status: newStatus } : t));
-                            }
-                          }}
-                          className="flex items-center justify-center w-9 h-9 rounded-full transition-transform hover:scale-105"
-                          style={{
-                            background: item.status === 'done' ? themeColors.accent.orange : 'transparent',
-                            border: `2px solid ${themeColors.accent.orange}`
-                          }}
-                          aria-label="toggle complete"
-                        >
-                          {item.status === 'done' ? <CheckCircle size={16} style={{ color: '#ffffff' }} /> : <div style={{ width: 10, height: 10, borderRadius: 999 }} />}
-                        </button>
-
-                        <div className="min-w-0">
-                          <div className={`font-medium truncate ${item.status === 'done' ? 'line-through' : ''}`} style={{ color: item.status === 'done' ? themeColors.text.tertiary : themeColors.text.primary }}>
-                            {item.title}
-                          </div>
-                          <div className="flex items-center gap-2 text-xs mt-1" style={{ color: themeColors.text.tertiary }}>
-                            <Calendar className="w-3 h-3" />
-                            <span>{item.date ?? item.due_date ?? (item.created_at ? new Date(item.created_at).toLocaleDateString() : 'No date')}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={async () => {
-                            const { error } = await supabase.from('todos').delete().eq('id', item.id);
-                            if (!error) setTodoItems(prev => prev.filter(t => t.id !== item.id));
-                          }}
-                          className="p-2 rounded-md hover:opacity-80 transition"
-                          style={{ color: themeColors.accent.red }}
-                          title="Delete"
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-              )}
+                <p className="text-sm" style={{ color: themeColors.text.white }}>Watch Demo</p>
+              </div>
             </div>
           </div>
-          {/* === END: Improved To-Do Card === */}
-
         </div>
 
-        {/* Recent Activity + Events */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-          <div className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow" style={{ backgroundColor: themeColors.accent.purple }}>
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center" style={{ color: themeColors.text.primary }}>
-              <Activity className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Recent Activity
-            </h2>
-            <div className="space-y-1 sm:space-y-2 lg:space-y-3">
-              {recentActivities.map((a, i) => (
-                <div key={i} className="p-2 sm:p-3 rounded-lg flex items-start shadow-sm" style={{ backgroundColor: themeColors.background.white }}>
-                  <div className="mr-2 sm:mr-3 flex-shrink-0">{getActivityIcon(a.type)}</div>
-                  <div>
-                    <p className="font-medium text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.primary }}>{a.title}</p>
-                    <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>{a.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* AI Hub Section */}
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blue }}>
+          <div className="mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
+                  AI Hub
+                </h2>
+                <svg className="w-36 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
+                </svg>
+          </div>
+          
+          {/* Horizontally Scrollable Container */}
+<div className="overflow-x-auto pb-4">
+  <div className="flex gap-4 sm:gap-6" style={{ minWidth: 'max-content' }}>
+    {aiToolsData.map((tool, index) => {
+      // Assign colors from themeColors in a rotating pattern
+      const colorOptions = [
+        themeColors.accent.yellow,
+        themeColors.accent.green,
+        themeColors.accent.purple,
+        themeColors.accent.orange,
+        themeColors.accent.yellow,
+        themeColors.accent.red
+      ];
+      const toolColor = colorOptions[index % colorOptions.length];
+      
+      return (
+        <div
+          key={tool.id}
+          className="rounded-2xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer p-6 flex-shrink-0"
+          style={{ 
+            backgroundColor: toolColor, 
+            width: '320px',
+          }}
+        >
+          {/* Icon */}
+          <div 
+            className="w-14 h-14 rounded-xl flex items-center justify-center mb-4" 
+            style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
+          >
+            <tool.icon className="w-7 h-7" style={{ color: themeColors.text.primary }} />
           </div>
 
-          <div className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow" style={{ backgroundColor: themeColors.accent.pinkLight }}>
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 lg:mb-4 flex items-center" style={{ color: themeColors.text.primary }}>
-              <Calendar className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" /> Upcoming Events
-            </h2>
-            <div className="space-y-1 sm:space-y-2 lg:space-y-3">
-              {upcomingEvents.map((e, i) => (
-                <div key={i} className="p-2 sm:p-3 rounded-lg shadow-sm" style={{ backgroundColor: themeColors.background.white }}>
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-0">
-                    <p className="font-medium text-xs sm:text-sm lg:text-base" style={{ color: themeColors.text.primary }}>{e.title}</p>
-                    <span className={`px-2 py-1 text-xs rounded-full border ${getEventColor(e.type)} self-start`}>
-                      {e.type}
-                    </span>
-                  </div>
-                  <p className="text-xs mt-1" style={{ color: themeColors.text.tertiary }}>
-                    {e.date} at {e.time}
-                  </p>
-                </div>
-              ))}
-            </div>
+          {/* Title */}
+          <h3 className="text-xl font-bold mb-3" style={{ color: themeColors.text.primary }}>
+            {tool.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-sm mb-4 line-clamp-3" style={{ color: themeColors.text.primary, opacity: 0.85 }}>
+            {tool.description}
+          </p>
+
+          {/* Features */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {tool.features.map((feature, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
+                style={{ 
+                  backgroundColor: 'rgba(0,0,0,0.15)', 
+                  color: themeColors.text.primary 
+                }}
+              >
+                <CheckCircle className="w-3 h-3" />
+                {feature}
+              </span>
+            ))}
           </div>
+
+          {/* Launch Button */}
+          <button 
+            className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:opacity-90 flex items-center justify-center gap-2 border-2" 
+            style={{ 
+              backgroundColor: themeColors.primary.black, 
+              color: themeColors.text.white,
+              borderColor: themeColors.primary.black
+            }}
+          >
+            Launch Tool
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+          {/* Scroll Indicator */}
+          <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more tools →</p>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-black text-white border-2 border-black rounded-3xl shadow-2xl mx-6 my-10">
+      {/* Footer - KEPT SAME */}
+      <footer className="bg-black text-white border-2 border-black rounded-3xl shadow-2xl mx-6 mb-6 mt-8">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10 xl:py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* Company Info */}

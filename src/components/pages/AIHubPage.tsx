@@ -113,11 +113,6 @@ export const AIHubPage: React.FC = () => {
           </div>
           
           <div className="relative px-4 sm:px-6 lg:px-8 xl:px-12 py-8 sm:py-10 lg:py-12 xl:py-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4" style={{ backgroundColor: themeColors.accent.purple }}>
-              <Sparkles className="w-4 h-4" style={{ color: themeColors.text.white }} />
-              <span className="text-sm font-bold" style={{ color: themeColors.text.white }}>Powered by Advanced AI</span>
-            </div>
-            
             <h1 
               className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6"
               style={{ color: themeColors.text.primary }}
