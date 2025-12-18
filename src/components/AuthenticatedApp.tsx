@@ -48,7 +48,7 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
     switch (currentPage) {
       case "home":
         return <HomePage />;
-      case "courses":
+      case "courses": 
         return <CoursesPage />;
       case "live-classes":
         return <LiveClassesPage />;

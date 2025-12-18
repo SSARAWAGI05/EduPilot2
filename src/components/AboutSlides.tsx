@@ -25,6 +25,7 @@ interface VideoCarouselProps {
 
 const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
   const [mutedStates, setMutedStates] = useState<boolean[]>(videos.map(() => true));
+  const [activeVideoIndex, setActiveVideoIndex] = useState<number | null>(null);
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -40,19 +41,75 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
   }, []);
 
   const toggleMute = (index: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    
+      e.stopPropagation();
+
+      const actualIndex = index % videos.length;
+      const isCurrentlyMuted = mutedStates[actualIndex];
+
+      if (isCurrentlyMuted) {
+        // Unmute ONLY this specific video (not its duplicate)
+        videoRefs.current.forEach((video, i) => {
+          if (video) {
+            if (i === index) {
+              // Restart and unmute only THIS specific video
+              video.currentTime = 0;
+              video.muted = false;
+              video.play().catch(err => console.log('Play error:', err));
+            } else {
+              // Mute everything else (including the duplicate)
+              video.muted = true;
+            }
+          }
+        });
+      
+      const newMutedStates = mutedStates.map(() => true);
+      newMutedStates[actualIndex] = false;
+      setMutedStates(newMutedStates);
+      setActiveVideoIndex(index);
+      setSelectedIndex(index);
+    } else {
+      // Mute all videos of this type
+      videoRefs.current.forEach((video, i) => {
+        if (video && i % videos.length === actualIndex) {
+          video.muted = true;
+        }
+      });
+      
+      const newMutedStates = [...mutedStates];
+      newMutedStates[actualIndex] = true;
+      setMutedStates(newMutedStates);
+      setActiveVideoIndex(null);
+      setSelectedIndex(null);
+    }
+  };
+
+  const handleVideoClick = (index: number) => {
     const actualIndex = index % videos.length;
     
-    if (mutedStates[actualIndex]) {
-    // Unmuting: mute ALL videos (including duplicates), unmute only this one
+    if (selectedIndex === index) {
+      // Clicking selected video - mute and deselect
+      videoRefs.current.forEach((video, i) => {
+        if (video && i % videos.length === actualIndex) {
+          video.muted = true;
+        }
+      });
+      
+      const newMutedStates = [...mutedStates];
+      newMutedStates[actualIndex] = true;
+      setMutedStates(newMutedStates);
+      setActiveVideoIndex(null);
+      setSelectedIndex(null);
+    } else {
+    // Select and unmute ONLY this specific video
     videoRefs.current.forEach((video, i) => {
       if (video) {
         if (i === index) {
-          video.currentTime = 0; // ← RESET TO BEGINNING
+          // Restart and unmute only THIS specific video
+          video.currentTime = 0;
           video.muted = false;
-          video.play().catch(err => console.log('Play error:', err)); // ← RESTART PLAYBACK
+          video.play().catch(err => console.log('Play error:', err));
         } else {
+          // Mute everything else
           video.muted = true;
         }
       }
@@ -61,54 +118,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
       const newMutedStates = mutedStates.map(() => true);
       newMutedStates[actualIndex] = false;
       setMutedStates(newMutedStates);
-      setSelectedIndex(index); // This pauses the animation
-    } else {
-      // Muting: mute this video and its duplicate
-      videoRefs.current.forEach((video, i) => {
-        if (video && i % videos.length === actualIndex) {
-          video.muted = true;
-        }
-      });
-      
-      const newMutedStates = [...mutedStates];
-      newMutedStates[actualIndex] = true;
-      setMutedStates(newMutedStates);
-      setSelectedIndex(null); // This resumes the animation
-    }
-  };
-
-  const handleVideoClick = (index: number) => {
-    const actualIndex = index % videos.length;
-    
-    if (selectedIndex === index) {
-      // Mute this video and its duplicate
-      videoRefs.current.forEach((video, i) => {
-        if (video && i % videos.length === actualIndex) {
-          video.muted = true;
-        }
-      });
-      
-      const newMutedStates = [...mutedStates];
-      newMutedStates[actualIndex] = true;
-      setMutedStates(newMutedStates);
-      setSelectedIndex(null);
-    } else {
-      // Mute ALL videos, unmute only this specific one
-      videoRefs.current.forEach((video, i) => {
-        if (video) {
-          if (i === index) {
-            video.currentTime = 0; // ← RESET TO BEGINNING
-            video.muted = false;
-            video.play().catch(err => console.log('Play error:', err)); // ← RESTART PLAYBACK
-          } else {
-            video.muted = true;
-          }
-        }
-      });
-      
-      const newMutedStates = mutedStates.map(() => true);
-      newMutedStates[actualIndex] = false;
-      setMutedStates(newMutedStates);
+      setActiveVideoIndex(index);
       setSelectedIndex(index);
     }
   };
@@ -137,12 +147,20 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
                 }`}
                 style={{ position: 'relative' }}
               >
+                {/* Active indicator */}
+                {activeVideoIndex === index && (
+                  <div className="absolute -top-2 -right-2 z-50 bg-green-500 rounded-full p-1.5 shadow-lg animate-pulse">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
                 <div 
-                  className="relative rounded-2xl overflow-hidden shadow-2xl border-4 cursor-pointer"
+                  className="relative rounded-2xl overflow-hidden shadow-2xl border-4 cursor-pointer transition-all duration-300"
                   style={{
-                      borderColor: isDark
-                        ? themeColors.primary.w
-                        : themeColors.primary.w
+                      borderColor: activeVideoIndex === index
+                        ? '#10b981'  // Green border for active video
+                        : (isDark ? themeColors.primary.lightGray : themeColors.primary.black)
                     }}
                   onClick={() => handleVideoClick(index)}
                 >
@@ -153,7 +171,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
                       src={video.url}
                       loop
                       playsInline
-                      muted={mutedStates[actualIndex]}
+                      muted={true}
                       autoPlay
                     />
 
@@ -661,15 +679,12 @@ const testimonialsRow3 = useMemo(() => [
               </div>
             </div>
 
-            
-          {/* Video Carousel */}
-          <div className="mb-8">
+            {/* Video Carousel */}
+            <div className="mb-8">
             <VideoCarousel videos={finalTestimonialVideos} />
           </div>
 
-          {/* Bottom 2 Horizontal Rows */}
-          <div className="space-y-6">
-            {/* Bottom Row 1 - Scrolling Right */}
+            {/* Bottom Row  - Scrolling Right */}
             <div className="overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
               <div className="flex animate-slide-horizontal space-x-4">
                 {[...testimonialsRow3, ...testimonialsRow3, ...testimonialsRow3].map((testimonial, index) => (
@@ -702,10 +717,7 @@ const testimonialsRow3 = useMemo(() => [
                 ))}
               </div>
             </div>
-
-            
             </div>
-          </div>
 
           {/* CTA Button */}
           <div className="text-center mt-12">
