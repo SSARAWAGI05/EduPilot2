@@ -323,14 +323,18 @@ const resetFocusTimer = () => {
                   </span>
                 </div>
 
-                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4" style={{ color: themeColors.text.primary }}>
-                  Welcome back
-                  {typedName || userName ? ',' : ''}{' '}
+                <h1
+                  className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4"
+                  style={{ color: themeColors.text.primary }}
+                >
+                  Welcome
+                  {(typedName || userName) && ','}{' '}
                   {(typedName || userName) && (
                     <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
                       {typedName || userName}!
                     </span>
                   )}
+                  <span className="ml-2">Ready to learn?</span>
                 </h1>
 
                 <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2" style={{ color: themeColors.text.secondary }}>
