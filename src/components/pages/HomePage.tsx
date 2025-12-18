@@ -54,7 +54,8 @@ export const HomePage: React.FC = () => {
   }[]>([]);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [activeTaskTab, setActiveTaskTab] = useState<'incomplete' | 'completed'>('incomplete');
-
+  const [isDailyPlannerOpen, setIsDailyPlannerOpen] = useState(true);
+  
   const aiToolsData = [
   {
     id: 1,
@@ -323,20 +324,20 @@ const resetFocusTimer = () => {
                   </span>
                 </div>
 
-                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4">
-  <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
-    Welcome
-    {(typedName || userName) && ','}{' '}
-    {(typedName || userName) && (
-      <span className="font-extrabold">
-        {typedName || userName}!
-      </span>
-    )}
-    <span className="font-semibold ml-2">
-      Ready to learn?
-    </span>
-  </span>
-</h1>
+                <h1
+                  className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold mb-3 sm:mb-4"
+                  style={{ color: themeColors.text.primary }}
+                >
+                  Welcome
+                  {(typedName || userName) && ','}{' '}
+                  {(typedName || userName) && (
+                    <span className="relative font-extrabold">
+                      {typedName || userName}!
+                      <span className="absolute left-0 -bottom-1 w-full h-1 bg-pink-500 rounded-full opacity-70"></span>
+                    </span>
+                  )}
+                  <span className="ml-2 opacity-80">Ready to learn?</span>
+                </h1>
 
 
                 <p className="text-xs sm:text-base lg:text-lg italic text-center leading-relaxed mb-2" style={{ color: themeColors.text.secondary }}>
@@ -469,7 +470,10 @@ const resetFocusTimer = () => {
               }}
             >
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
+                <div 
+                  className="flex items-center gap-3 cursor-pointer" 
+                  onClick={() => setIsDailyPlannerOpen(!isDailyPlannerOpen)}
+                >
                   <div 
                     className="w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{ 
@@ -486,6 +490,10 @@ const resetFocusTimer = () => {
                       {dailyTasks.filter(t => t.status === 'pending').length} pending · {dailyTasks.filter(t => t.status === 'done').length} completed
                     </p>
                   </div>
+                  <ChevronRight 
+                    className={`w-5 h-5 transition-transform duration-300 ${isDailyPlannerOpen ? 'rotate-90' : ''}`}
+                    style={{ color: themeColors.text.primary }}
+                  />
                 </div>
                 
                 <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2" style={{ backgroundColor: themeColors.accent.green, borderColor: themeColors.primary.black }}>
@@ -496,7 +504,8 @@ const resetFocusTimer = () => {
                   </div>
                 </div>
               </div>
-
+              {isDailyPlannerOpen && (
+              <>
               {/* Add Task Input */}
               <div className="flex gap-3 mb-6">
                 <input
@@ -656,6 +665,7 @@ const resetFocusTimer = () => {
                 </div>
 
               </div>
+              </>)}
             </div>
 
           </div>
