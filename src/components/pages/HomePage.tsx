@@ -377,7 +377,7 @@ const resetFocusTimer = () => {
                     <Activity className="w-7 h-7" style={{ color: themeColors.text.primary }} />
                     </div>
                   <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>12</p>
-                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Day Streak 🔥</p>
+                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Day Streak</p>
                 </div>
               </div>
 
@@ -395,7 +395,7 @@ const resetFocusTimer = () => {
                     <BookOpen className="w-7 h-7" style={{ color: themeColors.text.primary }} />
                   </div>
                   <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>7</p>
-                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Active Courses 📚</p>
+                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Active Courses</p>
                 </div>
               </div>
 
@@ -413,7 +413,7 @@ const resetFocusTimer = () => {
                     <Calendar className="w-7 h-7" style={{ color: themeColors.text.primary }} />
                   </div>
                   <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>3</p>
-                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Classes Today 📅</p>
+                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Classes Today</p>
                 </div>
               </div>
 
