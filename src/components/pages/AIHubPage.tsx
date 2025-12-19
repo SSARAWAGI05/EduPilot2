@@ -245,7 +245,7 @@ export const AIHubPage: React.FC = () => {
                     color: themeColors.text.white 
                   }}
                 >
-                  Launch Tool
+                  Coming Soon!
                   <ArrowRight size={16} />
                 </button>
               </div>

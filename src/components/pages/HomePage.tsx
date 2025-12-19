@@ -44,11 +44,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [typedName, setTypedName] = useState('');
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
+  const [marketPulseReels, setMarketPulseReels] = useState<any[]>([]);
+const [marketPulseLoading, setMarketPulseLoading] = useState(true);
+
   // Focus Timer States
   const [focusMinutes, setFocusMinutes] = useState(25);
   const [focusSeconds, setFocusSeconds] = useState(0);
   const [isFocusRunning, setIsFocusRunning] = useState(false);
 
+  
   // Daily Planner States (same as old todo)
   const [newTask, setNewTask] = useState('');
   const [dailyTasks, setDailyTasks] = useState<{ 
@@ -59,8 +63,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   }[]>([]);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [activeTaskTab, setActiveTaskTab] = useState<'incomplete' | 'completed'>('incomplete');
-  const [isDailyPlannerOpen, setIsDailyPlannerOpen] = useState(true);
-  
+  const [isDailyPlannerOpen, setIsDailyPlannerOpen] = useState(false);
+  const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
+const [featuredCoursesLoading, setFeaturedCoursesLoading] = useState(true);
+
   const aiToolsData = [
   {
     id: 1,
@@ -204,6 +210,30 @@ const [todayClasses, setTodayClasses] = useState<{
 
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+  const fetchMarketPulsePreview = async () => {
+    setMarketPulseLoading(true);
+
+    const { data, error } = await supabase
+      .from("market_reels")
+      .select(
+        "id, title, reel_url, thumbnail_url, platform, published_at, view_count, duration_seconds, tag"
+      )
+      .eq("is_active", true)
+      .order("published_at", { ascending: false })
+      .limit(5);
+
+    if (!error && data) {
+      setMarketPulseReels(data);
+    }
+
+    setMarketPulseLoading(false);
+  };
+
+  fetchMarketPulsePreview();
+}, []);
+
 
   useEffect(() => {
     if (!loading && userName) {
@@ -361,6 +391,37 @@ useEffect(() => {
   fetchTodayClassesForPlanner();
 }, []);
 
+  useEffect(() => {
+  const fetchFeaturedCourses = async () => {
+    setFeaturedCoursesLoading(true);
+
+    const { data, error } = await supabase
+      .from("courses")
+      .select(`
+        id,
+        title,
+        description,
+        instructor_name,
+        thumbnail_url,
+        duration_weeks,
+        level
+      `)
+      .eq("is_active", true)
+      .eq("featured", true)
+      .order("created_at", { ascending: false })
+      .limit(4);
+
+    if (!error && data) {
+      setFeaturedCourses(data);
+    }
+
+    setFeaturedCoursesLoading(false);
+  };
+
+  fetchFeaturedCourses();
+}, []);
+
+
   const getCurrentGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good Morning';
@@ -415,13 +476,6 @@ const resetFocusTimer = () => {
   setFocusSeconds(0);
   setIsFocusRunning(false);
 };
-
-  const featuredCourses = [
-    { id: 1, title: 'React Basics', color: themeColors.accent.blue },
-    { id: 2, title: 'JavaScript ES6', color: themeColors.accent.green },
-    { id: 3, title: 'Node.js', color: themeColors.accent.purple },
-    { id: 4, title: 'TypeScript', color: themeColors.accent.orange }
-  ];
 
   const aiTools = [
     { id: 1, title: 'Chat AI', color: themeColors.accent.green },
@@ -892,154 +946,6 @@ const resetFocusTimer = () => {
           </div>
         </div>
 
-        
-        {/* ================= MARKET PULSE SECTION ================= */}
-<div
-  className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-xl"
-  style={{ backgroundColor: themeColors.accent.blue }}
->
-  {/* Header */}
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-    <div className="mb-6">
-                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
-                  Market Pulse
-                </h2>
-                <svg className="w-60 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
-                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
-                </svg>
-          </div>
-
-    <button
-      onClick={() => onNavigate?.("market-pulse")}
-      className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-105 flex items-center gap-2"
-      style={{
-        backgroundColor: themeColors.primary.black,
-        color: themeColors.text.white,
-      }}
-    >
-      Explore MarketPulse
-      <ChevronRight size={18} />
-    </button>
-
-  </div>
-
-  {/* Reels Preview Grid */}
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-    {[
-      {
-        title: "Why BOJ Policy Shift Shook Markets",
-        tag: "BOJ",
-      },
-      {
-        title: "FED Rate Cuts – What’s Priced In?",
-        tag: "FED",
-      },
-      {
-        title: "Crude Oil Rally Explained Simply",
-        tag: "Crude Oil",
-      },
-    ].map((item, idx) => (
-      <div
-        key={idx}
-        className="rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105 cursor-pointer"
-        style={{ backgroundColor: themeColors.background.white }}
-        onClick={() => onNavigate?.("market-pulse")}
-      >
-        {/* Thumbnail */}
-        <div className="relative h-48">
-          <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ backgroundColor: themeColors.primary.black }}
-          >
-            <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center">
-              <Play className="w-6 h-6 text-black" fill="black" />
-            </div>
-          </div>
-
-          {/* Tag */}
-          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-black/70 text-white">
-            {item.tag}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-4">
-          <h3
-            className="font-bold text-sm sm:text-base leading-snug"
-            style={{ color: themeColors.text.primary }}
-          >
-            {item.title}
-          </h3>
-
-          <p
-            className="text-xs mt-2"
-            style={{ color: themeColors.text.secondary }}
-          >
-            Watch short market breakdown →
-          </p>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
-        {/* Featured Courses Section */}
-        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
-          <div className="mb-6">
-                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
-                  Featured Courses
-                </h2>
-                <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
-                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
-                </svg>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {courses.map((course) => (
-              <div
-                key={course.id}
-                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
-                style={{ backgroundColor: themeColors.background.white }}
-              >
-                {/* Course Image */}
-                <div className="h-40 bg-gradient-to-br from-blue-400 to-purple-500 relative overflow-hidden">
-                  <img 
-                    src={course.image} 
-                    alt={course.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = 'https://via.placeholder.com/400x300/4F46E5/ffffff?text=Course';
-                    }}
-                  />
-                </div>
-
-                {/* Course Content */}
-                <div className="p-4">
-                  <h3 className="font-bold text-base mb-2 line-clamp-2" style={{ color: themeColors.text.primary }}>
-                    {course.title}
-                  </h3>
-                  <p className="text-xs mb-1" style={{ color: themeColors.text.secondary }}>
-                    by {course.instructor}
-                  </p>
-                  <div className="flex items-center gap-3 text-xs mb-3" style={{ color: themeColors.text.tertiary }}>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {course.duration}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Users className="w-3 h-3" />
-                      {course.students}
-                    </span>
-                  </div>
-                  
-                  <button className="w-full py-2 rounded-lg font-bold text-sm transition-transform transform hover:scale-105" style={{ backgroundColor: themeColors.accent.blue, color: '#ffffff' }}>
-                    Register Now
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Live Classes Section */}
         <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.red }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1081,6 +987,200 @@ const resetFocusTimer = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* ================= MARKET PULSE SECTION ================= */}
+        <div
+          className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-xl"
+          style={{ backgroundColor: themeColors.accent.blue }}
+        >
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div className="mb-6">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
+                          Market Pulse
+                        </h2>
+                        <svg className="w-60 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                          <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
+                        </svg>
+                  </div>
+
+            <button
+              onClick={() => onNavigate?.("market-pulse")}
+              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-105 flex items-center gap-2"
+              style={{
+                backgroundColor: themeColors.primary.black,
+                color: themeColors.text.white,
+              }}
+            >
+              Explore MarketPulse
+              <ChevronRight size={18} />
+            </button>
+
+          </div>
+
+          {/* Reels Preview – Horizontal Scroll */}
+        <div className="overflow-x-auto pb-4">
+          <div className="flex gap-4 sm:gap-6" style={{ minWidth: "max-content" }}>
+
+            {marketPulseLoading && (
+              <div className="px-6 py-10 text-sm opacity-70">
+                Loading Market Pulse…
+              </div>
+            )}
+
+            {!marketPulseLoading &&
+              marketPulseReels.map((reel) => (
+                <div
+                  key={reel.id}
+                  className="w-[280px] sm:w-[320px] rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105 cursor-pointer flex-shrink-0"
+                  style={{ backgroundColor: themeColors.background.white }}
+                  onClick={() => window.open(reel.reel_url, "_blank")}
+                >
+                  {/* Thumbnail */}
+                  <div className="relative h-44 sm:h-48">
+                    <img
+                      src={
+                        reel.thumbnail_url ||
+                        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800"
+                      }
+                      alt={reel.title}
+                      className="w-full h-full object-cover"
+                    />
+
+                    {/* Play Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition">
+                      <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
+                        <Play className="w-6 h-6 text-black" />
+                      </div>
+                    </div>
+
+                    {/* Tag */}
+                    {reel.tag && (
+                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-black/70 text-white">
+                        {reel.tag}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-4">
+                    <h3
+                      className="font-bold text-sm sm:text-base line-clamp-2"
+                      style={{ color: themeColors.text.primary }}
+                    >
+                      {reel.title}
+                    </h3>
+
+                    <div
+                      className="mt-2 text-xs flex justify-between"
+                      style={{ color: themeColors.text.secondary }}
+                    >
+                      <span>
+                        {new Date(reel.published_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        </div>
+
+        {/* Featured Courses Section */}
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
+          <div className="mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
+                  Featured Courses
+                </h2>
+                <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
+                </svg>
+
+                
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* Loading */}
+          {featuredCoursesLoading && (
+            <p className="text-sm opacity-70 col-span-full text-center">
+              Loading featured courses…
+            </p>
+          )}
+
+          {/* Empty state */}
+          {!featuredCoursesLoading && featuredCourses.length === 0 && (
+            <p className="text-sm opacity-70 col-span-full text-center">
+              No featured courses available right now.
+            </p>
+          )}
+
+          {/* Courses */}
+          {!featuredCoursesLoading &&
+            featuredCourses.map((course) => (
+              <div
+                key={course.id}
+                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+                style={{ backgroundColor: themeColors.background.white }}
+              >
+                {/* Course Image */}
+                <div className="h-40 relative overflow-hidden">
+                  <img
+                    src={
+                      course.thumbnail_url ||
+                      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400"
+                    }
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Course Content */}
+                <div className="p-4">
+                  <h3
+                    className="font-bold text-base mb-2 line-clamp-2"
+                    style={{ color: themeColors.text.primary }}
+                  >
+                    {course.title}
+                  </h3>
+
+                  <p
+                    className="text-xs mb-1"
+                    style={{ color: themeColors.text.secondary }}
+                  >
+                    by {course.instructor_name}
+                  </p>
+
+                  <div
+                    className="flex items-center gap-3 text-xs mb-3"
+                    style={{ color: themeColors.text.tertiary }}
+                  >
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {course.duration_weeks} weeks
+                    </span>
+
+                    <span
+                      className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                      style={{ backgroundColor: themeColors.accent.blueLight }}
+                    >
+                      {course.level}
+                    </span>
+                  </div>
+
+                  <button
+                    className="w-full py-2 rounded-lg font-bold text-sm transition-transform hover:scale-105"
+                    style={{
+                      backgroundColor: themeColors.accent.blue,
+                      color: themeColors.text.white,
+                    }}
+                  >
+                    View Course
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
         </div>
 
         {/* AI Hub Section */}
@@ -1162,7 +1262,7 @@ const resetFocusTimer = () => {
                           borderColor: themeColors.primary.black
                         }}
                       >
-                        Launch Tool
+                        Coming Soon!
                         <ChevronRight size={16} />
                       </button>
                     </div>

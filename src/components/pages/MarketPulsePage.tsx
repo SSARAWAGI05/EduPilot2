@@ -16,11 +16,6 @@ import { getThemeColors } from "../../styles/colors";
 import { supabase } from "../../lib/supabaseClient";
 
 /* ================= TYPES ================= */
-interface MarketTag {
-  id: string;
-  name: string;
-}
-
 interface MarketReel {
   id: string;
   user_id: string;
@@ -33,13 +28,7 @@ interface MarketReel {
   view_count: number;
   published_at: string;
   is_active: boolean;
-  tags?: MarketTag[];
-}
-
-interface MarketReelWithTags extends MarketReel {
-  market_reel_tags: {
-    market_tags: MarketTag;
-  }[];
+  tag: string | null;  // ✅ Single tag column
 }
 
 /* ================= COMPONENT ================= */
@@ -55,52 +44,26 @@ const MarketPulsePage: React.FC = () => {
   const [reels, setReels] = useState<MarketReel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  // Fetch current user
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-      }
-    };
-    fetchUser();
-  }, []);
 
   // Fetch reels from database
   useEffect(() => {
     const fetchReels = async () => {
-      if (!userId) return;
-      
       setLoading(true);
       setError(null);
 
       try {
         const { data, error: fetchError } = await supabase
           .from('market_reels')
-          .select(`
-            *,
-            market_reel_tags (
-              market_tags (
-                id,
-                name
-              )
-            )
-          `)
-          .eq('user_id', userId)
+          .select('*')
           .eq('is_active', true)
           .order('published_at', { ascending: false });
 
-        if (fetchError) throw fetchError;
+        if (fetchError) {
+          console.error('Supabase error details:', fetchError);
+          throw fetchError;
+        }
 
-        // Transform data to include tags array
-        const transformedReels: MarketReel[] = (data as MarketReelWithTags[]).map(reel => ({
-          ...reel,
-          tags: reel.market_reel_tags.map(rt => rt.market_tags)
-        }));
-
-        setReels(transformedReels);
+        setReels(data || []);
       } catch (err) {
         console.error('Error fetching reels:', err);
         setError('Failed to load reels');
@@ -110,13 +73,15 @@ const MarketPulsePage: React.FC = () => {
     };
 
     fetchReels();
-  }, [userId]);
+  }, []);
 
   // Get all unique tags from reels
   const TAGS = useMemo(() => {
     const tagSet = new Set<string>();
     reels.forEach(reel => {
-      reel.tags?.forEach(tag => tagSet.add(tag.name));
+      if (reel.tag) {
+        tagSet.add(reel.tag);
+      }
     });
     return ["All", ...Array.from(tagSet)];
   }, [reels]);
@@ -130,9 +95,9 @@ const MarketPulsePage: React.FC = () => {
           .includes(query.toLowerCase().trim());
 
       const matchesTag =
-        !activeTag || 
-        activeTag === "All" || 
-        r.tags?.some(tag => tag.name === activeTag);
+      !activeTag || 
+      activeTag === "All" || 
+      r.tag === activeTag;
 
       return matchesSearch && matchesTag;
     });
@@ -245,16 +210,15 @@ const MarketPulsePage: React.FC = () => {
                 <div
                   className="rounded-2xl p-5"
                   style={{
-                    backgroundColor: themeColors.card.bg,
-                    border: `1px solid ${themeColors.card.border}`,
+                    backgroundColor: themeColors.accent.blue,
                     color: themeColors.text.primary,
                   }}
                 >
                   <h3 className="font-bold text-lg mb-3" style={{ color: themeColors.text.primary }}>
-                    📈 Today's Pulse
+                    📈 Latest Pulse
                   </h3>
                   <p className="text-sm" style={{ color: themeColors.text.muted }}>
-                    {reels.length} reels available
+                    BOJ decision
                   </p>
                 </div>
               </aside>
@@ -444,18 +408,17 @@ const MarketPulsePage: React.FC = () => {
 
                       {/* Tags */}
                       <div className="absolute top-4 left-4 flex gap-2 flex-wrap">
-                        {reel.tags?.slice(0, 2).map(tag => (
+                        {reel.tag && (
                           <span
-                            key={tag.id}
                             className="px-3 py-1 rounded-full text-xs font-bold"
                             style={{
                               backgroundColor: "rgba(0,0,0,0.7)",
                               color: themeColors.text.white,
                             }}
                           >
-                            {tag.name}
+                            {reel.tag}
                           </span>
-                        ))}
+                        )}
                         {reel.duration_seconds && (
                           <span
                             className="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1"
