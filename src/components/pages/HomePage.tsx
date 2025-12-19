@@ -31,7 +31,12 @@ import { supabase } from "../../supabaseClient";
 import { colors, getActivityIconColor, getEventColorClasses, getThemeColors } from '../../styles/colors';
 import { useTheme } from '../../contexts/ThemeContext';
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  onNavigate?: (page: string) => void;
+}
+
+
+export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [userName, setUserName] = useState<string | null>(null);
   const [jiggle, setJiggle] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -142,6 +147,26 @@ export const HomePage: React.FC = () => {
   }
 ]);
 
+  // Dashboard Stats
+const [dayStreak, setDayStreak] = useState(0);
+const [activeCoursesCount, setActiveCoursesCount] = useState(0);
+const [classesTodayCount, setClassesTodayCount] = useState(0);
+
+const isClassExpired = (date: string, startTime: string) => {
+  const now = new Date();
+
+  const classDateTime = new Date(`${date}T${startTime}`);
+  return now > classDateTime;
+};
+
+const [todayClasses, setTodayClasses] = useState<{
+  id: string;
+  title: string;
+  start_time: string;
+  scheduled_date: string;
+}[]>([]);
+
+
 
 
   useEffect(() => {
@@ -238,6 +263,104 @@ export const HomePage: React.FC = () => {
     fetchDailyTasks();
   }, []);
 
+  useEffect(() => {
+  const fetchDashboardStats = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    /* ================= DAY STREAK ================= */
+    const { data: completedTodos } = await supabase
+      .from('todos')
+      .select('created_at')
+      .eq('user_id', user.id)
+      .eq('status', 'done')
+      .order('created_at', { ascending: false });
+
+    if (completedTodos && completedTodos.length > 0) {
+      const completedDays = Array.from(
+        new Set(
+          completedTodos.map(t =>
+            new Date(t.created_at!).toDateString()
+          )
+        )
+      );
+
+      let streak = 0;
+      let currentDate = new Date();
+
+      for (let day of completedDays) {
+        const d = new Date(day);
+        if (d.toDateString() === currentDate.toDateString()) {
+          streak++;
+          currentDate.setDate(currentDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+
+      setDayStreak(streak);
+    } else {
+      setDayStreak(0);
+    }
+
+    /* ================= ACTIVE COURSES ================= */
+    const { data: activeCourses } = await supabase
+      .from('course_enrollments')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('status', 'active');
+
+    setActiveCoursesCount(activeCourses?.length || 0);
+
+
+    /* ================= CLASSES TODAY (ENROLLED) ================= */
+    const today = new Date().toISOString().split('T')[0];
+
+    const { data: enrolledClassesToday } = await supabase
+      .from('class_enrollments')
+      .select(`
+        id,
+        live_classes!inner (
+          scheduled_date,
+          status
+        )
+      `)
+      .eq('user_id', user.id)
+      .eq('live_classes.scheduled_date', today)
+      .eq('live_classes.status', 'confirmed');
+
+    setClassesTodayCount(enrolledClassesToday?.length || 0);
+
+      };
+
+  fetchDashboardStats();
+}, []);
+
+
+useEffect(() => {
+  const fetchTodayClassesForPlanner = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const today = new Date().toISOString().split('T')[0];
+
+  // NEW QUERY - Query live_classes directly
+  const { data, error } = await supabase
+    .from('live_classes')  // ← Query the live_classes table directly
+    .select('id, title, start_time, scheduled_date, status')
+    .eq('user_id', user.id)           // Filter by your user_id
+    .eq('scheduled_date', today)      // Today's classes
+    .eq('status', 'confirmed')        // Only confirmed classes
+    .order('start_time', { ascending: true });  // Sort by time
+
+  if (!error && data) {
+    setTodayClasses(data);  // This should work directly now
+  }
+};
+
+  fetchTodayClassesForPlanner();
+}, []);
+
   const getCurrentGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good Morning';
@@ -307,6 +430,29 @@ const resetFocusTimer = () => {
     { id: 4, title: 'Roadmap', color: themeColors.accent.yellowBright }
   ];
 
+  const assignedPlannerItems = [
+  // Classes first (only upcoming / live)
+  ...todayClasses
+    .filter(cls => !isClassExpired(cls.scheduled_date, cls.start_time))
+    .map(cls => ({
+      id: `class-${cls.id}`,
+      title: `📅 ${cls.title}`,
+      type: 'class' as const,
+      start_time: cls.start_time,
+    })),
+
+  // Then pending todos
+  ...dailyTasks
+    .filter(t => t.status === 'pending')
+    .map(t => ({
+      id: t.id,
+      title: t.title,
+      type: 'task' as const,
+    }))
+];
+
+
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
       {/* Spacer for fixed navbar */}
@@ -360,106 +506,145 @@ const resetFocusTimer = () => {
             >
 
 
-            {/* Stats Grid - 4 Cards in a row */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8">
-              
-              {/* Current Streak */}
-              <div 
-                className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
-                style={{
-                  backgroundColor: themeColors.accent.purple,
-                  borderColor: themeColors.primary.black
-                }}
-              >
-                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-                <div className="relative">
-                  <div className="flex justify-between items-start mb-3">
-                    <Activity className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-                    </div>
-                  <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>12</p>
-                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Day Streak</p>
-                </div>
-              </div>
+            {/* Stats Grid - Single Line, Clean & Premium */}
+<div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
 
-              {/* Courses Registered */}
-              <div 
-                className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
-                style={{
-                  backgroundColor: themeColors.accent.blue,
-                  borderColor: themeColors.primary.black
-                }}
-              >
-                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-                <div className="relative">
-                  <div className="flex justify-between items-start mb-3">
-                    <BookOpen className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-                  </div>
-                  <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>7</p>
-                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Active Courses</p>
-                </div>
-              </div>
+  {/* Current Streak */}
+  <div
+    className="flex items-center justify-between rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition border border-black/5"
+    style={{ backgroundColor: themeColors.accent.purple }}
+  >
+    <div className="flex items-center gap-3 min-w-0">
+      <div className="w-9 h-9 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: 'rgba(0,0,0,0.08)' }}>
+        <Activity className="w-4 h-4" style={{ color: themeColors.text.primary }} />
+      </div>
 
-              {/* Upcoming Classes */}
-              <div 
-                className="rounded-2xl p-6 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
-                style={{
-                  backgroundColor: themeColors.accent.yellow,
-                  borderColor: themeColors.primary.black
-                }}
-              >
-                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-                <div className="relative">
-                  <div className="flex justify-between items-start mb-3">
-                    <Calendar className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-                  </div>
-                  <p className="text-5xl font-bold mb-1" style={{ color: themeColors.text.primary }}>3</p>
-                  <p className="text-sm font-semibold" style={{ color: themeColors.text.primary, opacity: 0.8 }}>Classes Today</p>
-                </div>
-              </div>
+      <span className="text-lg font-semibold tabular-nums"
+        style={{ color: themeColors.text.primary }}>
+        {dayStreak}
+      </span>
 
-              {/* Focus Timer */}
-              <div 
-                className="rounded-2xl p-6 shadow-lg transition-all hover:shadow-xl"
-                style={{
-                  backgroundColor: themeColors.accent.red,
-                  borderColor: themeColors.primary.black
-                }}
-              >
-                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20" style={{ backgroundColor: themeColors.text.primary, transform: 'translate(30%, -30%)' }}></div>
-                <div className="relative">
-                  <div className="flex justify-between items-start mb-2">
-                    <Timer className="w-7 h-7" style={{ color: themeColors.text.primary }} />
-                    <span className="text-xs px-2 py-1 rounded-full font-semibold" style={{ backgroundColor: 'rgba(0,0,0,0.1)', color: themeColors.text.primary }}>{isFocusRunning ? 'Running' : 'Idle'}</span>
-                  </div>
-                  <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: themeColors.text.primary }}>
-                    {String(focusMinutes).padStart(2, '0')}:{String(focusSeconds).padStart(2, '0')}
-                  </p>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setIsFocusRunning(!isFocusRunning)}
-                      className="flex-1 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
-                      style={{
-                        backgroundColor: themeColors.primary.black,
-                        color: themeColors.text.white
-                      }}
-                    >
-                      {isFocusRunning ? 'Pause' : 'Start'}
-                    </button>
-                    <button
-                      onClick={resetFocusTimer}
-                      className="px-3 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"
-                      style={{
-                        backgroundColor: themeColors.primary.black,
-                        color: themeColors.text.white
-                      }}
-                    >
-                      ↻
-                    </button>
-                  </div>
-                </div>
-              </div>
+      <span className="text-sm truncate"
+        style={{ color: themeColors.text.primary, opacity: 0.7 }}>
+        Day Streak 
+      </span>
+    </div>
+  </div>
 
-            </div>
+  {/* Courses Registered */}
+  <div
+    className="flex items-center justify-between rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition border border-black/5"
+    style={{ backgroundColor: themeColors.accent.blue }}
+  >
+    <div className="flex items-center gap-3 min-w-0">
+      <div className="w-9 h-9 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: 'rgba(0,0,0,0.08)' }}>
+        <BookOpen className="w-4 h-4" style={{ color: themeColors.text.primary }} />
+      </div>
+
+      <span className="text-lg font-semibold"
+        style={{ color: themeColors.text.primary }}>
+        {activeCoursesCount}
+      </span>
+
+      <span className="text-sm truncate"
+        style={{ color: themeColors.text.primary, opacity: 0.7 }}>
+        Active Courses 
+      </span>
+    </div>
+  </div>
+
+  {/* Upcoming Classes */}
+  <div
+    className="flex items-center justify-between rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition border border-black/5"
+    style={{ backgroundColor: themeColors.accent.yellow }}
+  >
+    <div className="flex items-center gap-3 min-w-0">
+      <div className="w-9 h-9 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: 'rgba(0,0,0,0.08)' }}>
+        <Calendar className="w-4 h-4" style={{ color: themeColors.text.primary }} />
+      </div>
+
+      <span className="text-lg font-semibold"
+        style={{ color: themeColors.text.primary }}>
+        {classesTodayCount}
+      </span>
+
+      <span className="text-sm truncate"
+        style={{ color: themeColors.text.primary, opacity: 0.7 }}>
+        Classes Today 
+      </span>
+    </div>
+  </div>
+
+  {/* Social Connect */}
+<div
+  className="flex items-center justify-between rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition border border-black/5"
+  style={{ backgroundColor: themeColors.accent.red }}
+>
+  {/* Left side */}
+  <div className="flex items-center gap-3 min-w-0">
+    
+
+    <span
+      className="text-sm font-medium truncate"
+      style={{ color: themeColors.text.primary, opacity: 0.7 }}
+    >
+      Say Hello!
+    </span>
+  </div>
+
+  {/* Social Icons */}
+<div className="flex items-center gap-2 ml-3">
+  <a
+    href="https://l.instagram.com/?u=https%3A%2F%2Fchat.whatsapp.com%2FFzCODHVaAnFEoYgKjMEgM7%3Fmode%3Dhqrt2%26utm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnYU7QL0-s1szpbaUmSlZhg9ku4rwsK2G8lrXZ2yF--_dDsIvz3JFGmMq5Yxs%26brid%3D7sEOuXMEdYFIRsZvR0JMwg&e=AT1WfRorwFnqNiyNtX7vhCZRMtPUj-sZvsUOIsjEkVeocDxYrjLdsr5lX2iU16vyLFZgyeuB54ZCbb520VmV75NB6le-vjFwkhmVc6d9U4P-sbjoyKCQENAAdg"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-8 h-8 rounded-md flex items-center justify-center transition hover:scale-110"
+    style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
+  >
+    <i
+      className="fa-brands fa-whatsapp"
+      style={{ color: themeColors.text.primary, fontSize: "14px" }}
+    />
+  </a>
+
+  <a
+    href="https://instagram.com/deeco.official"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-8 h-8 rounded-md flex items-center justify-center transition hover:scale-110"
+    style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
+  >
+    <Instagram className="w-4 h-4" style={{ color: themeColors.text.primary }} />
+  </a>
+
+  <a
+    href="https://linkedin.com/company/yourcompany"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-8 h-8 rounded-md flex items-center justify-center transition hover:scale-110"
+    style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
+  >
+    <Linkedin className="w-4 h-4" style={{ color: themeColors.text.primary }} />
+  </a>
+
+  <a
+    href="https://x.com/yourhandle"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-8 h-8 rounded-md flex items-center justify-center transition hover:scale-110"
+    style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
+  >
+    <X className="w-4 h-4" style={{ color: themeColors.text.primary }} />
+  </a>
+</div>
+</div>
+
+
+</div>
+
 
             {/* Daily Planner Section */}
             <div 
@@ -470,10 +655,7 @@ const resetFocusTimer = () => {
               }}
             >
               <div className="flex items-center justify-between mb-6">
-                <div 
-                  className="flex items-center gap-3 cursor-pointer" 
-                  onClick={() => setIsDailyPlannerOpen(!isDailyPlannerOpen)}
-                >
+                <div className="flex items-center gap-3">
                   <div 
                     className="w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{ 
@@ -487,13 +669,24 @@ const resetFocusTimer = () => {
                       Daily Planner
                     </h3>
                     <p className="text-xs sm:text-sm" style={{ color: themeColors.text.secondary }}>
-                      {dailyTasks.filter(t => t.status === 'pending').length} pending · {dailyTasks.filter(t => t.status === 'done').length} completed
+                      {assignedPlannerItems.length} assigned · {dailyTasks.filter(t => t.status === 'done').length} completed
                     </p>
                   </div>
-                  <ChevronRight 
-                    className={`w-5 h-5 transition-transform duration-300 ${isDailyPlannerOpen ? 'rotate-90' : ''}`}
-                    style={{ color: themeColors.text.primary }}
-                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsDailyPlannerOpen(!isDailyPlannerOpen);
+                    }}
+                    className="p-2 rounded-xl transition-all hover:scale-110"
+                    style={{ 
+                      backgroundColor: themeColors.primary.w2,
+                    }}
+                  >
+                    <ChevronRight 
+                      className={`w-6 h-6 transition-transform duration-300 ${isDailyPlannerOpen ? 'rotate-90' : ''}`}
+                      style={{ color: themeColors.primary.w }}
+                    />
+                  </button>
                 </div>
                 
                 <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2" style={{ backgroundColor: themeColors.accent.green, borderColor: themeColors.primary.black }}>
@@ -556,11 +749,11 @@ const resetFocusTimer = () => {
                   <div className="flex items-center gap-2 mb-4">
                     <Clock className="w-5 h-5" style={{ color: themeColors.text.primary }} />
                     <h4 className="text-lg font-bold" style={{ color: themeColors.text.primary }}>
-                      Assigned ({dailyTasks.filter(t => t.status === 'pending').length})
+                      Assigned ({assignedPlannerItems.length}) 
                     </h4>
                   </div>
                   
-                  {dailyTasks.filter(t => t.status === 'pending').length === 0 ? (
+                  {assignedPlannerItems.length === 0 ? (
                     <div className="text-center py-0">
                       <div className="w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}>
                         <CheckCircle className="w-7 h-7" style={{ color: themeColors.text.primary, opacity: 0.3 }} />
@@ -568,37 +761,65 @@ const resetFocusTimer = () => {
                     </div>
                   ) : (
                     <div className="space-y-2.5">
-                      {dailyTasks.filter(t => t.status === 'pending').map((task) => (
-                        <div
-                          key={task.id}
-                          className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
-                          style={{
-                            backgroundColor: themeColors.background.white,
-                            borderColor: themeColors.primary.black
-                          }}
+                      {assignedPlannerItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md"
+                    style={{
+                      backgroundColor: themeColors.background.white,
+                      borderColor: themeColors.primary.black
+                    }}
+                  >
+                    {item.type === 'task' ? (
+                      <>
+                        <button
+                          onClick={() => toggleTaskStatus(item.id, 'pending')}
+                          className="flex-shrink-0 w-5 h-5 rounded border-2"
+                          style={{ borderColor: themeColors.accent.blue }}
+                        />
+                        <span 
+                        className="flex-1 text-sm font-medium"
+                        style={{ color: themeColors.primary.w2 }}  // Add this style
+                      >
+                        {item.title}
+                      </span>
+                        <button
+                          onClick={() => deleteTask(item.id)}
+                          className="p-1 rounded hover:scale-110"
+                          style={{ color: themeColors.accent.red }}
                         >
-                          <button
-                            onClick={() => toggleTaskStatus(task.id, task.status)}
-                            className="flex-shrink-0 w-5 h-5 rounded border-2 transition-all hover:scale-110"
-                            style={{
-                              borderColor: themeColors.accent.blue
-                            }}
-                          ></button>
-                          <span 
-                            className="flex-1 text-sm font-medium"
-                            style={{ color: themeColors.text.primary }}
-                          >
-                            {task.title}
-                          </span>
-                          <button
-                            onClick={() => deleteTask(task.id)}
-                            className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
-                            style={{ color: themeColors.accent.red }}
-                          >
-                            <X size={16} />
-                          </button>
+                          <X size={16} />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          className="w-5 h-5 rounded flex items-center justify-center"
+                          style={{ backgroundColor: themeColors.accent.yellow }}
+                        >
+                          <Calendar className="w-3 h-3" />
                         </div>
-                      ))}
+
+                        <span 
+                        className="flex-1 text-sm font-medium"
+                        style={{ color: themeColors.primary.w2 }} >
+                          {item.title}
+                          {item.start_time && (
+                            <span className="ml-2 text-xs opacity-60">
+                              ({item.start_time.slice(0, 5)})
+                            </span>
+                          )}
+                        </span>
+
+                        <span className="text-xs px-2 py-1 rounded-full"
+                          style={{ backgroundColor: themeColors.accent.green }}>
+                          Live Class
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  ))}
+
                     </div>
                   )}
                 </div>
@@ -671,6 +892,97 @@ const resetFocusTimer = () => {
           </div>
         </div>
 
+        
+        {/* ================= MARKET PULSE SECTION ================= */}
+<div
+  className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-xl"
+  style={{ backgroundColor: themeColors.accent.blueLight }}
+>
+  {/* Header */}
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+    <div className="mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
+                  Market Pulse
+                </h2>
+                <svg className="w-60 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
+                </svg>
+          </div>
+
+    <button
+      onClick={() => onNavigate?.("market-pulse")}
+      className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-105 flex items-center gap-2"
+      style={{
+        backgroundColor: themeColors.primary.black,
+        color: themeColors.text.white,
+      }}
+    >
+      Explore MarketPulse
+      <ChevronRight size={18} />
+    </button>
+
+  </div>
+
+  {/* Reels Preview Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    {[
+      {
+        title: "Why BOJ Policy Shift Shook Markets",
+        tag: "BOJ",
+      },
+      {
+        title: "FED Rate Cuts – What’s Priced In?",
+        tag: "FED",
+      },
+      {
+        title: "Crude Oil Rally Explained Simply",
+        tag: "Crude Oil",
+      },
+    ].map((item, idx) => (
+      <div
+        key={idx}
+        className="rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105 cursor-pointer"
+        style={{ backgroundColor: themeColors.background.white }}
+        onClick={() => onNavigate?.("market-pulse")}
+      >
+        {/* Thumbnail */}
+        <div className="relative h-48">
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ backgroundColor: themeColors.primary.black }}
+          >
+            <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center">
+              <Play className="w-6 h-6 text-black" fill="black" />
+            </div>
+          </div>
+
+          {/* Tag */}
+          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-black/70 text-white">
+            {item.tag}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-4">
+          <h3
+            className="font-bold text-sm sm:text-base leading-snug"
+            style={{ color: themeColors.text.primary }}
+          >
+            {item.title}
+          </h3>
+
+          <p
+            className="text-xs mt-2"
+            style={{ color: themeColors.text.secondary }}
+          >
+            Watch short market breakdown →
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
         {/* Featured Courses Section */}
         <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
           <div className="mb-6">
@@ -680,7 +992,7 @@ const resetFocusTimer = () => {
                 <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
                   <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
                 </svg>
-              </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {courses.map((course) => (
               <div

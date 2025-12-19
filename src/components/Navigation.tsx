@@ -27,8 +27,11 @@ export const Navigation: React.FC<NavigationProps> = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  /* ================= NAV ITEMS ================= */
+
   const navItems = [
     { id: "home", label: "Home" },
+    { id: "market-pulse", label: "MarketPulse" }, // ✅ NEW TAB
     { id: "courses", label: "Courses" },
     { id: "live-classes", label: "Live Classes" },
     { id: "ai-hub", label: "AI Hub" },
@@ -67,10 +70,10 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* DESKTOP NAV */}
+      {/* ================= DESKTOP NAV ================= */}
       <div className="fixed top-4 left-4 right-4 z-50 hidden md:block">
         <div className="flex items-center justify-between">
-          {/* LOGO LEFT */}
+          {/* LOGO */}
           <motion.div
             initial={{ y: -8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -79,9 +82,9 @@ export const Navigation: React.FC<NavigationProps> = ({
           >
             <div
               className="bg-white rounded-full p-2 lg:p-3 shadow-lg border-2 transition-opacity duration-300"
-              style={{ 
+              style={{
                 borderColor: themeColors.primary.black,
-                opacity: isScrolled ? 0.85 : 1
+                opacity: isScrolled ? 0.85 : 1,
               }}
             >
               <img
@@ -91,12 +94,12 @@ export const Navigation: React.FC<NavigationProps> = ({
               />
             </div>
 
-            <div 
+            <div
               className="leading-tight transition-opacity duration-300 overflow-hidden"
-              style={{ 
+              style={{
                 opacity: isScrolled ? 0 : 1,
-                maxWidth: isScrolled ? '0px' : '200px',
-                transition: 'opacity 0.3s ease, max-width 0.3s ease'
+                maxWidth: isScrolled ? "0px" : "200px",
+                transition: "opacity 0.3s ease, max-width 0.3s ease",
               }}
             >
               <div
@@ -114,7 +117,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
           </motion.div>
 
-          {/* NAVBAR RIGHT */}
+          {/* NAVBAR */}
           <motion.nav
             className="rounded-full px-4 py-2 shadow-2xl transition-all duration-300 flex items-center gap-3"
             style={{
@@ -146,10 +149,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                 >
                   {item.label}
 
-                  {/* ACTIVE UNDERLINE */}
+                  {/* ACTIVE INDICATOR */}
                   <span
                     className={`absolute left-1/2 -translate-x-1/2 bottom-1 h-0.5 rounded-full transition-all ${
-                      currentPage === item.id ? "w-10 opacity-100" : "w-0 opacity-0"
+                      currentPage === item.id
+                        ? "w-10 opacity-100"
+                        : "w-0 opacity-0"
                     }`}
                     style={{
                       background: `linear-gradient(90deg, ${themeColors.primary.black}, ${themeColors.primary.darkGray})`,
@@ -158,7 +163,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 </motion.button>
               ))}
 
-              {/* Logout */}
+              {/* LOGOUT */}
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 onClick={onLogout}
@@ -177,7 +182,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </div>
 
-      {/* MOBILE NAV */}
+      {/* ================= MOBILE NAV ================= */}
       <nav className="fixed top-3 left-3 right-3 z-50 md:hidden">
         <div
           className="rounded-2xl px-4 py-3 shadow-2xl flex items-center justify-between backdrop-blur-sm transition-colors"
@@ -229,7 +234,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           </button>
         </div>
 
-        {/* Mobile Dropdown */}
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -6 }}

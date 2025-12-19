@@ -5,6 +5,7 @@ export const colors = {
   lightMonochrome: {
     primary: {
       w: '#ffffff',
+      w2: '#090909ff',
       black: '#1a1a1a',
       darkGray: '#333333',
       mediumGray: '#666666',
@@ -70,6 +71,7 @@ export const colors = {
   darkMonochrome: {
     primary: {
       w: '#000000ff',
+      w2: '#ffffffff',
       black: '#ffffff',
       darkGray: '#d4d4d4',
       mediumGray: '#9ca3af',
@@ -135,6 +137,7 @@ export const colors = {
   light: {
     primary: {
       w: '#ffffff',
+      w2: '#090909ff',
       black: '#1e1e1e',
       darkGray: '#495057',
       mediumGray: '#6c757d',
@@ -206,6 +209,7 @@ export const colors = {
   dark: {
     primary: {
       w: '#000000ff',
+      w2: '#ffffffff',
       black: '#000000',
       darkGray: '#e6e6e6',
       mediumGray: '#bdbdbd',

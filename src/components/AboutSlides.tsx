@@ -194,7 +194,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
                     {/* Video Title Overlay */}
                     {video.title && (
                       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-                        <p className="text-white text-sm font-semibold">{video.title}</p>
+                        <p className="text-white text-sm font-semibold whitespace-pre-line">
+                          {video.title}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -225,15 +227,15 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
   const finalTestimonialVideoUrl = testimonialVideoUrl || defaultTestimonialVideoUrl;
 
-  // 👇 ADD THESE LINES HERE
   const defaultTestimonialVideos: Video[] = [
-    { url: "/graphics/testimonial1.mp4", title: "Ananya, USA" },
-    { url: "/graphics/testimonial2.mp4", title: "Amir, Australia" },
-    { url: "/graphics/testimonial3.mp4", title: "Student Success Story 3" },
-    { url: "/graphics/testimonial4.mp4", title: "Student Success Story 4" },
-    { url: "/graphics/testimonial5.mp4", title: "Student Success Story 5" },
-    { url: "/graphics/testimonial6.mp4", title: "Student Success Story 6" },
-  ];
+  { url: "/graphics/testimonial1.mp4", title: "Ananya\nUSA" },
+  { url: "/graphics/testimonial2.mp4", title: "Tanisha\nSt. Xaviers, Mumbai" },
+  { url: "/graphics/testimonial3.mp4", title: "Amir\nAustralia" },
+  { url: "/graphics/testimonial4.mp4", title: "Rhea\nNMIMS, Mumbai" },
+  { url: "/graphics/testimonial5.mp4", title: "Saanvi\nModern High, Kolkata" },
+  { url: "/graphics/testimonial6.mp4", title: "Harshitha\nSymbiosis, Pune" },
+];
+
 
   const finalTestimonialVideos = testimonialVideos || defaultTestimonialVideos;
 
@@ -546,70 +548,72 @@ const testimonialsRow3 = useMemo(() => [
         </div>
       </div>
 
-      {/* Slide 2: Services with Enhanced Cards */}
-      <div className="min-h-screen flex items-center justify-center px-4 py-12" style={{ backgroundColor: themeColors.background.white }}>
-        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-12">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center mb-8 animate-fade-in-down">
-              <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
-                <img
-                  src="/logo/De-Eco-logo.png"
-                  alt="DE-ECO Logo"
-                  className="w-16 h-16 object-contain"
-                />
-              </div>
-            </div>
-            
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+     {/* ================= WHAT WE OFFER ================= */}
+<section
+  className="py-20"
+  style={{ backgroundColor: themeColors.background.white }}
+>
+  <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+   {/* LEFT SIDE */}
+<div className="lg:col-span-4 flex items-center justify-center">
+
+  {/* Content */}
+  <div className="flex flex-col items-center text-center gap-6 -translate-y-8">
+    {/* ↑ adjust -translate-y-6 / -8 / -10 as needed */}
+
+    {/* Logo Circle */}
+    <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
+      <img
+        src="/logo/De-Eco-logo.png"
+        alt="DE-ECO"
+        className="w-20 h-20 object-contain"
+      />
+    </div>
+
+    <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-gray-100">
               What We <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">Offer</span>
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Comprehensive learning solutions designed to accelerate your career growth
-            </p>
+
+  </div>
+</div>
+
+
+
+
+
+    {/* RIGHT SIDE – BLOCK GRID */}
+    <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {services.map((service, idx) => (
+        <div
+          key={idx}
+          className="rounded-3xl p-8 flex flex-col gap-4"
+          style={{
+            backgroundColor: service.color,
+            minHeight: 220,
+          }}
+        >
+          {/* Icon */}
+          <div className="w-12 h-12 rounded-xl bg-white/80 flex items-center justify-center">
+            {service.icon}
           </div>
 
-          {/* Enhanced Services Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="group relative rounded-2xl p-6 shadow-lg border-3 border-white transition-all duration-500 hover:scale-110 hover:-rotate-1 cursor-pointer"
-                style={{ backgroundColor: service.color }}
-              >
-                {/* Hover glow effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-300 to-purple-300 rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500"></div>
-                
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center mb-4 shadow-md transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                    {service.icon}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100">{service.title}</h3>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{service.description}</p>
-                  
-                  {/* Floating indicator */}
-                  <div className="absolute top-4 right-4 w-3 h-3 bg-pink-500 rounded-full animate-ping opacity-0 group-hover:opacity-75"></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Text */}
+          <h3 className="text-xl font-bold text-gray-900">
+            {service.title}
+          </h3>
 
-          {/* Enhanced CTA */}
-          <div className="text-center">
-            <button 
-              onClick={onLogin}
-              className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
-              style={{ backgroundColor: themeColors.primary.black, color: themeColors.text.white }}
-            >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                Explore All Courses 
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
-          </div>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            {service.description}
+          </p>
         </div>
-      </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+
 
       {/* Slide 3: Enhanced Video Testimonials */}
       <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" 

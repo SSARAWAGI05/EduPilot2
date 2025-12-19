@@ -7,6 +7,7 @@ import { LiveClassesPage } from "./pages/LiveClassesPage";
 import { AIHubPage } from "./pages/AIHubPage";
 import { ContactPage } from "./pages/ContactPage";
 import { AboutUsPage } from "./pages/AboutUsPage";
+import { MarketPulsePage } from "./pages/MarketPulsePage";
 import ProfileCompletionModal from "./ProfileCompletionModal";
 
 interface AuthenticatedAppProps {
@@ -20,7 +21,10 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
 
   useEffect(() => {
     const checkProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) return;
 
       setUserId(user.id);
@@ -47,19 +51,29 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
   const renderPage = () => {
     switch (currentPage) {
       case "home":
-        return <HomePage />;
-      case "courses": 
+        // ✅ PASS NAVIGATION HANDLER TO HOME
+        return <HomePage onNavigate={setCurrentPage} />;
+
+      case "courses":
         return <CoursesPage />;
+
       case "live-classes":
         return <LiveClassesPage />;
+
       case "ai-hub":
         return <AIHubPage />;
+
+      case "market-pulse":
+        return <MarketPulsePage />;
+
       case "contact":
         return <ContactPage />;
+
       case "about":
         return <AboutUsPage />;
+
       default:
-        return <HomePage />;
+        return <HomePage onNavigate={setCurrentPage} />;
     }
   };
 
