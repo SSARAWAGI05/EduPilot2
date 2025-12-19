@@ -51,7 +51,7 @@ export const colors = {
     },
     card: {
       bg: '#cfe8d8',
-      border: '#bfbfbf',
+      border: '#000000ff',
     },
     priority: {
       high: '#ffd6d6',
@@ -116,8 +116,8 @@ export const colors = {
       elevated: '#1a1a1a',
     },
     card: {
-      bg: '#9ca3af',
-      border: '#4b4b4b',
+      bg: '#000000ff',
+      border: '#ffffffff',
     },
     priority: {
       high: '#4b4b4b',
@@ -186,8 +186,8 @@ export const colors = {
     },
 
     card: {
-      bg: '#bbf7d0',
-      border: '#e9ecef',
+      bg: '#ffffffff',
+      border: '#000000ff',
     },
 
     priority: {
@@ -258,8 +258,8 @@ export const colors = {
     },
 
     card: {
-      bg: '#10b981',
-      border: '#374151',
+      bg: '#000000ff',
+      border: '#ffffffff',
     },
 
     priority: {

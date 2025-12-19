@@ -23,6 +23,57 @@ import { supabase } from "../../supabaseClient";
 
 type SidebarSection = 'home' | 'upcoming' | 'notes' | 'recordings' | 'schedule';
 
+// Add these type definitions
+interface Class {
+  id: string;
+  title: string;
+  instructor: string;
+  date: string;
+  time: string;
+  duration: string;
+  participants: number;
+  status: string;
+  meeting_link: string;
+  scheduled_date: string;
+  start_time: string;
+}
+
+interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  priority: string;
+  type: string;
+}
+
+interface Note {
+  id: string;
+  title: string;
+  date: string;
+  size: string;
+  downloads: number;
+  file_url: string;
+}
+
+interface Recording {
+  id: string;
+  title: string;
+  date: string;
+  duration: string;
+  views: number;
+  video_url: string;
+}
+
+interface UserStats {
+  classes_attended: number;
+  classes_scheduled: number;
+  total_study_hours: number;
+  notes_downloaded: number;
+  recordings_watched: number;
+  attendance_rate: number;
+}
+
 export const LiveClassesPage: React.FC = () => {
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
@@ -37,12 +88,12 @@ export const LiveClassesPage: React.FC = () => {
 
   // NEW STATE - Add these
   const [loading, setLoading] = useState(true);
-  const [upcomingClasses, setUpcomingClasses] = useState<any[]>([]);
-  const [announcements, setAnnouncements] = useState<any[]>([]);
-  const [recentNotes, setRecentNotes] = useState<any[]>([]);
-  const [recentRecordings, setRecentRecordings] = useState<any[]>([]);
-  const [userStats, setUserStats] = useState<any>(null);
-  const [nextClass, setNextClass] = useState<any>(null);
+  const [upcomingClasses, setUpcomingClasses] = useState<Class[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [recentNotes, setRecentNotes] = useState<Note[]>([]);
+  const [recentRecordings, setRecentRecordings] = useState<Recording[]>([]);
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [nextClass, setNextClass] = useState<Class | null>(null);
   const [isEnrolled, setIsEnrolled] = useState<boolean | null>(null);
 
   // Calculate countdown for next class
@@ -200,7 +251,9 @@ export const LiveClassesPage: React.FC = () => {
           classes_attended: 0,
           classes_scheduled: 0,
           notes_downloaded: 0,
-          recordings_watched: 0
+          recordings_watched: 0,
+          total_study_hours: 0,
+          attendance_rate: 0
         });
       }
 
@@ -566,55 +619,187 @@ export const LiveClassesPage: React.FC = () => {
     </div>
   );
 
-  const renderSchedule = () => (
+  const renderSchedule = () => {
+  // Get current date info
+  const today = new Date();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  // Create a map of dates that have classes
+  const classDateMap = new Map();
+  upcomingClasses.forEach((cls: Class) => {
+  const classDate = new Date(cls.scheduled_date);
+  if (classDate.getMonth() === currentMonth && classDate.getFullYear() === currentYear) {
+    const day = classDate.getDate();
+    if (!classDateMap.has(day)) {
+      classDateMap.set(day, []);
+    }
+    classDateMap.get(day)!.push(cls);
+  }
+});
+
+  // Generate calendar days
+  const calendarDays = [];
+  
+  // Add empty cells for days before the first day of the month
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    calendarDays.push({ day: null, classes: [] });
+  }
+  
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    calendarDays.push({
+      day,
+      classes: classDateMap.get(day) || [],
+      isToday: day === today.getDate() && 
+               currentMonth === today.getMonth() && 
+               currentYear === today.getFullYear()
+    });
+  }
+
+  return (
     <div className="space-y-3 sm:space-y-4 lg:space-y-6">
       <div className="bg-white dark:bg-black p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl shadow-lg border-2 border-white dark:border-gray-700">
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 lg:mb-6">This Week's Schedule</h2>
+        <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Schedule
+          </h2>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            {upcomingClasses.filter(cls => {
+              const clsDate = new Date(cls.scheduled_date);
+              return clsDate.getMonth() === currentMonth && clsDate.getFullYear() === currentYear;
+            }).length} classes this month
+          </div>
+        </div>
         
         <div style={{ backgroundColor: themeColors.accent.blueLight }} className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl">
+          {/* Day Headers */}
           <div className="grid grid-cols-7 gap-2 mb-4">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, i) => (
-              <div key={i} className="text-center font-bold text-gray-900 dark:text-gray-100 text-sm p-2">
+              <div key={i} className="text-center font-bold text-gray-900 dark:text-gray-100 text-xs sm:text-sm p-2">
                 {day}
               </div>
             ))}
           </div>
           
+          {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-2">
-            {Array.from({ length: 35 }).map((_, i) => {
-              const dayNumber = i < 30 ? i + 1 : '';
-              const hasClass = [15, 16, 18].includes(i + 1);
+            {calendarDays.map((dayData, i) => {
+              const hasClass = dayData.classes.length > 0;
               
               return (
                 <div
                   key={i}
-                  className={`p-2 sm:p-3 rounded-lg text-center text-sm cursor-pointer transition ${
-                    hasClass 
-                      ? 'font-bold' 
-                      : 'hover:bg-white dark:hover:bg-gray-700'
+                  className={`p-2 sm:p-3 rounded-lg text-center text-sm relative group transition ${
+                    !dayData.day 
+                      ? 'bg-transparent' 
+                      : hasClass 
+                        ? 'cursor-pointer font-bold' 
+                        : 'hover:bg-white dark:hover:bg-gray-700 cursor-default'
+                  } ${
+                    dayData.isToday ? 'ring-2 ring-black dark:ring-white' : ''
                   }`}
                   style={{
                     backgroundColor: hasClass ? themeColors.accent.blue : undefined,
-                    color: hasClass ? themeColors.text.primary : themeColors.text.tertiary
+                    color: !dayData.day 
+                      ? 'transparent' 
+                      : hasClass 
+                        ? themeColors.text.primary 
+                        : themeColors.text.tertiary
                   }}
+                  title={hasClass ? `${dayData.classes.length} class(es)` : ''}
                 >
-                  {dayNumber}
+                  {dayData.day}
+                  
+                  {/* Tooltip on hover for days with classes */}
+                  {hasClass && (
+                    <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block z-10 w-48 sm:w-56">
+                      <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-black text-xs rounded-lg p-2 shadow-lg">
+                        <div className="font-bold mb-1">
+                          {dayData.classes.length} {dayData.classes.length === 1 ? 'Class' : 'Classes'}:
+                        </div>
+                        {dayData.classes.map((cls: Class, idx: number) => (
+                          <div key={idx} className="mb-1 last:mb-0">
+                            <div className="font-medium">{cls.title}</div>
+                            <div className="text-gray-300 dark:text-gray-600">{cls.time}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Indicator dot for multiple classes */}
+                  {dayData.classes.length > 1 && (
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 dark:bg-red-400 rounded-full"></div>
+                  )}
                 </div>
               );
             })}
           </div>
           
-          <div className="mt-4 p-3 bg-white dark:bg-gray-700 rounded-lg">
-            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Legend:</h4>
-            <div className="flex items-center gap-2 text-sm">
-              <div style={{ backgroundColor: themeColors.accent.blue }} className="w-4 h-4 rounded"></div>
-              <span className="text-gray-600 dark:text-gray-400">Class scheduled</span>
+          {/* Legend & Class List */}
+          <div className="mt-4 space-y-3">
+            <div className="p-3 bg-white dark:bg-gray-700 rounded-lg">
+              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Legend:</h4>
+              <div className="flex flex-wrap gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <div style={{ backgroundColor: themeColors.accent.blue }} className="w-4 h-4 rounded"></div>
+                  <span className="text-gray-600 dark:text-gray-400">Class scheduled</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded ring-2 ring-black dark:ring-white"></div>
+                  <span className="text-gray-600 dark:text-gray-400">Today</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-500 dark:bg-red-400 rounded-full"></div>
+                  <span className="text-gray-600 dark:text-gray-400">Multiple classes</span>
+                </div>
+              </div>
             </div>
+
+            {/* Classes List for Selected Month */}
+            {upcomingClasses.filter(cls => {
+              const clsDate = new Date(cls.scheduled_date);
+              return clsDate.getMonth() === currentMonth && clsDate.getFullYear() === currentYear;
+            }).length > 0 && (
+              <div className="p-3 bg-white dark:bg-gray-700 rounded-lg">
+                <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-3">This Month's Classes:</h4>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {upcomingClasses
+                    .filter((cls: Class) => {
+                      const clsDate = new Date(cls.scheduled_date);
+                      return clsDate.getMonth() === currentMonth && clsDate.getFullYear() === currentYear;
+                    })
+                    .map((cls: Class) => (
+                      <div 
+                        key={cls.id} 
+                        className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-600 rounded-lg text-sm"
+                      >
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900 dark:text-gray-100">{cls.title}</div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400">
+                            {cls.date} • {cls.time}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => window.open(cls.meeting_link, "_blank")}
+                          className="bg-black dark:bg-white text-white dark:text-black px-3 py-1 rounded text-xs font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition"
+                        >
+                          Join
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
+};
 
     const renderNotEnrolled = () => (
     <div

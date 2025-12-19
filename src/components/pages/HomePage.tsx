@@ -896,7 +896,7 @@ const resetFocusTimer = () => {
         {/* ================= MARKET PULSE SECTION ================= */}
 <div
   className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-xl"
-  style={{ backgroundColor: themeColors.accent.blueLight }}
+  style={{ backgroundColor: themeColors.accent.blue }}
 >
   {/* Header */}
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
@@ -1084,7 +1084,7 @@ const resetFocusTimer = () => {
         </div>
 
         {/* AI Hub Section */}
-        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blue }}>
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blueLight }}>
           <div className="mb-6">
                 <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
                   AI Hub

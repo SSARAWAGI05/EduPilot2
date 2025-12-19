@@ -7,7 +7,7 @@ import { LiveClassesPage } from "./pages/LiveClassesPage";
 import { AIHubPage } from "./pages/AIHubPage";
 import { ContactPage } from "./pages/ContactPage";
 import { AboutUsPage } from "./pages/AboutUsPage";
-import { MarketPulsePage } from "./pages/MarketPulsePage";
+import MarketPulsePage from "./pages/MarketPulsePage";
 import ProfileCompletionModal from "./ProfileCompletionModal";
 
 interface AuthenticatedAppProps {

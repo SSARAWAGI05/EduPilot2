@@ -114,16 +114,19 @@ export const CoursesPage: React.FC = () => {
         {/* STATS BAR */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="rounded-xl p-4 text-center" style={{ backgroundColor: themeColors.accent.blue }}>
-            <div className="text-2xl font-bold">{courses.length}</div>
-            <div className="text-sm">Courses Available</div>
+            <div className="text-2xl font-bold" style={{ color: themeColors.primary.w2 }} >{courses.length}</div>
+            <div className="text-sm" style={{ color: themeColors.primary.w2 }} >Courses Available</div>
           </div>
           <div className="rounded-xl p-4 text-center" style={{ backgroundColor: themeColors.accent.yellow }}>
-            <div className="text-2xl font-bold">Live</div>
-            <div className="text-sm">Expert Led</div>
+            <div 
+            className="text-2xl font-bold"
+            style={{ color: themeColors.primary.w2 }} 
+            >Live</div>
+            <div className="text-sm" style={{ color: themeColors.primary.w2 }} >Expert Led</div>
           </div>
           <div className="rounded-xl p-4 text-center" style={{ backgroundColor: themeColors.accent.red }}>
-            <div className="text-2xl font-bold">4.8</div>
-            <div className="text-sm">Avg Rating</div>
+            <div className="text-2xl font-bold" style={{ color: themeColors.primary.w2 }} >4.8</div>
+            <div className="text-sm" style={{ color: themeColors.primary.w2 }} >Avg Rating</div>
           </div>
         </div>
 
