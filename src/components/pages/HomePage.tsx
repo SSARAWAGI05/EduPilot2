@@ -775,7 +775,8 @@ const resetFocusTimer = () => {
                     setIsAddingTask(false);
                   }}
                   disabled={isAddingTask || !newTask.trim()}
-                  className="px-5 sm:px-7 py-3.5 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2"
+                  className="px-5 sm:px-7 py-3.5 rounded-xl font-bold transition-all hover:scale-[1.03] hover:-translate-y-1
+ active:scale-95 shadow-lg flex items-center gap-2"
                   style={{ 
                     backgroundColor: themeColors.accent.yellowBright,
                     color: themeColors.text.primary,
@@ -972,13 +973,15 @@ const resetFocusTimer = () => {
                 </p>
               </div>
               
-              <button className="px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-105 shadow-lg inline-block w-fit" style={{ backgroundColor: themeColors.accent.yellowBright, color: themeColors.text.primary }}>
+              <button className="px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1
+ shadow-lg inline-block w-fit" style={{ backgroundColor: themeColors.accent.yellowBright, color: themeColors.text.primary }}>
                 Register Now
               </button>
             </div>
 
             {/* Right - Video Placeholder */}
-            <div className="flex items-center justify-center rounded-2xl cursor-pointer transition-transform transform hover:scale-105" style={{ backgroundColor: themeColors.primary.black, minHeight: '300px' }}>
+            <div className="flex items-center justify-center rounded-2xl cursor-pointer transition-transform transform hover:scale-[1.03] hover:-translate-y-1
+" style={{ backgroundColor: themeColors.primary.black, minHeight: '300px' }}>
               <div className="text-center">
                 <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform transform hover:scale-110" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
                   <Play className="w-10 h-10" style={{ color: themeColors.text.white }} fill="white" />
@@ -1007,7 +1010,8 @@ const resetFocusTimer = () => {
 
             <button
               onClick={() => onNavigate?.("market-pulse")}
-              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-105 flex items-center gap-2"
+              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-[1.03] hover:-translate-y-1
+ flex items-center gap-2"
               style={{
                 backgroundColor: themeColors.primary.black,
                 color: themeColors.text.white,
@@ -1020,8 +1024,12 @@ const resetFocusTimer = () => {
           </div>
 
           {/* Reels Preview – Horizontal Scroll */}
-        <div className="overflow-x-auto pb-4">
-          <div className="flex gap-4 sm:gap-6" style={{ minWidth: "max-content" }}>
+        <div className="overflow-x-auto overflow-y-visible pb-8">
+
+          <div
+            className="flex gap-4 sm:gap-6 pt-4"
+            style={{ minWidth: "max-content" }}
+          >
 
             {marketPulseLoading && (
               <div className="px-6 py-10 text-sm opacity-70">
@@ -1033,7 +1041,8 @@ const resetFocusTimer = () => {
               marketPulseReels.map((reel) => (
                 <div
                   key={reel.id}
-                  className="w-[280px] sm:w-[320px] rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105 cursor-pointer flex-shrink-0"
+                  className="w-[280px] sm:w-[320px] rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-[1.03] hover:-translate-y-1
+ cursor-pointer flex-shrink-0"
                   style={{ backgroundColor: themeColors.background.white }}
                   onClick={() => window.open(reel.reel_url, "_blank")}
                 >
@@ -1100,7 +1109,7 @@ const resetFocusTimer = () => {
 
                 
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-4 overflow-visible">
           {/* Loading */}
           {featuredCoursesLoading && (
             <p className="text-sm opacity-70 col-span-full text-center">
@@ -1120,7 +1129,8 @@ const resetFocusTimer = () => {
             featuredCourses.map((course) => (
               <div
                 key={course.id}
-                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-[1.03] hover:-translate-y-1
+"
                 style={{ backgroundColor: themeColors.background.white }}
               >
                 {/* Course Image */}
@@ -1169,7 +1179,8 @@ const resetFocusTimer = () => {
                   </div>
 
                   <button
-                    className="w-full py-2 rounded-lg font-bold text-sm transition-transform hover:scale-105"
+                    className="w-full py-2 rounded-lg font-bold text-sm transition-transform hover:scale-[1.03] hover:-translate-y-1
+"
                     style={{
                       backgroundColor: themeColors.accent.blue,
                       color: themeColors.text.white,
@@ -1195,7 +1206,8 @@ const resetFocusTimer = () => {
           </div>
           
           {/* Horizontally Scrollable Container */}
-          <div className="overflow-x-auto pb-4">
+          <div className="overflow-x-auto overflow-y-visible pb-8">
+
             <div className="flex gap-4 sm:gap-6" style={{ minWidth: 'max-content' }}>
               {aiToolsData.map((tool, index) => {
                 // Assign colors from themeColors in a rotating pattern
@@ -1212,7 +1224,8 @@ const resetFocusTimer = () => {
                 return (
                   <div
                     key={tool.id}
-                    className="rounded-2xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer p-6 flex-shrink-0"
+                    className="rounded-2xl shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1
+ cursor-pointer p-6 flex-shrink-0"
                     style={{ 
                       backgroundColor: toolColor, 
                       width: '320px',
