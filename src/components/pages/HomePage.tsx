@@ -158,12 +158,26 @@ const [dayStreak, setDayStreak] = useState(0);
 const [activeCoursesCount, setActiveCoursesCount] = useState(0);
 const [classesTodayCount, setClassesTodayCount] = useState(0);
 
-const isClassExpired = (date: string, startTime: string) => {
+const getClassStatus = (
+  date: string,
+  startTime: string,
+  durationMinutes = 60
+): 'upcoming' | 'completed' | 'expired' => {
   const now = new Date();
 
-  const classDateTime = new Date(`${date}T${startTime}`);
-  return now > classDateTime;
+  const start = new Date(`${date}T${startTime}`);
+  const end = new Date(start.getTime() + durationMinutes * 60000);
+
+  // End of the same day (23:59:59)
+  const endOfDay = new Date(start);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  if (now < start) return 'upcoming';        // Before class
+  if (now >= start && now <= end) return 'completed'; // During/just after → treat as completed
+  if (now > end && now <= endOfDay) return 'completed'; // After class, same day
+  return 'expired';                          // Next day → flush
 };
+
 
 const [todayClasses, setTodayClasses] = useState<{
   id: string;
@@ -485,9 +499,11 @@ const resetFocusTimer = () => {
   ];
 
   const assignedPlannerItems = [
-  // Classes first (only upcoming / live)
+  // UPCOMING CLASSES
   ...todayClasses
-    .filter(cls => !isClassExpired(cls.scheduled_date, cls.start_time))
+    .filter(cls =>
+      getClassStatus(cls.scheduled_date, cls.start_time) === 'upcoming'
+    )
     .map(cls => ({
       id: `class-${cls.id}`,
       title: `📅 ${cls.title}`,
@@ -495,7 +511,7 @@ const resetFocusTimer = () => {
       start_time: cls.start_time,
     })),
 
-  // Then pending todos
+  // Pending todos
   ...dailyTasks
     .filter(t => t.status === 'pending')
     .map(t => ({
@@ -504,6 +520,7 @@ const resetFocusTimer = () => {
       type: 'task' as const,
     }))
 ];
+
 
 
 
@@ -645,7 +662,7 @@ const resetFocusTimer = () => {
       className="text-sm font-medium truncate"
       style={{ color: themeColors.text.primary, opacity: 0.7 }}
     >
-      Say Hello!
+      Connect with us
     </span>
   </div>
 
@@ -684,15 +701,6 @@ const resetFocusTimer = () => {
     <Linkedin className="w-4 h-4" style={{ color: themeColors.text.primary }} />
   </a>
 
-  <a
-    href="https://x.com/yourhandle"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-8 h-8 rounded-md flex items-center justify-center transition hover:scale-110"
-    style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
-  >
-    <X className="w-4 h-4" style={{ color: themeColors.text.primary }} />
-  </a>
 </div>
 </div>
 
@@ -838,13 +846,6 @@ const resetFocusTimer = () => {
                       >
                         {item.title}
                       </span>
-                        <button
-                          onClick={() => deleteTask(item.id)}
-                          className="p-1 rounded hover:scale-110"
-                          style={{ color: themeColors.accent.red }}
-                        >
-                          <X size={16} />
-                        </button>
                       </>
                     ) : (
                       <>
@@ -902,38 +903,42 @@ const resetFocusTimer = () => {
                     </div>
                   ) : (
                     <div className="space-y-2.5">
-                      {dailyTasks.filter(t => t.status === 'done').map((task) => (
+                      {[
+                        // Completed classes (same day)
+                        ...todayClasses
+                          .filter(cls =>
+                            getClassStatus(cls.scheduled_date, cls.start_time) === 'completed'
+                          )
+                          .map(cls => ({
+                            id: `class-done-${cls.id}`,
+                            title: `📅 ${cls.title}`,
+                            type: 'class' as const,
+                          })),
+
+                        // Completed todos
+                        ...dailyTasks
+                          .filter(t => t.status === 'done')
+                          .map(t => ({
+                            id: t.id,
+                            title: t.title,
+                            type: 'task' as const,
+                          }))
+                      ].map((item) => (
                         <div
-                          key={task.id}
-                          className="flex items-center gap-3 p-3 rounded-lg border-2 transition-all hover:shadow-md group"
+                          key={item.id}
+                          className="flex items-center gap-3 p-3 rounded-lg border-2"
                           style={{
                             backgroundColor: themeColors.background.white,
                             borderColor: themeColors.primary.black
                           }}
                         >
-                          <button
-                            onClick={() => toggleTaskStatus(task.id, task.status)}
-                            className="flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all hover:scale-110"
-                            style={{
-                              backgroundColor: themeColors.accent.blue,
-                              borderColor: themeColors.accent.blue
-                            }}
-                          >
-                            <CheckCircle size={12} style={{ color: themeColors.text.white }} />
-                          </button>
-                          <span 
-                            className="flex-1 text-sm font-medium line-through opacity-60"
+                          <CheckCircle size={14} />
+                          <span
+                            className="flex-1 text-sm font-medium opacity-70"
                             style={{ color: themeColors.text.primary }}
                           >
-                            {task.title}
+                            {item.title}
                           </span>
-                          <button
-                            onClick={() => deleteTask(task.id)}
-                            className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all p-1 rounded hover:scale-110"
-                            style={{ color: themeColors.accent.red }}
-                          >
-                            <X size={16} />
-                          </button>
                         </div>
                       ))}
                     </div>
@@ -1024,7 +1029,7 @@ const resetFocusTimer = () => {
           </div>
 
           {/* Reels Preview – Horizontal Scroll */}
-        <div className="overflow-x-auto overflow-y-visible pb-8">
+        <div className="overflow-x-auto overflow-y-visible pb-8 px-4">
 
           <div
             className="flex gap-4 sm:gap-6 pt-4"
@@ -1051,7 +1056,7 @@ const resetFocusTimer = () => {
                     <img
                       src={
                         reel.thumbnail_url ||
-                        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800"
+                        "/logo/De-Eco-logo.png"
                       }
                       alt={reel.title}
                       className="w-full h-full object-cover"
@@ -1195,7 +1200,10 @@ const resetFocusTimer = () => {
         </div>
 
         {/* AI Hub Section */}
-        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blueLight }}>
+        <div
+          className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 overflow-visible"
+          style={{ backgroundColor: themeColors.accent.blueLight }}
+        >
           <div className="mb-6">
                 <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
                   AI Hub
@@ -1206,9 +1214,11 @@ const resetFocusTimer = () => {
           </div>
           
           {/* Horizontally Scrollable Container */}
-          <div className="overflow-x-auto overflow-y-visible pb-8">
-
-            <div className="flex gap-4 sm:gap-6" style={{ minWidth: 'max-content' }}>
+          <div className="overflow-x-auto overflow-y-visible pb-8 px-4">
+            <div
+              className="flex gap-4 sm:gap-6 py-3"
+              style={{ minWidth: 'max-content' }}
+            >
               {aiToolsData.map((tool, index) => {
                 // Assign colors from themeColors in a rotating pattern
                 const colorOptions = [
@@ -1224,8 +1234,15 @@ const resetFocusTimer = () => {
                 return (
                   <div
                     key={tool.id}
-                    className="rounded-2xl shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1
- cursor-pointer p-6 flex-shrink-0"
+                    className="
+                      rounded-2xl shadow-lg
+                      transition-transform duration-300
+                      hover:scale-[1.03]
+                      hover:translate-z-10
+                      cursor-pointer
+                      p-6
+                      flex-shrink-0
+                    "
                     style={{ 
                       backgroundColor: toolColor, 
                       width: '320px',
@@ -1379,12 +1396,6 @@ const resetFocusTimer = () => {
           </button>
         ) : (
           <div className="p-3 sm:p-4 lg:p-6 rounded-lg sm:rounded-xl shadow-2xl w-64 sm:w-72 lg:w-80 border max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)]" style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.mediumGray }}>
-            <div className="flex justify-between items-center mb-2 sm:mb-3 lg:mb-4">
-              <h3 className="font-bold text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Chat Bot</h3>
-              <button onClick={() => setIsChatbotOpen(false)}>
-                <X className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-              </button>
-            </div>
             <div className="space-y-1 sm:space-y-2 mb-2 sm:mb-3 lg:mb-4">
               <div className="p-2 sm:p-3 rounded text-xs sm:text-sm" style={{ backgroundColor: themeColors.accent.blue, color: themeColors.text.primary }}>Hello! How can I help you?</div>
               <div className="p-2 sm:p-3 rounded ml-3 sm:ml-4 lg:ml-6 text-xs sm:text-sm" style={{ backgroundColor: themeColors.accent.green, color: themeColors.text.primary }}>Hi! I need help with my courses.</div>

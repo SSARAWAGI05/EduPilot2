@@ -44,6 +44,7 @@ const MarketPulsePage: React.FC = () => {
   const [reels, setReels] = useState<MarketReel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const FALLBACK_THUMBNAIL = "/logo/De-Eco-logo.png";
 
   // Fetch reels from database
   useEffect(() => {
@@ -385,10 +386,17 @@ const MarketPulsePage: React.FC = () => {
                       }}
                     >
                       <img
-                        src={reel.thumbnail_url || 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&auto=format&fit=crop'}
+                        src={reel.thumbnail_url || FALLBACK_THUMBNAIL}
+                        onError={(e) => {
+                          e.currentTarget.src = FALLBACK_THUMBNAIL;
+                        }}
                         alt={reel.title}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className={
+                          reel.thumbnail_url
+                            ? "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            : "w-full h-full object-contain bg-white p-6"
+                        }
                       />
 
                       {/* Play Overlay */}
