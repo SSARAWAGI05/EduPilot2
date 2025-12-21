@@ -30,6 +30,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  
 
   useEffect(() => {
     // Auto-play all videos on mount
@@ -64,6 +65,7 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
       
       const newMutedStates = mutedStates.map(() => true);
       newMutedStates[actualIndex] = false;
+      
       setMutedStates(newMutedStates);
       setActiveVideoIndex(index);
       setSelectedIndex(index);

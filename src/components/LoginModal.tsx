@@ -141,11 +141,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               </div>
 
               {/* Footer */}
-              <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                By continuing, you agree to our{" "}
-                <span className="underline cursor-pointer">Terms</span> &{" "}
-                <span className="underline cursor-pointer">Privacy Policy</span>.
-              </p>
+              
             </>
           ) : (
             <div className="py-10 text-center">
