@@ -363,7 +363,7 @@ const testimonialsRow3 = useMemo(() => [
 ];
 
   const stats = [
-     { icon: <Users className="w-6 h-6" />, value: "1000+", label: "Hours", color: themeColors.accent.yellow },
+     { icon: <Users className="w-6 h-6" />, value: "3000+", label: "Hours", color: themeColors.accent.yellow },
      { icon: <Globe className="w-6 h-6" />, value: "7+", label: "Countries", color: themeColors.accent.red },
      { icon: <TrendingUp className="w-6 h-6" />, value: "95%", label: "Success Rate", color: themeColors.accent.blue },
      { icon: <Zap className="w-6 h-6" />, value: "24/7", label: "AI Support", color: themeColors.accent.orange }
@@ -538,10 +538,7 @@ const testimonialsRow3 = useMemo(() => [
                         About Me
                       </h3>
                       <p className="text-sm lg:text-base text-gray-800 dark:text-gray-200 leading-relaxed">
-                        Welcome to my learning platform! I'm passionate about helping students master cutting-edge 
-                        technologies and AI tools. With years of industry experience and a proven track record in 
-                        education, I've created a comprehensive learning            ecosystem that combines theoretical knowledge 
-                        with practical applications. passionate about helping students master cutting-edge.
+                        
                       </p>
                     </div>
                   </div>
