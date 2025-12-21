@@ -5,7 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { CoursesPage } from "./pages/CoursesPage";
 import { LiveClassesPage } from "./pages/LiveClassesPage";
 import { AIHubPage } from "./pages/AIHubPage";
-import { ContactPage } from "./pages/ContactPage";
+import ContactPage  from "./pages/ContactPage";
 import { AboutUsPage } from "./pages/AboutUsPage";
 import MarketPulsePage from "./pages/MarketPulsePage";
 import ProfileCompletionModal from "./ProfileCompletionModal";
