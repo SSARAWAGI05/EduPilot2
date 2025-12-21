@@ -71,7 +71,9 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <>
       {/* ================= DESKTOP NAV ================= */}
-      <div className="fixed top-4 left-4 right-4 z-50 hidden md:block">
+      {/* ================= DESKTOP NAV ================= */}
+      <nav className="fixed top-3 left-3 right-3 z-50 hidden md:block">
+
         <div className="flex items-center justify-between">
           {/* LOGO */}
           <motion.div
@@ -180,7 +182,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
           </motion.nav>
         </div>
-      </div>
+      </nav>
 
       {/* ================= MOBILE NAV ================= */}
       <nav className="fixed top-3 left-3 right-3 z-50 md:hidden">

@@ -30,6 +30,7 @@ export const AIHubPage: React.FC = () => {
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const isComingSoon = true;
 
   const aiTools = [
     {
@@ -96,6 +97,7 @@ export const AIHubPage: React.FC = () => {
   ];
 
   return (
+    <div className="relative min-h-screen">
     <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
       {/* Spacer for fixed navbar */}
       <div className="h-20 sm:h-16 md:h-20 lg:h-32"></div>
@@ -390,5 +392,34 @@ export const AIHubPage: React.FC = () => {
         </div>
       </div>
     </div>
+    {isComingSoon && (
+  <div className="fixed inset-0 z-40 flex items-center justify-center">
+    
+    {/* Blur Layer */}
+    <div className="absolute inset-0 backdrop-blur-md bg-white/70 dark:bg-black/70"></div>
+
+    {/* Content */}
+    <div className="relative z-10 text-center px-6">
+      <h1
+        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4"
+        style={{ color: themeColors.text.primary }}
+      >
+        🚀 Coming Soon
+      </h1>
+
+      <p
+        className="text-base sm:text-lg max-w-md mx-auto"
+        style={{ color: themeColors.text.secondary }}
+      >
+        AI Hub is under active development.  
+        We’re building something powerful for you ✨
+      </p>
+    </div>
+
+  </div>
+)}
+
+            </div>
+
   );
 };

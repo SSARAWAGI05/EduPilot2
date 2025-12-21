@@ -1158,7 +1158,7 @@ const resetFocusTimer = () => {
           {/* Empty state */}
           {!featuredCoursesLoading && featuredCourses.length === 0 && (
             <p className="text-sm opacity-70 col-span-full text-center">
-              No featured courses available right now.
+              Coming Soon, Stay Tuned!
             </p>
           )}
 

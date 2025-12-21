@@ -34,6 +34,7 @@ export const CoursesPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
+  const isComingSoon = true;
 
   const coursesPerPage = 6;
   const totalPages = Math.ceil(courses.length / coursesPerPage);
@@ -98,7 +99,11 @@ export const CoursesPage: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: themeColors.primary.lightGray }} className="min-h-screen">
+  <div className="relative min-h-screen">
+    <div
+      style={{ backgroundColor: themeColors.primary.lightGray }}
+      className="min-h-screen"
+    >
       <div className="ccontainer mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-8 sm:pb-12">
 
         {/* HEADER */}
@@ -213,5 +218,34 @@ export const CoursesPage: React.FC = () => {
         </div>
       </div>
     </div>
+    {isComingSoon && (
+  <div className="fixed inset-0 z-40 flex items-center justify-center">
+
+    {/* Blur layer */}
+    <div className="absolute inset-0 backdrop-blur-md bg-white/70 dark:bg-black/70"></div>
+
+    {/* Content */}
+    <div className="relative z-10 text-center px-6">
+      <h1
+        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4"
+        style={{ color: themeColors.text.primary }}
+      >
+        🚀 Coming Soon
+      </h1>
+
+      <p
+        className="text-base sm:text-lg max-w-md mx-auto"
+        style={{ color: themeColors.text.secondary }}
+      >
+        Courses are currently under preparation.  
+        We’re launching them very soon ✨
+      </p>
+    </div>
+
+  </div>
+)}
+
+  </div>
+
   );
 };
