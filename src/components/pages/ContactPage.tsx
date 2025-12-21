@@ -1,108 +1,181 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
-import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import { useTheme } from '../../contexts/ThemeContext';
-import { getThemeColors } from '../../styles/colors';
-import { supabase } from '../../supabaseClient';
+import React, { useEffect, useRef, useState } from "react";
+import { Mail, Phone, MapPin, Send, CheckCircle, X } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeContext";
+import { getThemeColors } from "../../styles/colors";
+import { supabase } from "../../supabaseClient";
 
-export const ContactPage: React.FC = () => {
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  website?: string; // honeypot
+};
+
+type FormErrors = Partial<Record<keyof FormData, string>>;
+
+const initialForm: FormData = {
+  name: "",
+  email: "",
+  phone: "",
+  subject: "",
+  message: "",
+  website: "",
+};
+
+export default function ContactPage(): JSX.Element {
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-  });
-
+  const [formData, setFormData] = useState<FormData>(initialForm);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
+  const successTimeoutRef = useRef<number | null>(null);
 
-  // Get user ID if logged in
+  // Helpers: validation
+  const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const isValidPhone = (v: string) => /^\+?[0-9\s-]{7,15}$/.test(v);
+
+  const validateField = (name: keyof FormData, value: string): string | undefined => {
+    if (name === "website") return undefined; // honeypot
+    if (!value.trim()) return "This field is required.";
+    if (name === "email" && !isValidEmail(value)) return "Enter a valid email address.";
+    if (name === "phone" && !isValidPhone(value)) return "Enter a valid phone number.";
+    if (name === "message" && value.trim().length < 10) return "Message must be at least 10 characters.";
+    return undefined;
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    (Object.keys(formData) as (keyof FormData)[]).forEach((k) => {
+      const err = validateField(k, formData[k] ?? "");
+      if (err) newErrors[k] = err;
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Prefill user info when logged in
   useEffect(() => {
-    const getUserId = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
+    let mounted = true;
+    (async () => {
+      try {
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError) throw userError;
+        const user = (userData as any)?.user;
+        if (!mounted || !user) return;
         setUserId(user.id);
-        // Pre-fill email if user is logged in
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('email, first_name, last_name, phone')
-          .eq('id', user.id)
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("email, first_name, last_name, phone")
+          .eq("id", user.id)
           .single();
 
-        if (profile) {
-          setFormData(prev => ({
+        if (error) {
+          // silently ignore — profile might not exist
+          console.debug("No profile found or error fetching profile", error);
+          return;
+        }
+
+        if (data) {
+          setFormData((prev) => ({
             ...prev,
-            email: profile.email || prev.email,
-            name: profile.first_name && profile.last_name 
-              ? `${profile.first_name} ${profile.last_name}` 
-              : prev.name,
-            phone: profile.phone || prev.phone
+            email: data.email ?? prev.email,
+            name: data.first_name && data.last_name ? `${data.first_name} ${data.last_name}` : prev.name,
+            phone: data.phone ?? prev.phone,
           }));
         }
+      } catch (err) {
+        console.error("Error pre-filling profile:", err);
       }
-    };
+    })();
 
-    getUserId();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+  useEffect(() => {
+    return () => {
+      // clear any outstanding timeouts on unmount
+      if (successTimeoutRef.current) window.clearTimeout(successTimeoutRef.current);
+    };
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // live-validate the field
+    setErrors((prev) => {
+      const copy = { ...prev } as FormErrors;
+      const fieldErr = validateField(name as keyof FormData, value);
+      if (fieldErr) copy[name as keyof FormData] = fieldErr;
+      else delete copy[name as keyof FormData];
+      return copy;
     });
-    // Clear error message when user starts typing
-    if (submitError) setSubmitError('');
+
+    // clear global submit error if user edits
+    if (submitError) setSubmitError(null);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const err = validateField(name as keyof FormData, value);
+    setErrors((prev) => ({ ...prev, ...(err ? { [name]: err } : {}) }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check to reduce spam
+    if (formData.website && formData.website.trim() !== "") {
+      console.warn("Bot detected via honeypot");
+      return;
+    }
+
+    if (!validateForm()) return;
+
     setIsSubmitting(true);
-    setSubmitError('');
+    setSubmitError(null);
 
     try {
-      // Insert contact message into database
-      const { data, error } = await supabase
-        .from('contact_messages')
-        .insert([
-          {
-            user_id: userId, // Will be null if user is not logged in
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            subject: formData.subject,
-            message: formData.message,
-            status: 'new'
-          }
-        ])
-        .select();
+      const payload = {
+        user_id: userId,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        status: "new",
+      };
 
+      const { data, error } = await supabase.from("contact_messages").insert([payload]).select();
       if (error) throw error;
 
-      // Success!
       setSubmitSuccess(true);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setFormData(initialForm);
 
-      // Hide success message after 5 seconds
-      setTimeout(() => {
+      // auto-hide success
+      successTimeoutRef.current = window.setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-
-    } catch (error: any) {
-      console.error('Error submitting contact form:', error);
-      setSubmitError('Failed to send message. Please try again.');
+    } catch (err: any) {
+      console.error("Error submitting contact form:", err);
+      setSubmitError(err?.message || "Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const isFormValid = Object.keys(errors).length === 0 && formData.name && formData.email && formData.subject && formData.message;
 
   return (
     <div style={{ backgroundColor: themeColors.primary.lightGray }} className="min-h-screen text-gray-900 dark:text-gray-100">
@@ -118,29 +191,28 @@ export const ContactPage: React.FC = () => {
               <div>
                 {/* Success Message */}
                 {submitSuccess && (
-                  <div className="mb-6 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: themeColors.accent.green }}>
+                  <div role="status" aria-live="polite" className="mb-6 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: themeColors.accent.green }}>
                     <CheckCircle className="w-6 h-6 text-green-800" />
                     <div>
                       <p className="font-semibold text-green-800">Message Sent Successfully!</p>
                       <p className="text-sm text-green-700">We'll get back to you soon.</p>
                     </div>
+                    <button aria-label="dismiss" onClick={() => setSubmitSuccess(false)} className="ml-auto">
+                      <X />
+                    </button>
                   </div>
                 )}
 
                 {/* Error Message */}
                 {submitError && (
-                  <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: themeColors.accent.red }}>
+                  <div role="alert" className="mb-6 p-4 rounded-xl" style={{ backgroundColor: themeColors.accent.red }}>
                     <p className="text-red-800">{submitError}</p>
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6" noValidate>
                   <div>
-                    <label
-                      htmlFor="name"
-                      className="block font-semibold mb-2 text-sm sm:text-base"
-                      style={{ color: themeColors.text.secondary }}
-                    >
+                    <label htmlFor="name" className="block font-semibold mb-2 text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
                       Full Name
                     </label>
                     <input
@@ -149,24 +221,20 @@ export const ContactPage: React.FC = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       required
                       disabled={isSubmitting}
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? "name-error" : undefined}
                       className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
-                      style={{
-                        backgroundColor: themeColors.background.white,
-                        borderColor: themeColors.primary.lightGray,
-                        color: themeColors.text.primary
-                      }}
+                      style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.lightGray, color: themeColors.text.primary }}
                       placeholder="Enter your full name"
                     />
+                    {errors.name && <p id="name-error" className="mt-1 text-sm text-red-700">{errors.name}</p>}
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block font-semibold mb-2 text-sm sm:text-base"
-                      style={{ color: themeColors.text.secondary }}
-                    >
+                    <label htmlFor="email" className="block font-semibold mb-2 text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
                       Email Address
                     </label>
                     <input
@@ -175,24 +243,20 @@ export const ContactPage: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       required
                       disabled={isSubmitting}
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "email-error" : undefined}
                       className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
-                      style={{
-                        backgroundColor: themeColors.background.white,
-                        borderColor: themeColors.primary.lightGray,
-                        color: themeColors.text.primary
-                      }}
+                      style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.lightGray, color: themeColors.text.primary }}
                       placeholder="Enter your email address"
                     />
+                    {errors.email && <p id="email-error" className="mt-1 text-sm text-red-700">{errors.email}</p>}
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="phone"
-                      className="block font-semibold mb-2 text-sm sm:text-base"
-                      style={{ color: themeColors.text.secondary }}
-                    >
+                    <label htmlFor="phone" className="block font-semibold mb-2 text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
                       Phone Number
                     </label>
                     <input
@@ -201,24 +265,20 @@ export const ContactPage: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       required
                       disabled={isSubmitting}
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? "phone-error" : undefined}
                       className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
-                      style={{
-                        backgroundColor: themeColors.background.white,
-                        borderColor: themeColors.primary.lightGray,
-                        color: themeColors.text.primary
-                      }}
-                      placeholder="Enter your phone number"
+                      style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.lightGray, color: themeColors.text.primary }}
+                      placeholder="Enter your phone number (with country code)"
                     />
+                    {errors.phone && <p id="phone-error" className="mt-1 text-sm text-red-700">{errors.phone}</p>}
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="subject"
-                      className="block font-semibold mb-2 text-sm sm:text-base"
-                      style={{ color: themeColors.text.secondary }}
-                    >
+                    <label htmlFor="subject" className="block font-semibold mb-2 text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
                       Subject
                     </label>
                     <input
@@ -227,24 +287,20 @@ export const ContactPage: React.FC = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       required
                       disabled={isSubmitting}
+                      aria-invalid={!!errors.subject}
+                      aria-describedby={errors.subject ? "subject-error" : undefined}
                       className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
-                      style={{
-                        backgroundColor: themeColors.background.white,
-                        borderColor: themeColors.primary.lightGray,
-                        color: themeColors.text.primary
-                      }}
+                      style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.lightGray, color: themeColors.text.primary }}
                       placeholder="What's this about?"
                     />
+                    {errors.subject && <p id="subject-error" className="mt-1 text-sm text-red-700">{errors.subject}</p>}
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block font-semibold mb-2 text-sm sm:text-base"
-                      style={{ color: themeColors.text.secondary }}
-                    >
+                  <div className="md:col-span-2">
+                    <label htmlFor="message" className="block font-semibold mb-2 text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
                       Message
                     </label>
                     <textarea
@@ -252,40 +308,47 @@ export const ContactPage: React.FC = () => {
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
                       required
                       disabled={isSubmitting}
-                      rows={4}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors resize-vertical text-sm sm:text-base disabled:opacity-50"
-                      style={{
-                        backgroundColor: themeColors.background.white,
-                        borderColor: themeColors.primary.lightGray,
-                        color: themeColors.text.primary
-                      }}
+                      rows={6}
+                      aria-invalid={!!errors.message}
+                      aria-describedby={errors.message ? "message-error" : undefined}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors resize-y text-sm sm:text-base disabled:opacity-50"
+                      style={{ backgroundColor: themeColors.background.white, borderColor: themeColors.primary.lightGray, color: themeColors.text.primary }}
                       placeholder="Tell us more about how we can help you..."
                     />
+                    {errors.message && <p id="message-error" className="mt-1 text-sm text-red-700">{errors.message}</p>}
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-semibold text-base sm:text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
-                    style={{
-                      backgroundColor: themeColors.primary.w2,
-                      color: themeColors.primary.w
-                    }}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                        Send Message
-                      </>
-                    )}
-                  </button>
+                  {/* Honeypot field (hidden from real users) */}
+                  <div style={{ display: "none" }} aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input id="website" name="website" value={formData.website} onChange={handleInputChange} />
+                  </div>
+
+                  <div className="md:col-span-2 flex justify-center">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || !isFormValid}
+                      className="py-3 sm:py-4 px-6 sm:px-10 rounded-xl font-semibold text-base sm:text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
+                      style={{ backgroundColor: themeColors.primary.w2, color: themeColors.primary.w }}
+                      aria-disabled={isSubmitting || !isFormValid}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" aria-hidden />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                          Send Message
+                        </>
+                      )}
+                    </button>
+                  </div>
+
                 </form>
               </div>
 
@@ -296,8 +359,7 @@ export const ContactPage: React.FC = () => {
                     Get In Touch
                   </h3>
                   <p className="text-sm sm:text-base leading-relaxed mb-6 sm:mb-8" style={{ color: themeColors.text.secondary }}>
-                    Ready to start your learning journey with us? We'd love to hear
-                    from you. Send us a message and we'll respond as soon as possible.
+                    Ready to start your learning journey with us? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
                   </p>
                 </div>
 
@@ -308,17 +370,21 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Email</h4>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>deecobyrishika@gmail.com</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
+                        <a href="mailto:deecobyrishika@gmail.com" className="underline">deecobyrishika@gmail.com</a>
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: themeColors.accent.green }}>
-                      <Phone className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: themeColors.accent.red }} />
+                      <Phone className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: themeColors.accent.pink }} />
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Phone</h4>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>+91 9903996663</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
+                        <a href="tel:+919903996663" className="underline">+91 9903996663</a>
+                      </p>
                     </div>
                   </div>
 
@@ -329,17 +395,19 @@ export const ContactPage: React.FC = () => {
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Address</h4>
                       <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>6/1A Moira Street</p>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}></p>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-6 rounded-xl" style={{ backgroundColor: themeColors.background.lightGray }}>
-                  <h4 className="font-semibold mb-2 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Office Hours</h4>
-                  <div className="text-xs sm:text-sm space-y-1" style={{ color: themeColors.text.secondary }}>
-                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p>Saturday: 10:00 AM - 4:00 PM</p>
-                    <p>Sunday: Closed</p>
+                <div className="pt-4 border-t" style={{ borderColor: themeColors.primary.lightGray }}>
+                  <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>
+                    Follow us:
+                  </p>
+                  <div className="flex gap-3 mt-3">
+                    <a aria-label="Facebook" href="#" className="p-2 rounded-md hover:opacity-90"><Facebook /></a>
+                    <a aria-label="Twitter" href="#" className="p-2 rounded-md hover:opacity-90"><Twitter /></a>
+                    <a aria-label="Instagram" href="#" className="p-2 rounded-md hover:opacity-90"><Instagram /></a>
+                    <a aria-label="LinkedIn" href="#" className="p-2 rounded-md hover:opacity-90"><Linkedin /></a>
                   </div>
                 </div>
               </div>
@@ -349,4 +417,4 @@ export const ContactPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}

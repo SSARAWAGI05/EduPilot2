@@ -30,7 +30,6 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  
 
   useEffect(() => {
     // Auto-play all videos on mount
@@ -144,9 +143,8 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
             return (
               <div
                 key={index}
-                className={`flex-shrink-0 w-[220px] transition-all duration-300 ${
-                  isSelected ? 'scale-110 z-50' : 'scale-100 z-10'
-                }`}
+                className={`relative flex-shrink-0 w-[220px] transition-transform duration-300
+    ${isSelected ? 'scale-110 z-[60]' : 'scale-100 z-[10]'}`}
                 style={{ position: 'relative' }}
               >
                 {/* Active indicator */}
@@ -169,11 +167,11 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
                   <div className="aspect-[9/16] bg-black">
                     <video
                       ref={el => videoRefs.current[index] = el}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover relative z-10"
                       src={video.url}
                       loop
                       playsInline
-                      muted={true}
+                      muted
                       autoPlay
                     />
 
@@ -195,7 +193,9 @@ const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
 
                     {/* Video Title Overlay */}
                     {video.title && (
-                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+                      <div className="absolute bottom-0 left-0 right-0 p-3 
+                bg-gradient-to-t from-black/80 to-transparent
+                z-30 pointer-events-none">
                         <p className="text-white text-sm font-semibold whitespace-pre-line">
                           {video.title}
                         </p>
@@ -474,59 +474,65 @@ const testimonialsRow3 = useMemo(() => [
                 >
                   <div className="aspect-[9/16] relative">
                     {finalHeroVideoUrl ? (
-                      <div className="relative w-full h-full">
+                      <div
+                        className="relative w-full h-full cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!videoRef) return;
+
+                          if (videoRef.muted) {
+                            // Muted → unmute & restart
+                            videoRef.currentTime = 0;
+                            videoRef.muted = false;
+                            videoRef.play();
+                            setIsMuted(false);
+                          } else {
+                            // Playing → mute
+                            videoRef.muted = true;
+                            setIsMuted(true);
+                          }
+                        }}
+
+                      >
                         <video
                           ref={setVideoRef}
                           className="w-full h-full object-cover"
                           autoPlay
-                          muted={isMuted}
+                          muted
                           playsInline
                           loop
                         >
                           <source src={finalHeroVideoUrl} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
-                        
-                        {/* Mute/Unmute Button */}
+
+                        {/* Unmute / Activate Button */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (videoRef) {
-                              if (isMuted) {
-                                // Unmute and restart from beginning
-                                videoRef.currentTime = 0;
-                                videoRef.muted = false;
-                                videoRef.play();
-                                setIsMuted(false);
-                              } else {
-                                // Mute
-                                videoRef.muted = true;
-                                setIsMuted(true);
-                              }
+                            if (!videoRef) return;
+
+                            if (videoRef.muted) {
+                              // Muted → unmute & restart
+                              videoRef.currentTime = 0;
+                              videoRef.muted = false;
+                              videoRef.play();
+                              setIsMuted(false);
+                            } else {
+                              // Playing → mute
+                              videoRef.muted = true;
+                              setIsMuted(true);
                             }
                           }}
+
                           className="absolute bottom-20 right-4 w-12 h-12 rounded-full bg-black/70 hover:bg-black/90 flex items-center justify-center transition-all hover:scale-110 z-20 shadow-xl"
                         >
-                          {isMuted ? (
-                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </svg>
-                          ) : (
-                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-                            </svg>
-                          )}
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" />
+                          </svg>
                         </button>
                       </div>
-                    ) : (
-                      <div className="text-center text-white dark:text-gray-100 p-8 flex flex-col items-center justify-center h-full">
-                        <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-400 shadow-lg">
-                          <Play className="w-10 h-10 ml-1" />
-                        </div>
-                        <p className="text-lg font-semibold mb-2">Welcome Video</p>
-                        <p className="text-sm opacity-80">Custom video player</p>
-                      </div>
-                    )}
+                    ) : null}
                   </div>
                   <div
                     className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl backdrop-blur-md border border-white/20 dark:border-gray-600/20 bg-black/80 dark:bg-gray-900/80"
