@@ -268,17 +268,65 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   }, [currentSlide]);
 
   const testimonials = useMemo(() => [
-  { text: "Amazing courses that helped me land my dream job!", rating: 5, highlight: "dream job" },
-  { text: "The AI tools are incredibly helpful for learning.", rating: 5, highlight: "AI tools" },
-  { text: "Rishika's teaching style is exceptional and engaging.", rating: 4, highlight: "exceptional" },
-  { text: "Best investment I made for my career development.", rating: 5, highlight: "best investment" }
+  { 
+    text: "Rishika explains maths concepts in such a simple way. Even tough topics feel easy after her classes.", 
+    rating: 4, 
+    highlight: "simple way",
+    name: "Aditi Mehra",
+    institute: "Delhi University"
+  },
+  { 
+    text: "Her economics lectures are very structured. She breaks down complex theories into small, clear steps.", 
+    rating: 5, 
+    highlight: "breaks down complex theories",
+    name: "Rohan Iyer",
+    institute: "St. Xavier’s College, Mumbai"
+  },
+  { 
+    text: "Statistics was always scary for me, but Rishika’s teaching made it logical and manageable.", 
+    rating: 5, 
+    highlight: "logical and manageable",
+    name: "Sneha Kulkarni",
+    institute: "NMIMS Mumbai"
+  },
+  { 
+    text: "The mock tests are very close to actual exam level and helped me gain confidence.", 
+    rating: 4, 
+    highlight: "mock tests",
+    name: "Arpit Jain",
+    institute: "Christ University, Bangalore"
+  }
 ], []);
 
 const testimonialsRow3 = useMemo(() => [
-  { text: "Certificates helped me get recognition at my workplace.", rating: 5, highlight: "recognition" },
-  { text: "The AI Hub tools boosted my productivity significantly.", rating: 4, highlight: "productivity" },
-  { text: "Offline access feature is perfect for my schedule.", rating: 5, highlight: "perfect" },
-  { text: "30-day guarantee shows confidence in their quality.", rating: 5, highlight: "confidence" }
+  { 
+    text: "I am a working professional and her flexible teaching style made it easy to learn alongside my job.", 
+    rating: 5, 
+    highlight: "flexible teaching style",
+    name: "Vikas Agarwal",
+    institute: "Self-employed (Stock Trader)"
+  },
+  { 
+    text: "Rishika connects finance concepts with real-life examples, which makes learning very practical.", 
+    rating: 5, 
+    highlight: "real-life examples",
+    name: "Nidhi Bansal",
+    institute: "IIM Indore"
+  },
+  { 
+    text: "Her step-by-step approach helped me finally understand macroeconomics properly.", 
+    rating: 4, 
+    highlight: "step-by-step approach",
+    name: "Kunal Saxena",
+    institute: "Hansraj College, DU"
+  },
+  { 
+    text: "I am an entrepreneur and her finance sessions helped me understand cash flow and basic economics clearly.", 
+    rating: 4.5, 
+    highlight: "finance sessions",
+    name: "Pooja Shah",
+    institute: "Startup Founder"
+  }
 ], []);
 
   const services = [
@@ -673,12 +721,14 @@ const testimonialsRow3 = useMemo(() => [
                       "{testimonial.text}"
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-red-400 flex items-center justify-center text-white font-bold">
-                        {(index % testimonials.length) + 1}
+                      <div className="flex flex-col">
+                        <p className="text-gray-800 dark:text-gray-300 font-bold text-sm">
+                          {testimonial.name}
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs">
+                          {testimonial.institute}
+                        </p>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                        Student {(index % testimonials.length) + 1}
-                      </p>
                     </div>
                   </div>
                 ))}
@@ -712,12 +762,14 @@ const testimonialsRow3 = useMemo(() => [
                       "{testimonial.text}"
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white font-bold">
-                        {(index % testimonialsRow3.length) + 9}
+                      <div className="flex flex-col">
+                        <p className="text-gray-800 dark:text-gray-300 font-bold text-sm">
+                          {testimonial.name}
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs">
+                          {testimonial.institute}
+                        </p>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-400 font-semibold text-sm">
-                        Student {(index % testimonialsRow3.length) + 9}
-                      </p>
                     </div>
                   </div>
                 ))}

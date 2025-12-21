@@ -980,7 +980,7 @@ const resetFocusTimer = () => {
               
               <button className="px-8 py-4 rounded-xl font-bold text-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1
  shadow-lg inline-block w-fit" style={{ backgroundColor: themeColors.accent.yellowBright, color: themeColors.text.primary }}>
-                Register Now
+                Explore Live Classes
               </button>
             </div>
 
@@ -1104,15 +1104,37 @@ const resetFocusTimer = () => {
 
         {/* Featured Courses Section */}
         <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
-          <div className="mb-6">
-                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
-                  Featured Courses
-                </h2>
-                <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
-                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
-                </svg>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div>
+              <h2
+                className="text-3xl sm:text-4xl font-bold mb-2 inline-block"
+                style={{ color: themeColors.text.primary }}
+              >
+                Featured Courses
+              </h2>
+              <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                <path
+                  d="M0,4 Q60,2 120,5 T250,4"
+                  stroke={themeColors.text.primary}
+                  strokeWidth="3"
+                  fill="none"
+                />
+              </svg>
+            </div>
 
-                
+            {/* 🔹 Explore More Courses Button */}
+            <button
+              onClick={() => onNavigate?.("courses")}
+              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-[1.03] hover:-translate-y-1
+                flex items-center gap-2"
+              style={{
+                backgroundColor: themeColors.primary.black,
+                color: themeColors.text.white,
+              }}
+            >
+              Explore More Courses
+              <ChevronRight size={18} />
+            </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-4 overflow-visible">
           {/* Loading */}
@@ -1204,13 +1226,37 @@ const resetFocusTimer = () => {
           className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 overflow-visible"
           style={{ backgroundColor: themeColors.accent.blueLight }}
         >
-          <div className="mb-6">
-                <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
-                  AI Hub
-                </h2>
-                <svg className="w-36 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
-                  <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
-                </svg>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div>
+              <h2
+                className="text-3xl sm:text-4xl font-bold mb-2 inline-block"
+                style={{ color: themeColors.text.primary }}
+              >
+                AI Hub
+              </h2>
+              <svg className="w-36 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                <path
+                  d="M0,4 Q60,2 120,5 T250,4"
+                  stroke={themeColors.text.primary}
+                  strokeWidth="3"
+                  fill="none"
+                />
+              </svg>
+            </div>
+
+            {/* 🔹 Explore AI Hub Button */}
+            <button
+              onClick={() => onNavigate?.("ai-hub")}
+              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-[1.03] hover:-translate-y-1
+                flex items-center gap-2"
+              style={{
+                backgroundColor: themeColors.primary.black,
+                color: themeColors.text.white,
+              }}
+            >
+              Explore AI Hub
+              <ChevronRight size={18} />
+            </button>
           </div>
           
           {/* Horizontally Scrollable Container */}
