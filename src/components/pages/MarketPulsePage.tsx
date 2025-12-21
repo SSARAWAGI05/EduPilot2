@@ -368,32 +368,22 @@ const MarketPulsePage: React.FC = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {filteredReels.map((reel) => (
-                    <article
-                      key={reel.id}
-                      className="group rounded-2xl overflow-hidden transition hover:shadow-2xl hover:-translate-y-1 cursor-pointer border active:scale-95"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleReelClick(reel.id, reel.reel_url);
-                      }}
-                      onTouchEnd={(e) => {
-                        e.preventDefault();
-                        handleReelClick(reel.id, reel.reel_url);
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleReelClick(reel.id, reel.reel_url);
-                        }
-                      }}
+                  <article
+                    key={reel.id}
+                    className="group rounded-2xl overflow-hidden transition border"
+                    style={{
+                      borderColor: themeColors.card.border,
+                      backgroundColor: themeColors.card.bg,
+                    }}
+                  >
+                    <button
+                      onClick={() => handleReelClick(reel.id, reel.reel_url)}
+                      className="w-full text-left hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-98"
                       style={{
-                        borderColor: themeColors.card.border,
-                        backgroundColor: themeColors.card.bg,
                         WebkitTapHighlightColor: 'transparent',
                         touchAction: 'manipulation',
                       }}
-                    >
+                    ></button>
                     {/* Thumbnail */}
                     <div
                       className="relative h-64 overflow-hidden"
