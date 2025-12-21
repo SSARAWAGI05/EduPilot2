@@ -370,39 +370,48 @@ const testimonialsRow3 = useMemo(() => [
    ];
 
   const faqs = [
-    {
-      question: "How do I get started with the courses?",
-      answer: "Getting started is easy! Simply sign up for an account, browse our course catalog, and enroll in the courses that interest you. All courses come with detailed prerequisites and learning paths."
-    },
-    {
-      question: "What are the prerequisites for AI courses?",
-      answer: "Most of our AI courses require basic programming knowledge in Python. We also offer beginner-friendly courses that start from the fundamentals. Check each course description for specific requirements."
-    },
-    {
-      question: "Can I access courses offline?",
-      answer: "Yes! Once you enroll, you can download course materials and videos for offline viewing. However, some interactive elements and live sessions require an internet connection."
-    },
-    {
-      question: "Do you offer one-on-one mentoring?",
-      answer: "Absolutely! We provide personalized mentoring sessions with industry experts. You can book one-on-one sessions or join small group mentoring programs based on your learning goals."
-    },
-    {
-      question: "What's included in the AI Hub?",
-      answer: "The AI Hub includes access to cutting-edge AI tools, interactive coding environments, project templates, and exclusive resources to boost your productivity and learning experience."
-    },
-    {
-      question: "How often are live classes conducted?",
-      answer: "Live classes are conducted weekly for most courses. We also offer intensive bootcamps with daily sessions. All live classes are recorded and available for later viewing."
-    },
-    {
-      question: "Can I get a refund if I'm not satisfied?",
-      answer: "Yes, we offer a 30-day money-back guarantee. If you're not completely satisfied with your course within the first 30 days, we'll provide a full refund, no questions asked."
-    },
-    {
-      question: "Do you provide certificates upon completion?",
-      answer: "Yes! You'll receive a verified digital certificate upon successful completion of each course. These certificates are recognized by industry partners and can be shared on LinkedIn."
-    }
-  ];
+  {
+    question: "When will the courses be live?",
+    answer:
+      "Our courses are launching very soon. We’re currently putting the final touches in place to ensure a high-quality learning experience. Stay tuned for the official announcement!"
+  },
+  {
+    question: "When will the AI Hub tools be available?",
+    answer:
+      "The AI Hub tools will be going live very soon. We’re actively working on deploying powerful and easy-to-use tools—keep an eye out for updates!"
+  },
+  {
+    question: "How can I register for live classes?",
+    answer:
+      "You can register for live classes by contacting us directly at +91 9903996663, emailing us at saragirishika748@gmail.com, or by using the Contact Us section on our website. Simply drop your message there and our team will get back to you shortly."
+  },
+  {
+    question: "What subjects are covered in the live classes?",
+    answer:
+      "Our live classes cover a wide range of subjects including Mathematics, Statistics, Economics, and Finance, designed to build both conceptual clarity and practical understanding."
+  },
+  {
+    question: "What is Market Pulse?",
+    answer:
+      "Market Pulse provides simplified insights into global finance and economics. It breaks down complex global trends, policies, and market movements into easy-to-understand explanations, making them accessible for everyone."
+  },
+  {
+    question: "What features are included in live classes?",
+    answer:
+      "Live classes offer one-on-one or group learning options, flexible scheduling, access to curated class notes, session recordings, transcripts, daily interactive quizzes, and many more engaging learning features."
+  },
+  {
+    question: "Which age group are these courses suitable for?",
+    answer:
+      "Our programs are suitable for learners of all age groups who are interested in understanding global trends, economics, and finance—whether for exams, interviews, career growth, or general knowledge."
+  },
+  {
+    question: "Why should I choose De-Eco by Rishika?",
+    answer:
+      "De-Eco focuses on simplifying complex concepts through practical examples, real-world applications, and interactive learning. Our goal is to help learners gain clarity, confidence, and a strong understanding of global economics and finance."
+  }
+];
+
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
