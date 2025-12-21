@@ -639,8 +639,57 @@ const testimonialsRow3 = useMemo(() => [
 
       <div className="max-w-7xl mx-auto px-6 relative">
 
+        {/* ================= MOBILE VIEW (STACKED) ================= */}
+        <div className="lg:hidden flex flex-col items-center gap-10">
+
+          {/* Hub */}
+          <div className="relative">
+            <div className="absolute -inset-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse"></div>
+
+            <div
+              className="relative rounded-full w-44 h-44 shadow-2xl border-4 flex items-center justify-center text-center"
+              style={{
+                backgroundColor: isDark ? "#ffffff" : "#000000",
+                borderColor: isDark ? themeColors.primary.black : "#000000",
+                color: isDark ? "#000000" : "#ffffff",
+              }}
+            >
+              <h3 className="text-xl font-black leading-tight">
+                What We Offer
+              </h3>
+            </div>
+          </div>
+
+          {/* Services (stacked cards) */}
+          <div className="w-full flex flex-col gap-6 mt-6">
+            {services.map((service, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl p-5 shadow-lg border-2"
+                style={{ backgroundColor: service.color }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-white/90 flex items-center justify-center shrink-0">
+                    {service.icon}
+                  </div>
+
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900 mb-1">
+                      {service.title}
+                    </h3>
+                    <p className="text-sm text-gray-800 leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+
         {/* Hub & Spoke Container */}
-        <div className="relative min-h-[800px] lg:min-h-[900px] flex items-center justify-center">
+        <div className="relative min-h-[900px] hidden lg:flex items-center justify-center">
           
           {/* Center Hub - WHAT WE OFFER */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
@@ -683,7 +732,7 @@ const testimonialsRow3 = useMemo(() => [
           ];
 
           const angle = (angles[idx] * Math.PI) / 180;
-            const radius = 350; // Distance from center
+            const radius = window.innerWidth < 1024 ? 260 : 350;
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
 
