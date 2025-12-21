@@ -137,17 +137,6 @@ const MarketPulsePage: React.FC = () => {
     return `${diffDays}d ago`;
   };
 
-  // Increment view count
-  const handleReelClick = async (reelId: string, reelUrl: string) => {
-    try {
-      await supabase.rpc('increment_market_reel_views', { p_reel_id: reelId });
-      window.open(reelUrl, "_blank");
-    } catch (err) {
-      console.error('Error incrementing view count:', err);
-      window.open(reelUrl, "_blank");
-    }
-  };
-
   const hexToRgba = (hex: string, alpha = 1) => {
     const h = hex.replace("#", "");
     const bigint = parseInt(
@@ -368,22 +357,26 @@ const MarketPulsePage: React.FC = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {filteredReels.map((reel) => (
-                  <article
-                    key={reel.id}
-                    className="group rounded-2xl overflow-hidden transition border"
-                    style={{
-                      borderColor: themeColors.card.border,
-                      backgroundColor: themeColors.card.bg,
-                    }}
-                  >
-                    <button
-                      onClick={() => handleReelClick(reel.id, reel.reel_url)}
-                      className="w-full text-left hover:shadow-2xl hover:-translate-y-1 transition-all active:scale-98"
+                    <a
+                      key={reel.id}
+                      href={reel.reel_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group rounded-2xl overflow-hidden transition hover:shadow-2xl hover:-translate-y-1 cursor-pointer border active:scale-95 block"
+                      onClick={() => {
+                        // fire-and-forget (DO NOT await)
+                        supabase.rpc('increment_market_reel_views', {
+                          p_reel_id: reel.id,
+                        });
+                      }}
                       style={{
+                        borderColor: themeColors.card.border,
+                        backgroundColor: themeColors.card.bg,
                         WebkitTapHighlightColor: 'transparent',
                         touchAction: 'manipulation',
                       }}
-                    ></button>
+                    >
+
                     {/* Thumbnail */}
                     <div
                       className="relative h-64 overflow-hidden"
@@ -496,7 +489,7 @@ const MarketPulsePage: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  </article>
+                  </a>
                 ))}
               </div>
             )}
