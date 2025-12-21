@@ -9,6 +9,9 @@ import { ContactPage } from "./pages/ContactPage";
 import { AboutUsPage } from "./pages/AboutUsPage";
 import MarketPulsePage from "./pages/MarketPulsePage";
 import ProfileCompletionModal from "./ProfileCompletionModal";
+import { Footer } from "./Footer";
+import { colors, getPriorityColor, getThemeColors } from '../styles/colors';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface AuthenticatedAppProps {
   onLogout: () => void;
@@ -16,8 +19,28 @@ interface AuthenticatedAppProps {
 
 export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) => {
   const [currentPage, setCurrentPage] = useState("home");
+  const { isDark, isFocusMode } = useTheme();
+  const themeColors = getThemeColors(isDark, isFocusMode);
   const [profileIncomplete, setProfileIncomplete] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--app-bg",
+      themeColors.primary.lightGray
+    );
+  }, [themeColors]);
+
+
+  useEffect(() => {
+  // Always scroll to top on page change
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant", // use "smooth" if you want animation
+    });
+  }, [currentPage]);
+
 
   useEffect(() => {
     const checkProfile = async () => {
@@ -78,7 +101,10 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: themeColors.primary.lightGray }}
+    >
       {profileIncomplete && userId ? (
         <ProfileCompletionModal
           userId={userId}
@@ -86,12 +112,18 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
         />
       ) : (
         <>
+         <>
           <Navigation
             currentPage={currentPage}
             onPageChange={setCurrentPage}
             onLogout={onLogout}
           />
+
           {renderPage()}
+
+          <Footer onNavigate={setCurrentPage} />
+        </>
+
         </>
       )}
     </div>
