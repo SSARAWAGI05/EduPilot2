@@ -8,7 +8,7 @@ import {
   Globe,
   TrendingUp,
   BookOpen,
-  ArrowRight,
+  ArrowRight,Phone, MapPin, 
   Mail,
   Linkedin,
   Twitter,
@@ -247,58 +247,136 @@ export const AboutUsPage: React.FC = () => {
 
       </div>
 
-      {/* Footer - preserved style but less vertical padding so it reads denser on smaller screens */}
-      <footer className="text-white rounded-2xl shadow-lg mx-4 mb-6 mt-8" style={{ backgroundColor: '#000', borderColor: '#000' }}>
-        <div className="container mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="space-y-2 text-center sm:text-left">
-              <h3 className="text-lg font-bold text-white">DE-ECO</h3>
-              <p className="text-gray-300 text-xs">Empowering learners worldwide with innovative educational experiences and cutting-edge technology.</p>
-              <div className="flex space-x-3 justify-center sm:justify-start mt-2">
-                <Facebook className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
-                <Twitter className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
-                <Instagram className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
-                <Linkedin className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
+      {/* Footer */}
+      <footer
+        className="mx-6 my-10 rounded-3xl border shadow-2xl"
+        style={{
+          backgroundColor: themeColors.primary.black,
+          borderColor: themeColors.primary.black,
+          color: themeColors.text.white,
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
+            {/* Brand */}
+            <div className="space-y-4 text-center sm:text-left">
+              <h3 className="text-2xl font-bold">LearnHub</h3>
+              <p className="text-sm leading-relaxed" style={{ color: themeColors.text.secondary }}>
+                Empowering learners worldwide through innovative education and
+                cutting-edge technology.
+              </p>
+
+              {/* Socials */}
+              <div className="flex items-center justify-center sm:justify-start gap-3">
+              {[
+                {
+                  href: "https://chat.whatsapp.com/FzCODHVaAnFEoYgKjMEgM7",
+                  icon: <i className="fa-brands fa-whatsapp text-sm" />,
+                },
+                {
+                  href: "#",
+                  icon: <Instagram className="w-4 h-4" />,
+                },
+                {
+                  href: "#",
+                  icon: <Linkedin className="w-4 h-4" />,
+                },
+              ].map(({ href, icon }, idx) => (
+                <a
+                  key={idx}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 flex items-center justify-center rounded-md transition hover:scale-110"
+                  style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                >
+                  {icon}
+                </a>
+              ))}
               </div>
+
             </div>
 
+            {/* Quick Links */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm font-semibold mb-2">Quick Links</h4>
-              <ul className="space-y-1 text-xs">
-                <li><a href="#" className="text-gray-300 hover:text-white">Courses</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">Dashboard</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">Community</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">Certificates</a></li>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-sm" style={{ color: themeColors.text.secondary }}>
+                {["Courses", "Dashboard", "Community", "Certificates", "Help Center"].map(
+                  (item) => (
+                    <li key={item}>
+                      <a href="#" className="hover:text-white transition">
+                        {item}
+                      </a>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
 
+            {/* Support */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm font-semibold mb-2">Support</h4>
-              <ul className="space-y-1 text-xs">
-                <li><a href="#" className="text-gray-300 hover:text-white">FAQ</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">Contact Us</a></li>
-                <li><a href="#" className="text-gray-300 hover:text-white">Technical Support</a></li>
+              <h4 className="text-lg font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-sm" style={{ color: themeColors.text.secondary }}>
+                {["FAQ", "Contact Us", "Technical Support", "Privacy Policy", "Terms of Service"].map(
+                  (item) => (
+                    <li key={item}>
+                      <a href="#" className="hover:text-white transition">
+                        {item}
+                      </a>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
 
-            <div className="text-center sm:text-left">
-              <h4 className="text-sm font-semibold mb-2">Contact</h4>
-              <div className="text-xs">
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Mail className="w-3 h-3 mr-2 text-gray-400" />
-                  <span className="text-gray-300">support@de-eco.com</span>
-                </div>
-                <p className="text-gray-300 mt-2">Join us in shaping the future of education</p>
+            {/* Contact */}
+            <div className="text-center sm:text-left space-y-3">
+              <h4 className="text-lg font-semibold mb-4">Contact</h4>
+
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm">
+                <Mail className="w-4 h-4" />
+                <span style={{ color: themeColors.text.secondary }}>
+                  support@learnhub.com
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm">
+                <Phone className="w-4 h-4" />
+                <span style={{ color: themeColors.text.secondary }}>
+                  +1 (555) 123-4567
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm">
+                <MapPin className="w-4 h-4" />
+                <span style={{ color: themeColors.text.secondary }}>
+                  San Francisco, CA
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-700 mt-4 pt-3 flex flex-col md:flex-row justify-between items-center text-center">
-            <p className="text-gray-400 text-xs">© 2024 DE-ECO. All rights reserved.</p>
-            <div className="flex space-x-3 text-xs text-gray-400 mt-2 md:mt-0">
-              <a href="#" className="hover:text-white">Privacy</a>
-              <a href="#" className="hover:text-white">Terms</a>
-              <a href="#" className="hover:text-white">Accessibility</a>
+          {/* Bottom Bar */}
+          <div
+            className="mt-10 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-4 text-sm"
+            style={{ borderColor: themeColors.text.tertiary }}
+          >
+            <p style={{ color: themeColors.text.tertiary }}>
+              © 2024 LearnHub. All rights reserved.
+            </p>
+
+            <div className="flex gap-6">
+              {["Privacy", "Terms", "Accessibility"].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="hover:text-white transition"
+                  style={{ color: themeColors.text.tertiary }}
+                >
+                  {item}
+                </a>
+              ))}
             </div>
           </div>
         </div>

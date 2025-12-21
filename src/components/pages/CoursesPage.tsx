@@ -99,7 +99,7 @@ export const CoursesPage: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: themeColors.primary.lightGray }} className="min-h-screen">
-      <div className="container mx-auto px-4 pt-28 pb-12">
+      <div className="ccontainer mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-8 sm:pb-12">
 
         {/* HEADER */}
         <div className="text-center mb-10">

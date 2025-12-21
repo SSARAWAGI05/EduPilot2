@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'; // Add useRef here
-import { Play, Plus, Star, ChevronRight, ChevronLeft, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react'; // Add ChevronLeft here
+import { Play, Plus, Star, ChevronRight, Globe, Users, Video, Brain, FileText, Sparkles, TrendingUp, Award, Zap } from 'lucide-react'; // Add ChevronLeft here
 import { colors, getPriorityColor, getThemeColors } from '../styles/colors';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -221,7 +221,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const defaultHeroVideoUrl = "/graphics/deeco.mp4";
+  const defaultHeroVideoUrl = "/graphics/deeco.mov";
   const defaultTestimonialVideoUrl = "/graphics/rs.mp4";
 
   const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
@@ -274,13 +274,6 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   { text: "Best investment I made for my career development.", rating: 5, highlight: "best investment" }
 ], []);
 
-const testimonialsRow2 = useMemo(() => [
-  { text: "The personalized mentoring changed my career path completely!", rating: 5, highlight: "career path" },
-  { text: "Interactive coding environments made learning so much easier.", rating: 4, highlight: "much easier" },
-  { text: "Live classes are engaging and well-structured.", rating: 5, highlight: "well-structured" },
-  { text: "The community support is incredible and motivating.", rating: 4, highlight: "incredible" }
-], []);
-
 const testimonialsRow3 = useMemo(() => [
   { text: "Certificates helped me get recognition at my workplace.", rating: 5, highlight: "recognition" },
   { text: "The AI Hub tools boosted my productivity significantly.", rating: 4, highlight: "productivity" },
@@ -320,8 +313,8 @@ const testimonialsRow3 = useMemo(() => [
 ];
 
   const stats = [
-     { icon: <Users className="w-6 h-6" />, value: "10K+", label: "Happy Students", color: themeColors.accent.yellow },
-     { icon: <Award className="w-6 h-6" />, value: "50+", label: "Expert Courses", color: themeColors.accent.red },
+     { icon: <Users className="w-6 h-6" />, value: "1000+", label: "Hours", color: themeColors.accent.yellow },
+     { icon: <Globe className="w-6 h-6" />, value: "7+", label: "Countries", color: themeColors.accent.red },
      { icon: <TrendingUp className="w-6 h-6" />, value: "95%", label: "Success Rate", color: themeColors.accent.blue },
      { icon: <Zap className="w-6 h-6" />, value: "24/7", label: "AI Support", color: themeColors.accent.orange }
    ];
@@ -403,36 +396,45 @@ const testimonialsRow3 = useMemo(() => [
                         <video
                           ref={setVideoRef}
                           className="w-full h-full object-cover"
-                          controls={false}
                           autoPlay
                           muted={isMuted}
                           playsInline
-                          webkit-playsinline="true"
                           loop
-                          onClick={handlePlayPause}
                         >
                           <source src={finalHeroVideoUrl} type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
                         
-                        {/* Enhanced Play/Pause Button */}
-                        <div 
-                          className="absolute inset-0 flex items-center justify-center cursor-pointer group"
-                          onClick={handlePlayPause}
+                        {/* Mute/Unmute Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (videoRef) {
+                              if (isMuted) {
+                                // Unmute and restart from beginning
+                                videoRef.currentTime = 0;
+                                videoRef.muted = false;
+                                videoRef.play();
+                                setIsMuted(false);
+                              } else {
+                                // Mute
+                                videoRef.muted = true;
+                                setIsMuted(true);
+                              }
+                            }
+                          }}
+                          className="absolute bottom-20 right-4 w-12 h-12 rounded-full bg-black/70 hover:bg-black/90 flex items-center justify-center transition-all hover:scale-110 z-20 shadow-xl"
                         >
-                          <div className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-125 shadow-2xl ${
-                            isPlaying ? 'bg-black/70 dark:bg-white/70 backdrop-blur-md' : 'bg-white/95 dark:bg-gray-800/95 backdrop-blur-md'
-                          }`}>
-                            {isPlaying ? (
-                              <div className="flex gap-1.5">
-                                <div className="w-2 h-8 bg-white rounded-full animate-pulse"></div>
-                                <div className="w-2 h-8 bg-white rounded-full animate-pulse delay-75"></div>
-                              </div>
-                            ) : (
-                              <Play className="w-10 h-10 ml-1 text-gray-900 dark:text-gray-100 group-hover:text-pink-500 transition-colors" />
-                            )}
-                          </div>
-                        </div>
+                          {isMuted ? (
+                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          ) : (
+                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </button>
                       </div>
                     ) : (
                       <div className="text-center text-white dark:text-gray-100 p-8 flex flex-col items-center justify-center h-full">

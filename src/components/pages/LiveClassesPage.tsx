@@ -73,8 +73,11 @@ interface UserStats {
   recordings_watched: number;
   attendance_rate: number;
 }
+interface LiveClassesPageProps {
+  onPageChange: (page: string) => void;
+}
 
-export const LiveClassesPage: React.FC = () => {
+export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }) => {
   const { isDark, isFocusMode } = useTheme();
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [currentSection, setCurrentSection] = useState<SidebarSection>('home');
@@ -819,26 +822,7 @@ export const LiveClassesPage: React.FC = () => {
         </p>
 
         <button
-          onClick={async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
-
-            // Example: enroll user in the first available class
-            const { data: cls } = await supabase
-              .from('live_classes')
-              .select('id')
-              .limit(1)
-              .single();
-
-            if (cls) {
-              await supabase.from('class_enrollments').insert({
-                user_id: user.id,
-                class_id: cls.id
-              });
-
-              window.location.reload();
-            }
-          }}
+          onClick={() => onPageChange('contact')}
           className="w-full bg-black dark:bg-white text-white dark:text-black py-3 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition"
         >
           Register Now

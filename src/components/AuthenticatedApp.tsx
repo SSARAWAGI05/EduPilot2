@@ -58,7 +58,7 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
         return <CoursesPage />;
 
       case "live-classes":
-        return <LiveClassesPage />;
+        return <LiveClassesPage onPageChange={setCurrentPage} />;
 
       case "ai-hub":
         return <AIHubPage />;

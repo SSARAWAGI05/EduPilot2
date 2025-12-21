@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { getThemeColors } from '../../styles/colors';
+import { supabase } from '../../supabaseClient';
 
 export const ContactPage: React.FC = () => {
   const { isDark, isFocusMode } = useTheme();
@@ -11,9 +12,44 @@ export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: '',
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Get user ID if logged in
+  useEffect(() => {
+    const getUserId = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        // Pre-fill email if user is logged in
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('email, first_name, last_name, phone')
+          .eq('id', user.id)
+          .single();
+
+        if (profile) {
+          setFormData(prev => ({
+            ...prev,
+            email: profile.email || prev.email,
+            name: profile.first_name && profile.last_name 
+              ? `${profile.first_name} ${profile.last_name}` 
+              : prev.name,
+            phone: profile.phone || prev.phone
+          }));
+        }
+      }
+    };
+
+    getUserId();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -22,14 +58,49 @@ export const ContactPage: React.FC = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear error message when user starts typing
+    if (submitError) setSubmitError('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitError('');
 
-    alert("Thank you for your message! We'll get back to you soon.");
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      // Insert contact message into database
+      const { data, error } = await supabase
+        .from('contact_messages')
+        .insert([
+          {
+            user_id: userId, // Will be null if user is not logged in
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.subject,
+            message: formData.message,
+            status: 'new'
+          }
+        ])
+        .select();
+
+      if (error) throw error;
+
+      // Success!
+      setSubmitSuccess(true);
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 5000);
+
+    } catch (error: any) {
+      console.error('Error submitting contact form:', error);
+      setSubmitError('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -44,6 +115,24 @@ export const ContactPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
               {/* Contact Form */}
               <div>
+                {/* Success Message */}
+                {submitSuccess && (
+                  <div className="mb-6 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: themeColors.accent.green }}>
+                    <CheckCircle className="w-6 h-6 text-green-800" />
+                    <div>
+                      <p className="font-semibold text-green-800">Message Sent Successfully!</p>
+                      <p className="text-sm text-green-700">We'll get back to you soon.</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {submitError && (
+                  <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: themeColors.accent.red }}>
+                    <p className="text-red-800">{submitError}</p>
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   <div>
                     <label
@@ -60,7 +149,8 @@ export const ContactPage: React.FC = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base"
+                      disabled={isSubmitting}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
                       style={{
                         backgroundColor: themeColors.background.white,
                         borderColor: themeColors.primary.lightGray,
@@ -85,13 +175,40 @@ export const ContactPage: React.FC = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base"
+                      disabled={isSubmitting}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
                       style={{
                         backgroundColor: themeColors.background.white,
                         borderColor: themeColors.primary.lightGray,
                         color: themeColors.text.primary
                       }}
                       placeholder="Enter your email address"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="block font-semibold mb-2 text-sm sm:text-base"
+                      style={{ color: themeColors.text.secondary }}
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required
+                      disabled={isSubmitting}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
+                      style={{
+                        backgroundColor: themeColors.background.white,
+                        borderColor: themeColors.primary.lightGray,
+                        color: themeColors.text.primary
+                      }}
+                      placeholder="Enter your phone number"
                     />
                   </div>
 
@@ -110,7 +227,8 @@ export const ContactPage: React.FC = () => {
                       value={formData.subject}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base"
+                      disabled={isSubmitting}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors text-sm sm:text-base disabled:opacity-50"
                       style={{
                         backgroundColor: themeColors.background.white,
                         borderColor: themeColors.primary.lightGray,
@@ -134,8 +252,9 @@ export const ContactPage: React.FC = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       required
+                      disabled={isSubmitting}
                       rows={4}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors resize-vertical text-sm sm:text-base"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 rounded-xl focus:outline-none transition-colors resize-vertical text-sm sm:text-base disabled:opacity-50"
                       style={{
                         backgroundColor: themeColors.background.white,
                         borderColor: themeColors.primary.lightGray,
@@ -147,14 +266,24 @@ export const ContactPage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-semibold text-base sm:text-lg transition-colors flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className="w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-semibold text-base sm:text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
                     style={{
-                      backgroundColor: themeColors.primary.black,
-                      color: themeColors.text.white
+                      backgroundColor: themeColors.primary.w2,
+                      color: themeColors.primary.w
                     }}
                   >
-                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Send Message
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                        Send Message
+                      </>
+                    )}
                   </button>
                 </form>
               </div>
@@ -178,8 +307,7 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Email</h4>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>hello@rishika.edu</p>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>support@rishika.edu</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>sarawagirishika748@gmail.com</p>
                     </div>
                   </div>
 
@@ -189,8 +317,7 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Phone</h4>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>+1 (555) 123-4567</p>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>+1 (555) 987-6543</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>+91 9903996663</p>
                     </div>
                   </div>
 
@@ -200,8 +327,8 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Address</h4>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>123 Learning Street</p>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>Education City, EC 12345</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>6/1A Moira Street</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}></p>
                     </div>
                   </div>
                 </div>
@@ -220,76 +347,135 @@ export const ContactPage: React.FC = () => {
         </div>
       </div>  
       {/* Footer */}
-      <footer className="border-2 rounded-3xl shadow-2xl mx-6 my-10" style={{ backgroundColor: themeColors.primary.black, color: themeColors.text.white, borderColor: themeColors.primary.black }}>
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10 xl:py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {/* Company Info */}
-            <div className="space-y-2 sm:space-y-3 lg:space-y-4 text-center sm:text-left">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: themeColors.text.white }}>LearnHub</h3>
-              <p className="text-xs sm:text-sm lg:text-sm" style={{ color: themeColors.text.secondary }}>
-                Empowering learners worldwide with innovative educational experiences and cutting-edge technology.
+      <footer
+        className="mx-6 my-10 rounded-3xl border shadow-2xl"
+        style={{
+          backgroundColor: themeColors.primary.black,
+          borderColor: themeColors.primary.black,
+          color: themeColors.text.white,
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
+            {/* Brand */}
+            <div className="space-y-4 text-center sm:text-left">
+              <h3 className="text-2xl font-bold">LearnHub</h3>
+              <p className="text-sm leading-relaxed" style={{ color: themeColors.text.secondary }}>
+                Empowering learners worldwide through innovative education and
+                cutting-edge technology.
               </p>
-              <div className="flex space-x-3 sm:space-x-4 justify-center sm:justify-start">
-                <Facebook className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition hover:text-white" style={{ color: themeColors.text.tertiary }} />
-                <Twitter className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition hover:text-white" style={{ color: themeColors.text.tertiary }} />
-                <Instagram className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition hover:text-white" style={{ color: themeColors.text.tertiary }} />
-                <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer transition hover:text-white" style={{ color: themeColors.text.tertiary }} />
+
+              {/* Socials */}
+              <div className="flex items-center justify-center sm:justify-start gap-3">
+              {[
+                {
+                  href: "https://chat.whatsapp.com/FzCODHVaAnFEoYgKjMEgM7",
+                  icon: <i className="fa-brands fa-whatsapp text-sm" />,
+                },
+                {
+                  href: "#",
+                  icon: <Instagram className="w-4 h-4" />,
+                },
+                {
+                  href: "#",
+                  icon: <Linkedin className="w-4 h-4" />,
+                },
+              ].map(({ href, icon }, idx) => (
+                <a
+                  key={idx}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 flex items-center justify-center rounded-md transition hover:scale-110"
+                  style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                >
+                  {icon}
+                </a>
+              ))}
               </div>
+
             </div>
 
             {/* Quick Links */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.white }}>Quick Links</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm lg:text-sm">
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Courses</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Dashboard</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Community</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Certificates</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Help Center</a></li>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-sm" style={{ color: themeColors.text.secondary }}>
+                {["Courses", "Dashboard", "Community", "Certificates", "Help Center"].map(
+                  (item) => (
+                    <li key={item}>
+                      <a href="#" className="hover:text-white transition">
+                        {item}
+                      </a>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
 
             {/* Support */}
             <div className="text-center sm:text-left">
-              <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.white }}>Support</h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm lg:text-sm">
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>FAQ</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Technical Support</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition" style={{ color: themeColors.text.secondary }}>Terms of Service</a></li>
+              <h4 className="text-lg font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-sm" style={{ color: themeColors.text.secondary }}>
+                {["FAQ", "Contact Us", "Technical Support", "Privacy Policy", "Terms of Service"].map(
+                  (item) => (
+                    <li key={item}>
+                      <a href="#" className="hover:text-white transition">
+                        {item}
+                      </a>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
 
-            {/* Contact Info */}
-            <div className="text-center sm:text-left">
-              <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 sm:mb-3 lg:mb-4" style={{ color: themeColors.text.white }}>Contact</h4>
-              <div className="space-y-1 sm:space-y-2 lg:space-y-3 text-xs sm:text-sm lg:text-sm">
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" style={{ color: themeColors.text.tertiary }} />
-                  <span style={{ color: themeColors.text.secondary }}>support@learnhub.com</span>
-                </div>
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" style={{ color: themeColors.text.tertiary }} />
-                  <span style={{ color: themeColors.text.secondary }}>+1 (555) 123-4567</span>
-                </div>
-                <div className="flex items-center justify-center sm:justify-start">
-                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" style={{ color: themeColors.text.tertiary }} />
-                  <span style={{ color: themeColors.text.secondary }}>San Francisco, CA</span>
-                </div>
+            {/* Contact */}
+            <div className="text-center sm:text-left space-y-3">
+              <h4 className="text-lg font-semibold mb-4">Contact</h4>
+
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm">
+                <Mail className="w-4 h-4" />
+                <span style={{ color: themeColors.text.secondary }}>
+                  support@learnhub.com
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm">
+                <Phone className="w-4 h-4" />
+                <span style={{ color: themeColors.text.secondary }}>
+                  +1 (555) 123-4567
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm">
+                <MapPin className="w-4 h-4" />
+                <span style={{ color: themeColors.text.secondary }}>
+                  San Francisco, CA
+                </span>
               </div>
             </div>
           </div>
 
           {/* Bottom Bar */}
-          <div className="border-t mt-4 sm:mt-6 lg:mt-8 pt-3 sm:pt-4 lg:pt-6 flex flex-col md:flex-row justify-between items-center text-center" style={{ borderColor: themeColors.text.tertiary }}>
-            <p className="text-xs sm:text-sm" style={{ color: themeColors.text.tertiary }}>
+          <div
+            className="mt-10 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-4 text-sm"
+            style={{ borderColor: themeColors.text.tertiary }}
+          >
+            <p style={{ color: themeColors.text.tertiary }}>
               © 2024 LearnHub. All rights reserved.
             </p>
-            <div className="flex space-x-3 sm:space-x-4 lg:space-x-6 text-xs sm:text-sm mt-2 sm:mt-3 md:mt-0">
-              <a href="#" className="hover:text-white transition" style={{ color: themeColors.text.tertiary }}>Privacy</a>
-              <a href="#" className="hover:text-white transition" style={{ color: themeColors.text.tertiary }}>Terms</a>
-              <a href="#" className="hover:text-white transition" style={{ color: themeColors.text.tertiary }}>Accessibility</a>
+
+            <div className="flex gap-6">
+              {["Privacy", "Terms", "Accessibility"].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="hover:text-white transition"
+                  style={{ color: themeColors.text.tertiary }}
+                >
+                  {item}
+                </a>
+              ))}
             </div>
           </div>
         </div>

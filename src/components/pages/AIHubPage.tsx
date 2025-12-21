@@ -98,7 +98,7 @@ export const AIHubPage: React.FC = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
       {/* Spacer for fixed navbar */}
-      <div className="h-14 sm:h-16 md:h-20 lg:h-24"></div>
+      <div className="h-20 sm:h-16 md:h-20 lg:h-32"></div>
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         
@@ -241,7 +241,7 @@ export const AIHubPage: React.FC = () => {
                 <button 
                   className="w-full py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
                   style={{ 
-                    backgroundColor: tool.color,
+                    backgroundColor: themeColors.primary.black,
                     color: themeColors.text.white 
                   }}
                 >
