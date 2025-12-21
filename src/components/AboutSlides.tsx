@@ -221,7 +221,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const defaultHeroVideoUrl = "/graphics/hero-video.mp4";
+  const defaultHeroVideoUrl = "/graphics/deeco.mp4";
   const defaultTestimonialVideoUrl = "/graphics/rs.mp4";
 
   const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
@@ -603,7 +603,7 @@ const testimonialsRow3 = useMemo(() => [
             {service.title}
           </h3>
 
-          <p className="text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm text-gray-900 leading-relaxed">
             {service.description}
           </p>
         </div>
