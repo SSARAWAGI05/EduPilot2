@@ -308,7 +308,7 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-sm sm:text-base" style={{ color: themeColors.text.primary }}>Email</h4>
-                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>sarawagirishika748@gmail.com</p>
+                      <p className="text-sm sm:text-base" style={{ color: themeColors.text.secondary }}>deecobyrishika@gmail.com</p>
                     </div>
                   </div>
 

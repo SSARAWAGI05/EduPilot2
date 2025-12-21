@@ -219,7 +219,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [currentSlide, setCurrentSlide] = useState(0);
   const [typedText, setTypedText] = useState('');
   const fullText = "Hi! I am Rishika!";
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [openFAQ, setOpenFAQ] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -353,6 +353,21 @@ const testimonialsRow3 = useMemo(() => [
     color: themeColors.accent.red,
     gradient: colors.gradient.redGradient
   },
+
+  {
+    icon: <TrendingUp className="w-8 h-8" />,
+    title: "Market Pulse",
+    description:
+      "One curated pulse every day covering global finance and economics. Complex news, policies, and market movements explained simply—so you stay informed without feeling overwhelmed.",
+    color: themeColors.accent.purple
+  },
+  {
+    icon: <Users className="w-8 h-8" />,
+    title: "Community Access",
+    description:
+      "Be part of a focused learning community to discuss ideas, share insights, ask questions, and grow together through meaningful conversations and collaborative learning.",
+    color: themeColors.accent.green
+  },
   {
     icon: <FileText className="w-8 h-8" />,
     title: "Study Resources",
@@ -371,41 +386,49 @@ const testimonialsRow3 = useMemo(() => [
 
   const faqs = [
   {
+    id: "courses-live",
     question: "When will the courses be live?",
     answer:
       "Our courses are launching very soon. We’re currently putting the final touches in place to ensure a high-quality learning experience. Stay tuned for the official announcement!"
   },
   {
+    id: "ai-hub",
     question: "When will the AI Hub tools be available?",
     answer:
       "The AI Hub tools will be going live very soon. We’re actively working on deploying powerful and easy-to-use tools—keep an eye out for updates!"
   },
   {
+    id: "register-live",
     question: "How can I register for live classes?",
     answer:
       "You can register for live classes by contacting us directly at +91 9903996663, emailing us at saragirishika748@gmail.com, or by using the Contact Us section on our website. Simply drop your message there and our team will get back to you shortly."
   },
   {
+    id: "subjects-live",
     question: "What subjects are covered in the live classes?",
     answer:
-      "Our live classes cover a wide range of subjects including Mathematics, Statistics, Economics, and Finance, designed to build both conceptual clarity and practical understanding."
+      "Our live classes cover a wide range of subjects including Mathematics, Statistics, Economics, Business, and Finance, designed to build both conceptual clarity and practical understanding."
   },
   {
+    id: "market-pulse",
     question: "What is Market Pulse?",
     answer:
     "Market Pulse delivers one curated pulse every day, focusing on important global finance and economics news. Each daily pulse breaks down complex events, policies, and market movements into simple, easy-to-understand insights so that anyone can stay informed without feeling overwhelmed."
 },
   {
+    id: "features-live",
     question: "What features are included in live classes?",
     answer:
       "Live classes offer one-on-one or group learning options, flexible scheduling, access to curated class notes, session recordings, transcripts, daily interactive quizzes, and many more engaging learning features."
   },
   {
+    id: "age-group",
     question: "Which age group are these courses suitable for?",
     answer:
       "Our programs are suitable for learners of all age groups who are interested in understanding global trends, economics, and finance—whether for exams, interviews, career growth, or general knowledge."
   },
   {
+    id: "why-deeco",
     question: "Why should I choose De-Eco by Rishika?",
     answer:
       "De-Eco focuses on simplifying complex concepts through practical examples, real-world applications, and interactive learning. Our goal is to help learners gain clarity, confidence, and a strong understanding of global economics and finance."
@@ -413,8 +436,8 @@ const testimonialsRow3 = useMemo(() => [
 ];
 
 
-  const toggleFAQ = (index: number) => {
-    setOpenFAQ(openFAQ === index ? null : index);
+  const toggleFAQ = (id: string) => {
+    setOpenFAQ(prev => (prev === id ? null : id));
   };
 
   const renderStars = (rating: number) => {
@@ -547,7 +570,7 @@ const testimonialsRow3 = useMemo(() => [
                         About Me
                       </h3>
                       <p className="text-sm lg:text-base text-gray-800 dark:text-gray-200 leading-relaxed">
-                        
+                        Welcome to DE-ECO, where learning meets the real world. With an Economics Honours degree, an MBA in Marketing, and professional experience at Mastercard, I created DE-ECO to bridge the gap between academic knowledge and practical skills. My goal is to help students think independently, apply concepts with confidence, and excel in exams, interviews, and beyond.
                       </p>
                     </div>
                   </div>
@@ -606,70 +629,150 @@ const testimonialsRow3 = useMemo(() => [
         </div>
       </div>
 
-     {/* ================= WHAT WE OFFER ================= */}
-<section
-  className="py-20"
-  style={{ backgroundColor: themeColors.background.white }}
->
-  <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+     {/* ================= WHAT WE OFFER - HUB & SPOKE DESIGN ================= */}
+    <section className="py-20 relative overflow-hidden" style={{ backgroundColor: themeColors.background.white }}>
+      {/* Background effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 dark:bg-gray-700/30 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-200/30 dark:bg-gray-600/30 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+      </div>
 
-   {/* LEFT SIDE */}
-<div className="lg:col-span-4 flex items-center justify-center">
+      <div className="max-w-7xl mx-auto px-6 relative">
 
-  {/* Content */}
-  <div className="flex flex-col items-center text-center gap-6 -translate-y-8">
-    {/* ↑ adjust -translate-y-6 / -8 / -10 as needed */}
+        {/* Hub & Spoke Container */}
+        <div className="relative min-h-[800px] lg:min-h-[900px] flex items-center justify-center">
+          
+          {/* Center Hub - WHAT WE OFFER */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="relative">
+              
+              {/* Glow effect */}
+              <div className="absolute -inset-5 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse"></div>
 
-    {/* Logo Circle */}
-    <div className="bg-white rounded-full p-2.5 shadow-lg border-2" style={{ borderColor: themeColors.primary.black }}>
-      <img
-        src="/logo/De-Eco-logo.png"
-        alt="DE-ECO"
-        className="w-20 h-20 object-contain"
-      />
-    </div>
+              {/* Text Hub */}
+              <div
+                className="relative rounded-full w-56 h-56 shadow-2xl border-4 flex flex-col items-center justify-center text-center transform hover:scale-110 transition-all duration-500"
+                style={{
+                  backgroundColor: isDark ? "#ffffff" : "#000000",
+                  borderColor: isDark ? themeColors.primary.black : "#000000",
+                  color: isDark ? "#000000" : "#ffffff",
+                }}
+              >
+                <h3
+                className="text-2xl sm:text-3xl font-black leading-tight"
+                style={{ color: isDark ? "#000000" : "#ffffff" }}
+              >
+                What We Offer
+              </h3>
+                <div className="w-10 h-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 mt-4"></div>
+              </div>
 
-    <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-gray-100">
-              What We <span className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">Offer</span>
-            </h2>
-
-  </div>
-</div>
-
-
-
-
-
-    {/* RIGHT SIDE – BLOCK GRID */}
-    <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-      {services.map((service, idx) => (
-        <div
-          key={idx}
-          className="rounded-3xl p-8 flex flex-col gap-4"
-          style={{
-            backgroundColor: service.color,
-            minHeight: 220,
-          }}
-        >
-          {/* Icon */}
-          <div className="w-12 h-12 rounded-xl bg-white/80 flex items-center justify-center">
-            {service.icon}
+            </div>
           </div>
 
-          {/* Text */}
-          <h3 className="text-xl font-bold text-gray-900">
-            {service.title}
-          </h3>
+          {/* Service Cards in Circle Formation */}
+          {services.map((service, idx) => {
+            // Calculate position in circle (6 items = 60 degrees apart)
+            const angles = [
+            -120, // Top-left
+            -60,  // Top-right
+            0,    // Right
+            60,   // Bottom-right
+            120,  // Bottom-left
+            180,  // Left
+          ];
 
-          <p className="text-sm text-gray-900 leading-relaxed">
-            {service.description}
-          </p>
+          const angle = (angles[idx] * Math.PI) / 180;
+            const radius = 350; // Distance from center
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+
+            return (
+              <div key={idx}>
+                {/* Connecting Line/Arrow */}
+                <svg
+                  className="absolute top-1/2 left-1/2 pointer-events-none z-0"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <defs>
+                    <marker
+                      id={`arrowhead-${idx}`}
+                      markerWidth="10"
+                      markerHeight="10"
+                      refX="9"
+                      refY="3"
+                      orient="auto"
+                    >
+                      <polygon
+                        points="0 0, 10 3, 0 6"
+                        fill={service.color}
+                      />
+                    </marker>
+                  </defs>
+                  <line
+                    x1="50%"
+                    y1="50%"
+                    x2={`calc(50% + ${x * 0.7}px)`}
+                    y2={`calc(50% + ${y * 0.7}px)`}
+                    stroke={service.color}
+                    strokeWidth="3"
+                    strokeDasharray="8,4"
+                    markerEnd={`url(#arrowhead-${idx})`}
+                    className="animate-dash"
+                  />
+                </svg>
+
+                {/* Service Card */}
+                <div
+                  className="absolute group cursor-pointer z-10"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                  }}
+                >
+                  <div
+                    className="w-64 rounded-3xl p-6 shadow-xl border-4 border-white dark:border-gray-700 transform hover:scale-110 hover:-rotate-2 transition-all duration-300"
+                    style={{ backgroundColor: service.color }}
+                  >
+                    {/* Icon */}
+                    <div className="w-12 h-12 rounded-xl bg-white/90 flex items-center justify-center mb-4 transform group-hover:rotate-12 transition-transform">
+                      {service.icon}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      {service.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-800 leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      ))}
-    </div>
 
-  </div>
-</section>
+        {/* CTA Button */}
+        <div className="text-center mt-12">
+          <button
+            onClick={onLogin}
+            className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1"
+            style={{ backgroundColor: themeColors.primary.w2, color: !isDark ? "#ffffff" : "#000000" }}
+          >
+            Explore All Services
+            <ChevronRight className="w-5 h-5 inline ml-2" />
+          </button>
+        </div>
+      </div>
+    </section>
 
 
 
@@ -825,12 +928,12 @@ const testimonialsRow3 = useMemo(() => [
                     </p>
                   </div>
       
-                  <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                  <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto items-start">
                     {faqs.map((faq, index) => (
-                      <div
-                        key={index}
+                    <div
+                      key={faq.id}
                         className={`group transition-all duration-300 cursor-pointer rounded-2xl overflow-hidden border-4 hover:scale-[1.02] ${
-                          openFAQ === index 
+                          openFAQ === faq.id
                             ? 'shadow-2xl border-white dark:border-gray-700' 
                             : 'shadow-lg border-white dark:border-gray-700 hover:shadow-xl'
                         }`}
@@ -847,7 +950,7 @@ const testimonialsRow3 = useMemo(() => [
                                   : themeColors.accent.orange
                               )
                         }}
-                        onClick={() => toggleFAQ(index)}
+                        onClick={() => toggleFAQ(faq.id)}
                       >
                         <div className="p-6">
                           <div className="flex justify-between items-start gap-4 mb-4">
@@ -855,7 +958,7 @@ const testimonialsRow3 = useMemo(() => [
                               {faq.question}
                             </h3>
                             <div className={`flex-shrink-0 transition-all duration-300 transform ${
-                              openFAQ === index ? 'rotate-45' : 'group-hover:rotate-90'
+                              openFAQ === faq.id ? 'rotate-45' : 'group-hover:rotate-90'
                             } w-10 h-10 rounded-xl flex items-center justify-center shadow-md`}
                             // Update the backgroundColor calculation:
                             style={{ 
@@ -869,7 +972,7 @@ const testimonialsRow3 = useMemo(() => [
                           </div>
                           
                           <div className={`overflow-hidden transition-all duration-500 ${
-                            openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            openFAQ === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                           }`}>
                             <div className="pt-4 border-t-2 border-white/50">
                               <p className="text-gray-800 dark:text-gray-200 leading-relaxed font-medium">{faq.answer}</p>

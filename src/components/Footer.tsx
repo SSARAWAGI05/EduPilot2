@@ -89,11 +89,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-semibold mb-4">Contact</h4>
             <div className="flex items-center gap-2 text-sm">
               <Mail className="w-4 h-4" />
-              support@deeco.in
+              deecobyrishika@gmail.com
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Phone className="w-4 h-4" />
-              +91 9XXXXXXXXX
+              +91 9903996663
             </div>
           </div>
         </div>
