@@ -393,8 +393,8 @@ const testimonialsRow3 = useMemo(() => [
   {
     question: "What is Market Pulse?",
     answer:
-      "Market Pulse provides simplified insights into global finance and economics. It breaks down complex global trends, policies, and market movements into easy-to-understand explanations, making them accessible for everyone."
-  },
+    "Market Pulse delivers one curated pulse every day, focusing on important global finance and economics news. Each daily pulse breaks down complex events, policies, and market movements into simple, easy-to-understand insights so that anyone can stay informed without feeling overwhelmed."
+},
   {
     question: "What features are included in live classes?",
     answer:
