@@ -35,7 +35,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     { id: "market-pulse", label: "MarketPulse" }, // ✅ NEW TAB
     { id: "courses", label: "Courses" },
     { id: "ai-hub", label: "AI Hub" },
-    { id: "about", label: "About Us" },
+    //{ id: "about", label: "About Us" },
     { id: "contact", label: "Contact Us" },
   ];
 

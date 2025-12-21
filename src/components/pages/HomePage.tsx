@@ -1005,34 +1005,38 @@ const resetFocusTimer = () => {
         </div>
 
         {/* ================= MARKET PULSE SECTION ================= */}
-        <div
-          className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-xl"
-          style={{ backgroundColor: themeColors.accent.blue }}
-        >
-          {/* Header */}
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blue }}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            <div className="mb-6">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-2 inline-block" style={{ color: themeColors.text.primary }}>
-                          Market Pulse
-                        </h2>
-                        <svg className="w-60 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
-                          <path d="M0,4 Q60,2 120,5 T250,4" stroke={themeColors.text.primary} strokeWidth="3" fill="none" />
-                        </svg>
-                  </div>
+            <div>
+              <h2
+                className="text-3xl sm:text-4xl font-bold mb-2 inline-block"
+                style={{ color: themeColors.text.primary }}
+              >
+                Market Pulse
+              </h2>
+              <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                <path
+                  d="M0,4 Q60,2 120,5 T250,4"
+                  stroke={themeColors.text.primary}
+                  strokeWidth="3"
+                  fill="none"
+                />
+              </svg>
+            </div>
 
+            {/* 🔹 Explore More Courses Button */}
             <button
               onClick={() => onNavigate?.("market-pulse")}
               className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-[1.03] hover:-translate-y-1
- flex items-center gap-2"
+                flex items-center gap-2"
               style={{
                 backgroundColor: themeColors.primary.black,
                 color: themeColors.text.white,
               }}
             >
-              Explore MarketPulse
+              Explore Market Pulse
               <ChevronRight size={18} />
             </button>
-
           </div>
 
           {/* Reels Preview – Horizontal Scroll */}
