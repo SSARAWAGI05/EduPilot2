@@ -202,8 +202,10 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
       const { data: announcementsData, error: announcementsError } = await supabase
         .from('class_announcements')
         .select('*')
-        .eq('user_id', user.id)  // ← ADD THIS LINE
         .eq('is_active', true)
+        .or(
+          `target_audience.eq.all,user_id.eq.${user.id}`
+        )
         .order('created_at', { ascending: false })
         .limit(3);
 
