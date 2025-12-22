@@ -19,7 +19,7 @@ import {
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import { getPriorityColor, getStatusColor, getThemeColors } from '../../styles/colors';
 import { useTheme } from '../../contexts/ThemeContext';
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 type SidebarSection = 'home' | 'upcoming' | 'notes' | 'recordings' | 'schedule';
 
@@ -34,8 +34,8 @@ interface Class {
   participants: number;
   status: string;
   meeting_link: string;
-  scheduled_date: string;
-  start_time: string;
+  scheduled_datetime: string;  // ✅ Changed
+  end_datetime: string;         // ✅ Changed
 }
 
 interface Announcement {
@@ -105,7 +105,7 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
 
     const calculateCountdown = () => {
       const now = new Date();
-      const classDateTime = new Date(`${nextClass.scheduled_date}T${nextClass.start_time}`);
+      const classDateTime = new Date(nextClass.scheduled_datetime); // ✅ Direct parse of timestamptz
       const diff = classDateTime.getTime() - now.getTime();
 
       if (diff <= 0) {
@@ -151,28 +151,46 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
         setIsEnrolled(true);
         
         // Fetch upcoming classes
+        // Fetch upcoming classes
         const { data: classes, error: classesError } = await supabase
           .from('live_classes')
           .select('*')
-          .eq('user_id', user.id)  // ← ADD THIS LINE
-          .gte('scheduled_date', new Date().toISOString().split('T')[0])
-          .order('scheduled_date', { ascending: true })
-          .order('start_time', { ascending: true });
+          .eq('user_id', user.id)
+          .gte('scheduled_datetime', new Date().toISOString()) // ✅ Compare with full UTC timestamp
+          .order('scheduled_datetime', { ascending: true });
 
         if (!classesError && classes) {
-          setUpcomingClasses(classes.map(cls => ({
-            id: cls.id,
-            title: cls.title,
-            instructor: cls.instructor_name,
-            date: new Date(cls.scheduled_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-            time: `${cls.start_time.slice(0, 5)} - ${cls.end_time.slice(0, 5)}`,
-            duration: `${cls.duration_minutes} min`,
-            participants: cls.current_participants,
-            status: cls.status,
-            meeting_link: cls.meeting_link,
-            scheduled_date: cls.scheduled_date,
-            start_time: cls.start_time
-          })));
+          setUpcomingClasses(classes.map(cls => {
+            const scheduledDate = new Date(cls.scheduled_datetime); // ✅ Parse timestamptz
+            const endDate = new Date(cls.end_datetime);
+            
+            return {
+              id: cls.id,
+              title: cls.title,
+              instructor: cls.instructor_name,
+              // ✅ Automatically converts to user's local timezone
+              date: scheduledDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+              }),
+              time: `${scheduledDate.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+              })} - ${endDate.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+              })}`,
+              duration: `${cls.duration_minutes} min`,
+              participants: cls.current_participants,
+              status: cls.status,
+              meeting_link: cls.meeting_link,
+              scheduled_datetime: cls.scheduled_datetime,
+              end_datetime: cls.end_datetime
+            };
+          }));
 
           // Set next class for countdown
           if (classes.length > 0) {
@@ -633,7 +651,7 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
   // Create a map of dates that have classes
   const classDateMap = new Map();
   upcomingClasses.forEach((cls: Class) => {
-  const classDate = new Date(cls.scheduled_date);
+    const classDate = new Date(cls.scheduled_datetime); // ✅ Parse timestamptz
   if (classDate.getMonth() === currentMonth && classDate.getFullYear() === currentYear) {
     const day = classDate.getDate();
     if (!classDateMap.has(day)) {
@@ -671,7 +689,7 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
           </h2>
           <div className="text-sm text-gray-600 dark:text-gray-400">
             {upcomingClasses.filter(cls => {
-              const clsDate = new Date(cls.scheduled_date);
+              const clsDate = new Date(cls.scheduled_datetime); // ✅ Parse timestamptz
               return clsDate.getMonth() === currentMonth && clsDate.getFullYear() === currentYear;
             }).length} classes this month
           </div>
@@ -764,7 +782,7 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
 
             {/* Classes List for Selected Month */}
             {upcomingClasses.filter(cls => {
-              const clsDate = new Date(cls.scheduled_date);
+              const clsDate = new Date(cls.scheduled_datetime); // ✅ Fixed
               return clsDate.getMonth() === currentMonth && clsDate.getFullYear() === currentYear;
             }).length > 0 && (
               <div className="p-3 bg-white dark:bg-gray-700 rounded-lg">
@@ -772,7 +790,7 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {upcomingClasses
                     .filter((cls: Class) => {
-                      const clsDate = new Date(cls.scheduled_date);
+                      const clsDate = new Date(cls.scheduled_datetime); // ✅ Parse timestamptz
                       return clsDate.getMonth() === currentMonth && clsDate.getFullYear() === currentYear;
                     })
                     .map((cls: Class) => (
@@ -948,6 +966,11 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
                   </span>
                 </div>
               </div>
+            </div>
+
+            {/* User Timezone Info */}
+            <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
+              Your timezone: {Intl.DateTimeFormat().resolvedOptions().timeZone}
             </div>
           </div>
         </div>

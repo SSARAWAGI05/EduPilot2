@@ -4,7 +4,7 @@ import { AuthenticatedApp } from "./components/AuthenticatedApp";
 import LoginModal from "./components/LoginModal";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { ThemeControls } from "./components/ThemeControls";
-import { supabase } from "./supabaseClient";
+import { supabase } from "./lib/supabaseClient";
 
 function App() {
   const [session, setSession] = useState<any>(null);

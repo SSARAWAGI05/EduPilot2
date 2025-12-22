@@ -27,14 +27,21 @@ import {
   ListChecks,
   FileText
 } from 'lucide-react';
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 import { colors, getActivityIconColor, getEventColorClasses, getThemeColors } from '../../styles/colors';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface HomePageProps {
   onNavigate?: (page: string) => void;
 }
-
+interface LiveClass {
+  id: string;
+  title: string;
+  scheduled_datetime: string;
+  end_datetime: string;
+  duration_minutes: number;
+  status: string;
+}
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [userName, setUserName] = useState<string | null>(null);
@@ -159,14 +166,12 @@ const [activeCoursesCount, setActiveCoursesCount] = useState(0);
 const [classesTodayCount, setClassesTodayCount] = useState(0);
 
 const getClassStatus = (
-  date: string,
-  startTime: string,
-  durationMinutes = 60
+  scheduledDatetime: string,
+  endDatetime: string
 ): 'upcoming' | 'completed' | 'expired' => {
   const now = new Date();
-
-  const start = new Date(`${date}T${startTime}`);
-  const end = new Date(start.getTime() + durationMinutes * 60000);
+  const start = new Date(scheduledDatetime);
+  const end = new Date(endDatetime);
 
   // End of the same day (23:59:59)
   const endOfDay = new Date(start);
@@ -182,8 +187,10 @@ const getClassStatus = (
 const [todayClasses, setTodayClasses] = useState<{
   id: string;
   title: string;
-  start_time: string;
-  scheduled_date: string;
+  scheduled_datetime: string;
+  end_datetime: string;
+  duration_minutes: number;
+  status: string;
 }[]>([]);
 
 
@@ -357,23 +364,21 @@ const [todayClasses, setTodayClasses] = useState<{
     setActiveCoursesCount(activeCourses?.length || 0);
 
 
-    /* ================= CLASSES TODAY (ENROLLED) ================= */
-    const today = new Date().toISOString().split('T')[0];
+    /* ================= CLASSES TODAY (USER'S LIVE CLASSES) ================= */
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setDate(endOfDay.getDate() + 1);
 
-    const { data: enrolledClassesToday } = await supabase
-      .from('class_enrollments')
-      .select(`
-        id,
-        live_classes!inner (
-          scheduled_date,
-          status
-        )
-      `)
+    const { data: classesToday } = await supabase
+      .from('live_classes')
+      .select('id')
       .eq('user_id', user.id)
-      .eq('live_classes.scheduled_date', today)
-      .eq('live_classes.status', 'confirmed');
+      .gte('scheduled_datetime', startOfDay.toISOString())
+      .lt('scheduled_datetime', endOfDay.toISOString())
+      .eq('status', 'confirmed');
 
-    setClassesTodayCount(enrolledClassesToday?.length || 0);
+    setClassesTodayCount(classesToday?.length || 0);
 
       };
 
@@ -383,24 +388,36 @@ const [todayClasses, setTodayClasses] = useState<{
 
 useEffect(() => {
   const fetchTodayClassesForPlanner = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-  const today = new Date().toISOString().split('T')[0];
+    // Get today's date range in user's local timezone
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setDate(endOfDay.getDate() + 1);
 
-  // NEW QUERY - Query live_classes directly
-  const { data, error } = await supabase
-    .from('live_classes')  // ← Query the live_classes table directly
-    .select('id, title, start_time, scheduled_date, status')
-    .eq('user_id', user.id)           // Filter by your user_id
-    .eq('scheduled_date', today)      // Today's classes
-    .eq('status', 'confirmed')        // Only confirmed classes
-    .order('start_time', { ascending: true });  // Sort by time
+    // Query using scheduled_datetime (timestamptz)
+    const { data, error } = await supabase
+      .from('live_classes')
+      .select('id, title, scheduled_datetime, end_datetime, duration_minutes, status')
+      .eq('user_id', user.id)
+      .gte('scheduled_datetime', startOfDay.toISOString())
+      .lt('scheduled_datetime', endOfDay.toISOString())
+      .eq('status', 'confirmed')
+      .order('scheduled_datetime', { ascending: true });
 
-  if (!error && data) {
-    setTodayClasses(data);  // This should work directly now
-  }
-};
+    if (!error && data) {
+      setTodayClasses(data.map(cls => ({
+        id: cls.id,
+        title: cls.title,
+        scheduled_datetime: cls.scheduled_datetime,
+        end_datetime: cls.end_datetime,
+        duration_minutes: cls.duration_minutes,
+        status: cls.status
+      })));
+    }
+  };
 
   fetchTodayClassesForPlanner();
 }, []);
@@ -502,13 +519,17 @@ const resetFocusTimer = () => {
   // UPCOMING CLASSES
   ...todayClasses
     .filter(cls =>
-      getClassStatus(cls.scheduled_date, cls.start_time) === 'upcoming'
+      getClassStatus(cls.scheduled_datetime, cls.end_datetime) === 'upcoming'
     )
     .map(cls => ({
       id: `class-${cls.id}`,
       title: `📅 ${cls.title}`,
       type: 'class' as const,
-      start_time: cls.start_time,
+      start_time: new Date(cls.scheduled_datetime).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }),
     })),
 
   // Pending todos
@@ -520,9 +541,6 @@ const resetFocusTimer = () => {
       type: 'task' as const,
     }))
 ];
-
-
-
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: themeColors.primary.lightGray }}>
@@ -907,7 +925,7 @@ const resetFocusTimer = () => {
                         // Completed classes (same day)
                         ...todayClasses
                           .filter(cls =>
-                            getClassStatus(cls.scheduled_date, cls.start_time) === 'completed'
+                            getClassStatus(cls.scheduled_datetime, cls.end_datetime) === 'completed'
                           )
                           .map(cls => ({
                             id: `class-done-${cls.id}`,

@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin, Send, CheckCircle, X } from "lucide-react";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { getThemeColors } from "../../styles/colors";
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 type FormData = {
   name: string;

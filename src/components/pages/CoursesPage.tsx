@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { getThemeColors } from '../../styles/colors';
-import { supabase } from '../../supabaseClient';
+import { supabase } from "../../lib/supabaseClient";
 
 interface Course {
   id: string;
