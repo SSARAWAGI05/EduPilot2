@@ -1032,7 +1032,7 @@ const resetFocusTimer = () => {
           </div>
 
         {/* ================= MARKET PULSE SECTION ================= */}
-        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blue }}>
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 overflow-visible" style={{ backgroundColor: themeColors.accent.blue }}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <div>
               <h2
@@ -1067,7 +1067,7 @@ const resetFocusTimer = () => {
           </div>
 
           {/* Reels Preview – Horizontal Scroll */}
-        <div className="overflow-x-auto overflow-y-visible pb-8 px-4">
+        <div className="overflow-x-auto overflow-y-visible px-4">
 
           <div
             className="flex gap-4 sm:gap-6 pt-4"
@@ -1136,6 +1136,9 @@ const resetFocusTimer = () => {
                 </div>
               ))}
           </div>
+
+          {/* Scroll Indicator */}
+          <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more pulses →</p>
         </div>
 
         </div>
@@ -1170,7 +1173,7 @@ const resetFocusTimer = () => {
                 color: themeColors.text.white,
               }}
             >
-              Explore More Courses
+              Coming Soon, Stay Tuned!
               <ChevronRight size={18} />
             </button>
           </div>
@@ -1185,7 +1188,7 @@ const resetFocusTimer = () => {
           {/* Empty state */}
           {!featuredCoursesLoading && featuredCourses.length === 0 && (
             <p className="text-sm opacity-70 col-span-full text-center">
-              Coming Soon, Stay Tuned!
+              
             </p>
           )}
 
@@ -1386,7 +1389,11 @@ const resetFocusTimer = () => {
           </div>
 
           {/* Scroll Indicator */}
-          <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more tools →</p>
+          <div className="mt-8 mb-2">
+            <p className="text-center text-sm text-gray-400">
+              ← Scroll to see more pulses →
+            </p>
+          </div>
         </div>
       </div>
         </div>
