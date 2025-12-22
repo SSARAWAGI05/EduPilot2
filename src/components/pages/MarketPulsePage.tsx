@@ -202,7 +202,7 @@ const MarketPulsePage: React.FC = () => {
                     backgroundColor: themeColors.accent.blue,
                     color: themeColors.text.primary,
                   }}
-                >
+                > {/*HI*/}
                   <h3 className="font-bold text-lg mb-3" style={{ color: themeColors.text.primary }}>
                     Latest Pulse
                   </h3>
