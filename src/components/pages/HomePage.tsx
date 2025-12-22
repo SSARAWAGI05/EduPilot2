@@ -1030,7 +1030,6 @@ const resetFocusTimer = () => {
             </div>
             </div>
           </div>
-        </div>
 
         {/* ================= MARKET PULSE SECTION ================= */}
         <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.blue }}>
@@ -1390,5 +1389,6 @@ const resetFocusTimer = () => {
           <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more tools →</p>
         </div>
       </div>
+        </div>
   );
 };
