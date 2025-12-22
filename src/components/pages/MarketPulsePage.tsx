@@ -190,8 +190,8 @@ const MarketPulsePage: React.FC = () => {
                   className="text-xs sm:text-base lg:text-lg italic leading-relaxed mb-2"
                   style={{ color: themeColors.text.secondary }}
                 >
-                  Short, sharp market explainers — central banks, macro moves,
-                  commodity action and FX, all in under a minute.
+                  Your daily market pulse—fast, focused, and easy to digest.
+                  Breaking down global economics into insights you’ll enjoy learning.
                 </p>
               </div>
 
