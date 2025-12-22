@@ -999,14 +999,14 @@ const resetFocusTimer = () => {
                   className="text-base sm:text-lg leading-relaxed"
                   style={{ color: themeColors.text.primary }}
                 >
-                  Study Economics, Finance, Maths, Business Studies, Statistics, and more through interactive learning session.
+                  Learn Economics, Finance, Maths, Business Studies, Statistics, and more by connecting theory with real-life applications.
                 </p>
 
                 <p
                   className="text-base sm:text-lg leading-relaxed"
                   style={{ color: themeColors.text.primary }}
                 >
-                  Get access to live sessions, detailed notes, recorded classes, and everything you need to succeed.
+                  Open to working professionals, college learners, and school students, with access to live classes, notes, recordings, and comprehensive study resources.
                 </p>
               </div>
               
