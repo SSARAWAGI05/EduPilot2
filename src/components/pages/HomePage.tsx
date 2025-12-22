@@ -73,6 +73,9 @@ const [marketPulseLoading, setMarketPulseLoading] = useState(true);
   const [isDailyPlannerOpen, setIsDailyPlannerOpen] = useState(false);
   const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
 const [featuredCoursesLoading, setFeaturedCoursesLoading] = useState(true);
+  const liveDemoVideoSrc = isDark
+  ? "/graphics/demovideodark.mp4"
+  : "/graphics/demovideolight.mp4";
 
   const aiToolsData = [
   {
@@ -1010,14 +1013,21 @@ const resetFocusTimer = () => {
             </div>
 
             {/* Right - Video Placeholder */}
-            <div className="flex items-center justify-center rounded-2xl cursor-pointer transition-transform transform hover:scale-[1.03] hover:-translate-y-1
-" style={{ backgroundColor: themeColors.primary.black, minHeight: '300px' }}>
-              <div className="text-center">
-                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform transform hover:scale-110" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                  <Play className="w-10 h-10" style={{ color: themeColors.text.white }} fill="white" />
-                </div>
-                <p className="text-sm" style={{ color: themeColors.text.white }}>Watch Demo</p>
-              </div>
+            {/* Right - Video Demo */}
+            <div
+              className="rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1"
+              style={{ minHeight: "300px", backgroundColor: themeColors.primary.black }}
+            >
+              <video
+                key={liveDemoVideoSrc}   // 👈 important: forces reload on theme switch
+                src={liveDemoVideoSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
             </div>
           </div>
         </div>
@@ -1380,6 +1390,5 @@ const resetFocusTimer = () => {
           <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more tools →</p>
         </div>
       </div>
-    </div>
   );
 };
