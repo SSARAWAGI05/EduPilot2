@@ -988,14 +988,25 @@ const resetFocusTimer = () => {
               </div>
 
               <div className="space-y-3 mb-8">
-                <p className="text-base sm:text-lg leading-relaxed" style={{ color: themeColors.text.primary }}>
-                  Join interactive live sessions with expert instructors from around the world.
+                <p
+                  className="text-base sm:text-lg leading-relaxed"
+                  style={{ color: themeColors.text.primary }}
+                >
+                  Enroll in live classes designed for both group learning and one-on-one guidance.
                 </p>
-                <p className="text-base sm:text-lg leading-relaxed" style={{ color: themeColors.text.primary }}>
-                  Get real-time feedback, ask questions, and collaborate with peers in our virtual classroom.
+
+                <p
+                  className="text-base sm:text-lg leading-relaxed"
+                  style={{ color: themeColors.text.primary }}
+                >
+                  Study Economics, Finance, Maths, Business Studies, Statistics, and more through interactive learning session.
                 </p>
-                <p className="text-base sm:text-lg leading-relaxed" style={{ color: themeColors.text.primary }}>
-                  Access recordings and transcripts after each session for future reference.
+
+                <p
+                  className="text-base sm:text-lg leading-relaxed"
+                  style={{ color: themeColors.text.primary }}
+                >
+                  Get access to live sessions, detailed notes, recorded classes, and everything you need to succeed.
                 </p>
               </div>
               
