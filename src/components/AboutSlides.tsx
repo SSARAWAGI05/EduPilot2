@@ -223,7 +223,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const defaultHeroVideoUrl = "/graphics/deeco.mov";
+  const defaultHeroVideoUrl = "/graphics/deeco_small.mp4";
   const defaultTestimonialVideoUrl = "/graphics/rs.mp4";
 
   const finalHeroVideoUrl = heroVideoUrl || defaultHeroVideoUrl;
@@ -449,6 +449,27 @@ const testimonialsRow3 = useMemo(() => [
     ));
   };
 
+  const switchToFullVideo = () => {
+  if (!videoRef) return;
+
+  videoRef.pause();
+  videoRef.innerHTML = ""; // remove small source
+
+  const source = document.createElement("source");
+  source.src = "/graphics/deeco_fast.mp4";
+  source.type = "video/mp4";
+
+  videoRef.appendChild(source);
+  videoRef.load();
+
+  videoRef.currentTime = 0;
+  videoRef.muted = false;
+  videoRef.play();
+
+  setIsMuted(false);
+};
+
+
   return (
     <div className="min-h-screen overflow-y-auto scroll-smooth bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Slide 1: Hero Section with Enhanced Design */}
@@ -481,13 +502,9 @@ const testimonialsRow3 = useMemo(() => [
                           if (!videoRef) return;
 
                           if (videoRef.muted) {
-                            // Muted → unmute & restart
-                            videoRef.currentTime = 0;
-                            videoRef.muted = false;
-                            videoRef.play();
-                            setIsMuted(false);
+                            // Switch to full-quality video on first interaction
+                            switchToFullVideo();
                           } else {
-                            // Playing → mute
                             videoRef.muted = true;
                             setIsMuted(true);
                           }
@@ -501,9 +518,10 @@ const testimonialsRow3 = useMemo(() => [
                           muted
                           playsInline
                           loop
+                          preload="metadata"
+                          poster="/graphics/deeco_post.jpg"
                         >
-                          <source src={finalHeroVideoUrl} type="video/mp4" />
-                          Your browser does not support the video tag.
+                          <source src="/graphics/deeco_small.mp4" type="video/mp4" />
                         </video>
 
                         {/* Unmute / Activate Button */}

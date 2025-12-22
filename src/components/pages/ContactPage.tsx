@@ -404,10 +404,41 @@ export default function ContactPage(): JSX.Element {
                     Follow us:
                   </p>
                   <div className="flex gap-3 mt-3">
-                    <a aria-label="Facebook" href="#" className="p-2 rounded-md hover:opacity-90"><Facebook /></a>
-                    <a aria-label="Twitter" href="#" className="p-2 rounded-md hover:opacity-90"><Twitter /></a>
-                    <a aria-label="Instagram" href="#" className="p-2 rounded-md hover:opacity-90"><Instagram /></a>
-                    <a aria-label="LinkedIn" href="#" className="p-2 rounded-md hover:opacity-90"><Linkedin /></a>
+                    {/* WhatsApp */}
+                    <a
+                      aria-label="WhatsApp Community"
+                      href="https://chat.whatsapp.com/FzCODHVaAnFEoYgKjMEgM7"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-md transition hover:scale-110 hover:opacity-90"
+                      style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                    >
+                      <i className="fa-brands fa-whatsapp text-base" />
+                    </a>
+
+                    {/* Instagram */}
+                    <a
+                      aria-label="Instagram"
+                      href="https://www.instagram.com/deeco.official"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-md transition hover:scale-110 hover:opacity-90"
+                      style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                    >
+                      <i className="fa-brands fa-instagram text-base" />
+                    </a>
+
+                    {/* LinkedIn */}
+                    <a
+                      aria-label="LinkedIn"
+                      href="#"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-md transition hover:scale-110 hover:opacity-90"
+                      style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+                    >
+                      <i className="fa-brands fa-linkedin-in text-base" />
+                    </a>
                   </div>
                 </div>
               </div>
