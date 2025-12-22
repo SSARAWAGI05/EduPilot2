@@ -31,12 +31,14 @@ interface Class {
   date: string;
   time: string;
   duration: string;
+  duration_minutes: number; // ✅ ADD THIS
   participants: number;
   status: string;
   meeting_link: string;
-  scheduled_datetime: string;  // ✅ Changed
-  end_datetime: string;         // ✅ Changed
+  scheduled_datetime: string;
+  end_datetime: string;
 }
+
 
 interface Announcement {
   id: string;
@@ -82,11 +84,13 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
   const themeColors = getThemeColors(isDark, isFocusMode);
   const [currentSection, setCurrentSection] = useState<SidebarSection>('home');
   const [countdown, setCountdown] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  phase: 'upcoming' as 'upcoming' | 'in_progress' | 'ended',
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+});
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // NEW STATE - Add these
@@ -101,31 +105,41 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
 
   // Calculate countdown for next class
   useEffect(() => {
-    if (!nextClass) return;
+  if (!nextClass) return;
 
-    const calculateCountdown = () => {
-      const now = new Date();
-      const classDateTime = new Date(nextClass.scheduled_datetime); // ✅ Direct parse of timestamptz
-      const diff = classDateTime.getTime() - now.getTime();
+  const calculateCountdown = () => {
+    const now = Date.now();
+    const start = new Date(nextClass.scheduled_datetime).getTime();
+    const end =
+      start + nextClass.duration_minutes * 60 * 1000;
 
-      if (diff <= 0) {
-        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
+    let diff = 0;
+    let phase: 'upcoming' | 'in_progress' | 'ended';
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    if (now < start) {
+      phase = 'upcoming';
+      diff = start - now;
+    } else if (now >= start && now < end) {
+      phase = 'in_progress';
+      diff = end - now;
+    } else {
+      phase = 'ended';
+      diff = 0;
+    }
 
-      setCountdown({ days, hours, minutes, seconds });
-    };
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-    calculateCountdown();
-    const interval = setInterval(calculateCountdown, 1000);
+    setCountdown({ phase, days, hours, minutes, seconds });
+  };
 
-    return () => clearInterval(interval);
-  }, [nextClass]);
+  calculateCountdown();
+  const interval = setInterval(calculateCountdown, 1000);
+  return () => clearInterval(interval);
+}, [nextClass]);
+
 
   // Fetch all data from database
   useEffect(() => {
@@ -133,6 +147,15 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
+
+        // ✅ FAST COUNT: Classes Attended
+        const nowIso = new Date().toISOString();
+
+        const { count: attendedCount, error: attendedError } = await supabase
+          .from('live_classes')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .lt('end_datetime', nowIso);
 
         // 🔒 CHECK ENROLLMENT
         const { data: enrollment, error: enrollmentError } = await supabase
@@ -152,12 +175,17 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
         
         // Fetch upcoming classes
         // Fetch upcoming classes
-        const { data: classes, error: classesError } = await supabase
-          .from('live_classes')
-          .select('*')
-          .eq('user_id', user.id)
-          .gte('scheduled_datetime', new Date().toISOString()) // ✅ Compare with full UTC timestamp
-          .order('scheduled_datetime', { ascending: true });
+        const now = new Date().toISOString();
+
+          const { data: classes, error: classesError } = await supabase
+            .from('live_classes')
+            .select('*')
+            .eq('user_id', user.id)
+            .or(
+              `scheduled_datetime.gte.${now},and(scheduled_datetime.lte.${now},end_datetime.gte.${now})`
+            )
+            .order('scheduled_datetime', { ascending: true });
+
 
         if (!classesError && classes) {
           setUpcomingClasses(classes.map(cls => {
@@ -184,6 +212,7 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
                 hour12: true 
               })}`,
               duration: `${cls.duration_minutes} min`,
+              duration_minutes: cls.duration_minutes, // ✅ ADD
               participants: cls.current_participants,
               status: cls.status,
               meeting_link: cls.meeting_link,
@@ -259,26 +288,33 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
       }
 
       // Fetch user stats
-      const { data: stats, error: statsError } = await supabase
-        .from('user_class_stats')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+const { data: stats, error: statsError } = await supabase
+  .from('user_class_stats')
+  .select('*')
+  .eq('user_id', user.id)
+  .single();
 
-      if (!statsError && stats) {
-        setUserStats(stats);
-      } else {
-        // Create stats if they don't exist
-        await supabase.from('user_class_stats').insert([{ user_id: user.id }]);
-        setUserStats({
-          classes_attended: 0,
-          classes_scheduled: 0,
-          notes_downloaded: 0,
-          recordings_watched: 0,
-          total_study_hours: 0,
-          attendance_rate: 0
-        });
-      }
+if (!statsError && stats) {
+  setUserStats({
+    ...stats,
+    // ✅ OVERRIDE classes_attended with FAST DB COUNT
+    classes_attended: attendedError ? stats.classes_attended : (attendedCount ?? 0),
+  });
+} else {
+  // Create stats if they don't exist
+  await supabase.from('user_class_stats').insert([{ user_id: user.id }]);
+
+  setUserStats({
+    // ✅ USE COUNT HERE TOO
+    classes_attended: attendedCount ?? 0,
+    classes_scheduled: 0,
+    notes_downloaded: 0,
+    recordings_watched: 0,
+    total_study_hours: 0,
+    attendance_rate: 0
+  });
+}
+
 
       setLoading(false); // ✅ SUCCESS PATH
     } catch (error) {
@@ -358,17 +394,32 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
       <div style={{ backgroundColor: themeColors.accent.blue }} className="p-3 sm:p-4 lg:p-6 xl:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-lg">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
           <div>
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100">Next Class Starting In</h3>
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {countdown.phase === 'upcoming' && 'Next Class Starting In'}
+              {countdown.phase === 'in_progress' && 'Class In Progress'}
+              {countdown.phase === 'ended' && 'Last Class Ended'}
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm lg:text-base">
               {nextClass?.title || 'No upcoming classes'}
             </p>
           </div>
           <button
-          onClick={() => window.open(nextClass?.meeting_link || "#", "_blank")}
-          className="bg-black dark:bg-white text-white dark:text-black px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition hover:bg-gray-800 dark:hover:bg-gray-200"
-        >
-          Join Class
-        </button>
+  onClick={() => {
+    if (countdown.phase !== 'ended') {
+      window.open(nextClass?.meeting_link || "#", "_blank");
+    }
+  }}
+  className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition ${
+    countdown.phase === 'in_progress'
+      ? 'bg-green-600 text-white animate-pulse'
+      : 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200'
+  }`}
+>
+  {countdown.phase === 'upcoming' && 'Join Class'}
+  {countdown.phase === 'in_progress' && 'Join fast'}
+  {countdown.phase === 'ended' && 'Class Ended'}
+</button>
+
         </div>
 
 
@@ -524,11 +575,21 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
                   >
                     {cls.status}
                   </span>
-                  <button 
-                    onClick={() => window.open(nextClass?.meeting_link || "#", "_blank")}
-                    className="bg-black dark:bg-white text-white dark:text-black px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition"
+                  <button
+                    onClick={() => {
+                      if (countdown.phase !== 'ended') {
+                        window.open(nextClass?.meeting_link || "#", "_blank");
+                      }
+                    }}
+                    className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold shadow-md transition ${
+                      countdown.phase === 'in_progress'
+                        ? 'bg-green-600 text-white animate-pulse'
+                        : 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200'
+                    }`}
                   >
-                    Join Class
+                    {countdown.phase === 'upcoming' && 'Join Class'}
+                    {countdown.phase === 'in_progress' && 'Join fast'}
+                    {countdown.phase === 'ended' && 'Class Ended'}
                   </button>
                 </div>
               </div>
@@ -590,11 +651,6 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
                   <Download className="w-4 h-4" />
                 </button>
               </div>
-              
-              <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                <span>Size: {note.size}</span>
-                <span>{note.downloads} downloads</span>
-              </div>
             </div>
           ))}
         </div>
@@ -629,11 +685,6 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
               >
                 Watch
               </button>
-              </div>
-              
-              <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                <span>Duration: {recording.duration}</span>
-                <span>{recording.views} views</span>
               </div>
             </div>
           ))}
@@ -954,18 +1005,6 @@ export const LiveClassesPage: React.FC<LiveClassesPageProps> = ({ onPageChange }
                 <div className="flex justify-between">
                   <span>Classes This Week:</span>
                   <span className="font-medium">{upcomingClasses.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Total Hours:</span>
-                  <span className="font-medium">
-                    {userStats?.total_study_hours || 0}h
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Attendance Rate:</span>
-                  <span className="font-medium">
-                    {userStats?.attendance_rate || 0}%
-                  </span>
                 </div>
               </div>
             </div>
