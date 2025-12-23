@@ -653,57 +653,53 @@ const testimonialsRow3 = useMemo(() => [
         </div>
       </div>
 
-     {/* ================= WHAT WE OFFER - HUB & SPOKE DESIGN ================= */}
-    <section className="py-20 relative overflow-hidden" style={{ backgroundColor: themeColors.background.white }}>
-      {/* Background effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 dark:bg-gray-700/30 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-200/30 dark:bg-gray-600/30 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+    {/* ================= WHAT WE OFFER ================= */}
+    <section
+      className="py-20 relative overflow-hidden"
+      style={{ backgroundColor: themeColors.background.white }}
+    >
+      {/* Background blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 dark:bg-gray-700/30 rounded-full blur-3xl animate-blob" />
+        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-200/30 dark:bg-gray-600/30 rounded-full blur-3xl animate-blob animation-delay-2000" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative">
 
-        {/* ================= MOBILE VIEW (STACKED) ================= */}
+        {/* ================= MOBILE VIEW ================= */}
         <div className="lg:hidden flex flex-col items-center gap-10">
 
           {/* Hub */}
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse"></div>
+            <div className="absolute -inset-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse" />
 
             <div
-              className="relative rounded-full w-44 h-44 shadow-2xl border-4 flex items-center justify-center text-center"
+              className="relative w-44 h-44 rounded-full border-4 flex items-center justify-center text-center shadow-2xl"
               style={{
                 backgroundColor: isDark ? "#ffffff" : "#000000",
-                borderColor: isDark ? themeColors.primary.black : "#000000",
                 color: isDark ? "#000000" : "#ffffff",
+                borderColor: themeColors.primary.black,
               }}
             >
-              <h3 className="text-xl font-black leading-tight">
-                What We Offer
-              </h3>
+              <h3 className="text-xl font-black">What We Offer</h3>
             </div>
           </div>
 
-          {/* Services (stacked cards) */}
-          <div className="w-full flex flex-col gap-6 mt-6">
+          {/* Cards */}
+          <div className="w-full flex flex-col gap-6">
             {services.map((service, idx) => (
               <div
                 key={idx}
                 className="rounded-2xl p-5 shadow-lg border-2"
                 style={{ backgroundColor: service.color }}
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-white/90 flex items-center justify-center shrink-0">
+                <div className="flex gap-4">
+                  <div className="w-12 h-12 bg-white/90 rounded-xl flex items-center justify-center shrink-0">
                     {service.icon}
                   </div>
-
                   <div>
-                    <h3 className="text-base font-bold text-gray-900 mb-1">
-                      {service.title}
-                    </h3>
-                    <p className="text-sm text-gray-800 leading-relaxed">
-                      {service.description}
-                    </p>
+                    <h3 className="font-bold text-gray-900">{service.title}</h3>
+                    <p className="text-sm text-gray-800">{service.description}</p>
                   </div>
                 </div>
               </div>
@@ -711,141 +707,120 @@ const testimonialsRow3 = useMemo(() => [
           </div>
         </div>
 
+        {/* ================= DESKTOP HUB & SPOKE ================= */}
+        <div className="relative hidden lg:flex items-center justify-center min-h-[900px]">
 
-        {/* Hub & Spoke Container */}
-        <div className="relative min-h-[900px] hidden lg:flex items-center justify-center">
-          
-          {/* Center Hub - WHAT WE OFFER */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+          {/* -------- Center Hub -------- */}
+          <div className="absolute z-20">
             <div className="relative">
-              
-              {/* Glow effect */}
-              <div className="absolute -inset-5 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse"></div>
+              <div className="absolute -inset-5 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse" />
 
-              {/* Text Hub */}
               <div
-                className="relative rounded-full w-56 h-56 shadow-2xl border-4 flex flex-col items-center justify-center text-center transform hover:scale-110 transition-all duration-500"
+                className="relative w-56 h-56 rounded-full flex flex-col items-center justify-center border-4 shadow-2xl"
                 style={{
                   backgroundColor: isDark ? "#ffffff" : "#000000",
-                  borderColor: isDark ? themeColors.primary.black : "#000000",
                   color: isDark ? "#000000" : "#ffffff",
+                  borderColor: themeColors.primary.black,
+                  transform: "translateY(-4px)"
                 }}
               >
-                <h3
-                className="text-2xl sm:text-3xl font-black leading-tight"
-                style={{ color: isDark ? "#000000" : "#ffffff" }}
-              >
-                What We Offer
-              </h3>
-                <div className="w-10 h-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 mt-4"></div>
+                <h3 className="text-3xl font-black leading-none text-center">
+                  What We <br />
+                  Offer
+                </h3>
+                <div className="w-10 h-1 bg-gradient-to-r from-pink-500 to-red-500 mt-4 rounded-full" />
               </div>
-
             </div>
           </div>
 
-          {/* Service Cards in Circle Formation */}
-          {services.map((service, idx) => {
-            // Calculate position in circle (6 items = 60 degrees apart)
-            const angles = [
-            -120, // Top-left
-            -60,  // Top-right
-            0,    // Right
-            60,   // Bottom-right
-            120,  // Bottom-left
-            180,  // Left
-          ];
+          {/* -------- SVG CONNECTORS (ONE SVG ONLY) -------- */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+            <defs>
+              {services.map((_, i) => (
+                <marker
+                  key={i}
+                  id={`arrow-${i}`}
+                  markerWidth="10"
+                  markerHeight="10"
+                  refX="9"
+                  refY="3"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 10 3, 0 6" fill={services[i].color} />
+                </marker>
+              ))}
+            </defs>
 
-          const angle = (angles[idx] * Math.PI) / 180;
-            const radius = window.innerWidth < 1024 ? 260 : 350;
+            {services.map((_, idx) => {
+              const angle = (idx / services.length) * 2 * Math.PI;
+              const radius = 360;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+
+              return (
+                <line
+                  key={idx}
+                  x1="50%"
+                  y1="50%"
+                  x2={`calc(50% + ${x}px)`}
+                  y2={`calc(50% + ${y}px)`}
+                  stroke={services[idx].color}
+                  strokeWidth="3"
+                  strokeDasharray="8,4"
+                  markerEnd={`url(#arrow-${idx})`}
+                />
+              );
+            })}
+          </svg>
+
+          {/* -------- SERVICE CARDS -------- */}
+          {services.map((service, idx) => {
+            const angle = (idx / services.length) * 2 * Math.PI;
+            const radius = 360;
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
 
             return (
-              <div key={idx}>
-                {/* Connecting Line/Arrow */}
-                <svg
-                  className="absolute top-1/2 left-1/2 pointer-events-none z-0"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <defs>
-                    <marker
-                      id={`arrowhead-${idx}`}
-                      markerWidth="10"
-                      markerHeight="10"
-                      refX="9"
-                      refY="3"
-                      orient="auto"
-                    >
-                      <polygon
-                        points="0 0, 10 3, 0 6"
-                        fill={service.color}
-                      />
-                    </marker>
-                  </defs>
-                  <line
-                    x1="50%"
-                    y1="50%"
-                    x2={`calc(50% + ${x * 0.7}px)`}
-                    y2={`calc(50% + ${y * 0.7}px)`}
-                    stroke={service.color}
-                    strokeWidth="3"
-                    strokeDasharray="8,4"
-                    markerEnd={`url(#arrowhead-${idx})`}
-                    className="animate-dash"
-                  />
-                </svg>
-
-                {/* Service Card */}
+              <div
+                key={idx}
+                className="absolute z-10"
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                }}
+              >
                 <div
-                  className="absolute group cursor-pointer z-10"
-                  style={{
-                    left: '50%',
-                    top: '50%',
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                  }}
+                  className="w-64 p-6 rounded-3xl border-4 border-white dark:border-gray-700 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-2"
+                  style={{ backgroundColor: service.color }}
                 >
-                  <div
-                    className="w-64 rounded-3xl p-6 shadow-xl border-4 border-white dark:border-gray-700 transform hover:scale-110 hover:-rotate-2 transition-all duration-300"
-                    style={{ backgroundColor: service.color }}
-                  >
-                    {/* Icon */}
-                    <div className="w-12 h-12 rounded-xl bg-white/90 flex items-center justify-center mb-4 transform group-hover:rotate-12 transition-transform">
-                      {service.icon}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">
-                      {service.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-800 leading-relaxed">
-                      {service.description}
-                    </p>
+                  <div className="w-12 h-12 bg-white/90 rounded-xl flex items-center justify-center mb-4">
+                    {service.icon}
                   </div>
+                  <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-sm text-gray-800">{service.description}</p>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* CTA Button */}
-        <div className="text-center mt-12">
+        {/* ================= CTA ================= */}
+        <div className="text-center mt-14">
           <button
             onClick={onLogin}
-            className="px-12 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform hover:-translate-y-1"
-            style={{ backgroundColor: themeColors.primary.w2, color: !isDark ? "#ffffff" : "#000000" }}
+            className="px-12 py-4 rounded-xl font-bold text-lg transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-2xl"
+            style={{
+              backgroundColor: themeColors.primary.w2,
+              color: isDark ? "#000000" : "#ffffff",
+            }}
           >
-            Explore All Services
-            <ChevronRight className="w-5 h-5 inline ml-2" />
+            Explore All Services <ChevronRight className="inline w-5 h-5 ml-2" />
           </button>
         </div>
       </div>
     </section>
+
 
 
 
