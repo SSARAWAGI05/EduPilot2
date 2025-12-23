@@ -341,10 +341,10 @@ const testimonialsRow3 = useMemo(() => [
   },
   {
     icon: <Users className="w-8 h-8" />,
-    title: "Live Classes",
-    description: "One-on-one or group learning options, flexible scheduling, access to curated class notes, session recordings, transcripts, daily interactive quizzes, and many more engaging learning features.",
-    color: themeColors.accent.yellow,
-    gradient: colors.gradient.yellowGradient
+    title: "Community Access",
+    description:
+      "Be part of a focused learning community to discuss ideas, share insights, ask questions, and grow together through meaningful conversations and collaborative learning.",
+    color: themeColors.accent.green
   },
   {
     icon: <Brain className="w-8 h-8" />,
@@ -353,27 +353,26 @@ const testimonialsRow3 = useMemo(() => [
     color: themeColors.accent.red,
     gradient: colors.gradient.redGradient
   },
-
-  {
-    icon: <TrendingUp className="w-8 h-8" />,
-    title: "Market Pulse",
-    description:
-      "One curated pulse every day covering global finance and economics. Complex news, policies, and market movements explained simply—so you stay informed without feeling overwhelmed.",
-    color: themeColors.accent.purple
-  },
-  {
-    icon: <Users className="w-8 h-8" />,
-    title: "Community Access",
-    description:
-      "Be part of a focused learning community to discuss ideas, share insights, ask questions, and grow together through meaningful conversations and collaborative learning.",
-    color: themeColors.accent.green
-  },
   {
     icon: <FileText className="w-8 h-8" />,
     title: "Study Resources",
     description: "Access to PYQs, cheatsheets, and comprehensive materials for your field of study.",
     color: themeColors.accent.orange,
     gradient: colors.gradient.orangeGradient
+  },
+  {
+    icon: <Users className="w-8 h-8" />,
+    title: "Live Classes",
+    description: "One-on-one or group learning options, flexible scheduling, access to curated class notes, session recordings, transcripts, daily interactive quizzes, and many more engaging learning features.",
+    color: themeColors.accent.yellow,
+    gradient: colors.gradient.yellowGradient
+  },
+  {
+    icon: <TrendingUp className="w-8 h-8" />,
+    title: "Market Pulse",
+    description:
+      "One curated pulse every day covering global finance and economics. Complex news, policies, and market movements explained simply—so you stay informed without feeling overwhelmed.",
+    color: themeColors.accent.purple
   }
 ];
 
@@ -732,46 +731,6 @@ const testimonialsRow3 = useMemo(() => [
               </div>
             </div>
           </div>
-
-          {/* -------- SVG CONNECTORS (ONE SVG ONLY) -------- */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-            <defs>
-              {services.map((_, i) => (
-                <marker
-                  key={i}
-                  id={`arrow-${i}`}
-                  markerWidth="10"
-                  markerHeight="10"
-                  refX="9"
-                  refY="3"
-                  orient="auto"
-                >
-                  <polygon points="0 0, 10 3, 0 6" fill={services[i].color} />
-                </marker>
-              ))}
-            </defs>
-
-            {services.map((_, idx) => {
-              const angle = (idx / services.length) * 2 * Math.PI;
-              const radius = 360;
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
-
-              return (
-                <line
-                  key={idx}
-                  x1="50%"
-                  y1="50%"
-                  x2={`calc(50% + ${x}px)`}
-                  y2={`calc(50% + ${y}px)`}
-                  stroke={services[idx].color}
-                  strokeWidth="3"
-                  strokeDasharray="8,4"
-                  markerEnd={`url(#arrow-${idx})`}
-                />
-              );
-            })}
-          </svg>
 
           {/* -------- SERVICE CARDS -------- */}
           {services.map((service, idx) => {
