@@ -230,7 +230,7 @@ export const AboutSlides: React.FC<AboutSlidesProps> = ({ onLogin, heroVideoUrl,
   const finalTestimonialVideoUrl = testimonialVideoUrl || defaultTestimonialVideoUrl;
 
   const defaultTestimonialVideos: Video[] = [
-  { url: "/graphics/testimonial1.mp4", title: "Ananya\nUSA" },
+  { url: "/graphics/testimonial1.mp4", title: "Anushka\nUSA" },
   { url: "/graphics/testimonial2.mp4", title: "Tanisha\nSt. Xaviers, Mumbai" },
   { url: "/graphics/testimonial3.mp4", title: "Amir\nAustralia" },
   { url: "/graphics/testimonial4.mp4", title: "Rhea\nNMIMS, Mumbai" },
@@ -334,8 +334,8 @@ const testimonialsRow3 = useMemo(() => [
   const services = [
   {
     icon: <Video className="w-8 h-8" />,
-    title: "Pre-Recorded Courses",
-    description: "Comprehensive courses on latest technologies and tools with lifetime access and regular updates.",
+    title: "Career-Focused Live Courses",
+    description: "Live, guided courses that go beyond regular subjects to build real-world skills, confidence, and interview readiness for Masters and professional roles.",
     color: themeColors.accent.blue,
     gradient: colors.gradient.blueGradient
   },
@@ -355,8 +355,8 @@ const testimonialsRow3 = useMemo(() => [
   },
   {
     icon: <FileText className="w-8 h-8" />,
-    title: "Study Resources",
-    description: "Access to PYQs, cheatsheets, and comprehensive materials for your field of study.",
+    title: "Centralised Study Materials & Recordings",
+    description: "Session-wise class notes and complete class recordings are securely uploaded on the student portal for structured learning and revision.",
     color: themeColors.accent.orange,
     gradient: colors.gradient.orangeGradient
   },
@@ -367,6 +367,15 @@ const testimonialsRow3 = useMemo(() => [
     color: themeColors.accent.yellow,
     gradient: colors.gradient.yellowGradient
   },
+  // 👇 ADD THIS NEW SERVICE HERE
+  {
+    icon: <Award className="w-8 h-8" />,
+    title: "Connect with Industry Experts",
+    description: "Interact with corporate professionals to understand real-world roles, workplace expectations, and how careers actually unfold beyond classrooms.",
+    color: themeColors.accent.orange,
+    gradient: colors.gradient.orangeGradient
+  },
+  // 👆 END OF NEW SERVICE
   {
     icon: <TrendingUp className="w-8 h-8" />,
     title: "Market Pulse",
@@ -471,6 +480,18 @@ const testimonialsRow3 = useMemo(() => [
 
   return (
     <div className="min-h-screen overflow-y-auto scroll-smooth bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      {/* Floating Get Started Button */}
+      {/* Floating Get Started Button */}
+      <button
+        onClick={onLogin}
+        className="fixed top-6 right-6 z-50 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl transform shadow-2xl animate-pulse"
+        style={{ 
+          backgroundColor: '#ef4444', // Bright red
+          color: '#ffffff'
+        }}
+      >
+        🚀 Get Started
+      </button>
       {/* Slide 1: Hero Section with Enhanced Design */}
       <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden" style={{ backgroundColor: themeColors.background.beige }}>
         {/* Animated background elements */}
@@ -592,10 +613,41 @@ const testimonialsRow3 = useMemo(() => [
                       <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex items-center gap-2">
                         About Me
                       </h3>
-                      <p className="text-sm lg:text-base text-gray-800 dark:text-gray-200 leading-relaxed">
+                      <p className="text-sm lg:text-base text-gray-800 dark:text-gray-200 leading-relaxed mb-4">
                         Welcome to DE-ECO, where learning meets the real world. With an Economics Honours degree, an MBA in Marketing, and professional experience at Mastercard, I created DE-ECO to bridge the gap between academic knowledge and practical skills. My goal is to help students think independently, apply concepts with confidence, and excel in exams, interviews, and beyond.
                       </p>
                     </div>
+                  </div>
+
+                  {/* Certifications/Boards Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                     {['IB', 'IGCSE', 'HSC NSW', 'CBSE', 'ICSE/ISC', 'State Boards', 'AP', 'SAT', 'Colleges', 'Professionals', 'Interview Prep', 'IndustryBridge'].map((board, idx) => (
+                      <div 
+                        key={idx}
+                        className="relative group text-center p-3 rounded-xl transform hover:scale-105 transition-all duration-300 cursor-default shadow-lg border-2 border-white dark:border-gray-700"
+                        style={{ 
+                          backgroundColor: [
+                            themeColors.accent.blue,
+                            themeColors.accent.yellow,
+                            themeColors.accent.red,
+                            themeColors.accent.orange,
+                            themeColors.accent.green,
+                            themeColors.accent.purple,
+                            themeColors.accent.blueLight,
+                            themeColors.accent.blue,
+                            themeColors.accent.yellow,
+                            themeColors.accent.red,
+                            themeColors.accent.orange,
+                            themeColors.accent.green
+                          ][idx]
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-white dark:bg-gray-900 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                        <div className="relative">
+                          <div className="text-sm font-bold text-gray-900 dark:text-gray-100">{board}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Enhanced Stats Grid */}
@@ -603,47 +655,23 @@ const testimonialsRow3 = useMemo(() => [
                     {stats.slice(0, 2).map((stat, index) => (
                       <div 
                         key={index}
-                        className="relative group text-center p-4 rounded-2xl transform hover:scale-110 hover:-rotate-2 transition-all duration-300 cursor-pointer"
+                        className="relative text-center px-2 py-1.5 rounded-lg shadow-md border border-white dark:border-gray-700"
+
                         style={{ backgroundColor: stat.color }}
                       >
-                        <div className="absolute inset-0 bg-white dark:bg-gray-900 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
                         <div className="relative">
-                          <div className="flex items-center justify-center mb-2">
+                          <div className="flex items-center justify-center mb-0.5">
                             {stat.icon}
                           </div>
-                          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stat.value}</div>
-                          <div className="text-sm text-gray-700 dark:text-gray-300 font-medium">{stat.label}</div>
+                          <div className="text-lg font-semibold text-gray-900 dark:text-gray-100 leading-tight">
+  {stat.value}
+</div>
+                          <div className="text-[10px] text-gray-700 dark:text-gray-300 leading-tight">
+  {stat.label}
+</div>
                         </div>
                       </div>
                     ))}
-                  </div>
-
-                  {/* Enhanced CTA Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                    <button
-                      onClick={onLogin}
-                      className="flex-1 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl transform hover:-translate-y-1 relative overflow-hidden group"
-                      style={{ backgroundColor: themeColors.primary.black, color: themeColors.text.white }}
-                    >
-                      <span className="relative z-10 flex items-center justify-center gap-2">
-                        Get Started
-                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    </button>
-                    <button
-                      onClick={onLogin}
-                      className="
-                        flex-1 px-8 py-4 rounded-xl font-bold text-lg border-3 transition-all duration-300 
-                        hover:scale-105 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden group
-
-                        bg-black text-white border-black               // Light mode
-                        dark:bg-white dark:text-black dark:border-white // Dark mode
-                      "
-                    >
-                      <span className="relative z-10">Learn More</span>
-                      <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-5 transition-opacity"></div>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -707,7 +735,7 @@ const testimonialsRow3 = useMemo(() => [
         </div>
 
         {/* ================= DESKTOP HUB & SPOKE ================= */}
-        <div className="relative hidden lg:flex items-center justify-center min-h-[900px]">
+        <div className="relative hidden lg:flex items-center justify-center min-h-[1100px]">
 
           {/* -------- Center Hub -------- */}
           <div className="absolute z-20">
@@ -735,7 +763,7 @@ const testimonialsRow3 = useMemo(() => [
           {/* -------- SERVICE CARDS -------- */}
           {services.map((service, idx) => {
             const angle = (idx / services.length) * 2 * Math.PI;
-            const radius = 360;
+            const radius = 450;
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
 
