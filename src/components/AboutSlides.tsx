@@ -342,7 +342,7 @@ const testimonialsRow3 = useMemo(() => [
   {
     icon: <Users className="w-8 h-8" />,
     title: "Live Classes",
-    description: "One-on-one or small group sessions tailored to your learning needs with expert instructors.",
+    description: "One-on-one or group learning options, flexible scheduling, access to curated class notes, session recordings, transcripts, daily interactive quizzes, and many more engaging learning features.",
     color: themeColors.accent.yellow,
     gradient: colors.gradient.yellowGradient
   },
