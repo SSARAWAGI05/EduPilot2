@@ -346,12 +346,13 @@ const testimonialsRow3 = useMemo(() => [
       "Be part of a focused learning community to discuss ideas, share insights, ask questions, and grow together through meaningful conversations and collaborative learning.",
     color: themeColors.accent.green
   },
+  // 👆 END OF NEW SERVICE
   {
-    icon: <Brain className="w-8 h-8" />,
-    title: "AI Hub Access",
-    description: "Cutting-edge AI tools to maximize your learning and boost productivity with exclusive features.",
-    color: themeColors.accent.red,
-    gradient: colors.gradient.redGradient
+    icon: <TrendingUp className="w-8 h-8" />,
+    title: "Market Pulse",
+    description:
+      "One curated pulse every day covering global finance and economics. Complex news, policies, and market movements explained simply—so you stay informed without feeling overwhelmed.",
+    color: themeColors.accent.purple
   },
   {
     icon: <FileText className="w-8 h-8" />,
@@ -375,13 +376,12 @@ const testimonialsRow3 = useMemo(() => [
     color: themeColors.accent.orange,
     gradient: colors.gradient.orangeGradient
   },
-  // 👆 END OF NEW SERVICE
   {
-    icon: <TrendingUp className="w-8 h-8" />,
-    title: "Market Pulse",
-    description:
-      "One curated pulse every day covering global finance and economics. Complex news, policies, and market movements explained simply—so you stay informed without feeling overwhelmed.",
-    color: themeColors.accent.purple
+    icon: <Brain className="w-8 h-8" />,
+    title: "AI Hub Access",
+    description: "Cutting-edge AI tools to maximize your learning and boost productivity with exclusive features.",
+    color: themeColors.accent.red,
+    gradient: colors.gradient.redGradient
   }
 ];
 
@@ -680,135 +680,78 @@ const testimonialsRow3 = useMemo(() => [
         </div>
       </div>
 
-    {/* ================= WHAT WE OFFER ================= */}
-    <section
-      className="py-20 relative overflow-hidden"
-      style={{ backgroundColor: themeColors.background.white }}
-    >
-      {/* Background blobs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 dark:bg-gray-700/30 rounded-full blur-3xl animate-blob" />
-        <div className="absolute bottom-20 right-20 w-72 h-72 bg-pink-200/30 dark:bg-gray-600/30 rounded-full blur-3xl animate-blob animation-delay-2000" />
-      </div>
+      {/* ================= WHAT WE OFFER ================= */}
+<section
+  className="py-24"
+  style={{ backgroundColor: themeColors.background.white }}
+>
+  <div className="max-w-7xl mx-auto px-6">
 
-      <div className="max-w-7xl mx-auto px-6 relative">
+    {/* -------- Section Header -------- */}
+    <div className="text-center max-w-3xl mx-auto mb-16">
+      <h2
+        className="text-4xl sm:text-5xl font-extrabold mb-4"
+        style={{ color: themeColors.text.primary }}
+      >
+        What We Offer
+      </h2>
+      <p className="text-lg text-gray-600 dark:text-gray-400">
+        Practical learning experiences designed to connect concepts with the real world.
+      </p>
+    </div>
 
-        {/* ================= MOBILE VIEW ================= */}
-        <div className="lg:hidden flex flex-col items-center gap-10">
+    {/* -------- Services Grid -------- */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  {services.map((service, idx) => {
+    const isLast = idx === services.length - 1;
 
-          {/* Hub */}
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse" />
-
-            <div
-              className="relative w-44 h-44 rounded-full border-4 flex items-center justify-center text-center shadow-2xl"
-              style={{
-                backgroundColor: isDark ? "#ffffff" : "#000000",
-                color: isDark ? "#000000" : "#ffffff",
-                borderColor: themeColors.primary.black,
-              }}
-            >
-              <h3 className="text-xl font-black">What We Offer</h3>
-            </div>
+    return (
+      <div
+        key={idx}
+        className={isLast ? "lg:col-span-3 flex justify-center" : ""}
+      >
+        <div
+          className="group w-full max-w-sm rounded-3xl p-8 border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+          style={{
+            backgroundColor: service.color,
+          }}
+        >
+          <div className="w-14 h-14 mb-6 rounded-2xl bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+            {service.icon}
           </div>
 
-          {/* Cards */}
-          <div className="w-full flex flex-col gap-6">
-            {services.map((service, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl p-5 shadow-lg border-2"
-                style={{ backgroundColor: service.color }}
-              >
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-white/90 rounded-xl flex items-center justify-center shrink-0">
-                    {service.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">{service.title}</h3>
-                    <p className="text-sm text-gray-800">{service.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          <h3 className="text-xl font-bold mb-3 text-gray-900">
+            {service.title}
+          </h3>
 
-        {/* ================= DESKTOP HUB & SPOKE ================= */}
-        <div className="relative hidden lg:flex items-center justify-center min-h-[1100px]">
+          <p className="text-gray-800 text-sm leading-relaxed">
+            {service.description}
+          </p>
 
-          {/* -------- Center Hub -------- */}
-          <div className="absolute z-20">
-            <div className="relative">
-              <div className="absolute -inset-5 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 rounded-full blur-xl opacity-60 animate-pulse" />
-
-              <div
-                className="relative w-56 h-56 rounded-full flex flex-col items-center justify-center border-4 shadow-2xl"
-                style={{
-                  backgroundColor: isDark ? "#ffffff" : "#000000",
-                  color: isDark ? "#000000" : "#ffffff",
-                  borderColor: themeColors.primary.black,
-                  transform: "translateY(-4px)"
-                }}
-              >
-                <h3 className="text-3xl font-black leading-none text-center">
-                  What We <br />
-                  Offer
-                </h3>
-                <div className="w-10 h-1 bg-gradient-to-r from-pink-500 to-red-500 mt-4 rounded-full" />
-              </div>
-            </div>
-          </div>
-
-          {/* -------- SERVICE CARDS -------- */}
-          {services.map((service, idx) => {
-            const angle = (idx / services.length) * 2 * Math.PI;
-            const radius = 450;
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-
-            return (
-              <div
-                key={idx}
-                className="absolute z-10"
-                style={{
-                  left: "50%",
-                  top: "50%",
-                  transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                }}
-              >
-                <div
-                  className="w-64 p-6 rounded-3xl border-4 border-white dark:border-gray-700 shadow-xl transition-all duration-300 hover:scale-110 hover:-rotate-2"
-                  style={{ backgroundColor: service.color }}
-                >
-                  <div className="w-12 h-12 bg-white/90 rounded-xl flex items-center justify-center mb-4">
-                    {service.icon}
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
-                  <p className="text-sm text-gray-800">{service.description}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* ================= CTA ================= */}
-        <div className="text-center mt-14">
-          <button
-            onClick={onLogin}
-            className="px-12 py-4 rounded-xl font-bold text-lg transition-all hover:scale-110 hover:-translate-y-1 hover:shadow-2xl"
-            style={{
-              backgroundColor: themeColors.primary.w2,
-              color: isDark ? "#000000" : "#ffffff",
-            }}
-          >
-            Explore All Services <ChevronRight className="inline w-5 h-5 ml-2" />
-          </button>
+          <div className="mt-6 h-1 w-12 rounded-full bg-black/10 group-hover:w-20 transition-all duration-300" />
         </div>
       </div>
-    </section>
+    );
+  })}
+</div>
 
 
+    {/* -------- CTA -------- */}
+    <div className="text-center mt-20">
+      <button
+        onClick={onLogin}
+        className="px-14 py-4 rounded-xl font-bold text-lg transition-all hover:scale-105 hover:shadow-xl"
+        style={{
+          backgroundColor: themeColors.primary.w2,
+          color: isDark ? "#000000" : "#ffffff",
+        }}
+      >
+        Explore All Services <ChevronRight className="inline w-5 h-5 ml-2" />
+      </button>
+    </div>
+
+  </div>
+</section>
 
 
       {/* Slide 3: Enhanced Video Testimonials */}
