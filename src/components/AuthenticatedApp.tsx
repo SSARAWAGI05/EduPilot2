@@ -78,7 +78,7 @@ export const AuthenticatedApp: React.FC<AuthenticatedAppProps> = ({ onLogout }) 
         return <HomePage onNavigate={setCurrentPage} />;
 
       case "courses":
-        return <CoursesPage />;
+        return <CoursesPage onPageChange={setCurrentPage} />;
 
       case "live-classes":
         return <LiveClassesPage onPageChange={setCurrentPage} />;

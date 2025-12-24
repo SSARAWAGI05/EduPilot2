@@ -1026,17 +1026,17 @@ const resetFocusTimer = () => {
             {/* Right - Video Placeholder */}
             {/* Right - Video Demo */}
             <div
-              className="rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1"
-              style={{ minHeight: "300px", backgroundColor: themeColors.primary.black }}
+              className="relative rounded-2xl shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1"
+              style={{ backgroundColor: themeColors.primary.black }}
             >
               <video
-                key={liveDemoVideoSrc}   // 👈 important: forces reload on theme switch
+                key={liveDemoVideoSrc} // forces reload on theme switch
                 src={liveDemoVideoSrc}
                 autoPlay
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-cover"
+                className="w-full h-auto block rounded-2xl"
               />
             </div>
             </div>
