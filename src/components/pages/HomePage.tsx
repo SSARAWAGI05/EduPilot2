@@ -972,7 +972,126 @@ const resetFocusTimer = () => {
 
           </div>
         </div>
+              
+        {/* Featured Courses Section */}
+        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div>
+              <h2
+                className="text-3xl sm:text-4xl font-bold mb-2 inline-block"
+                style={{ color: themeColors.text.primary }}
+              >
+                Featured Courses
+              </h2>
+              <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
+                <path
+                  d="M0,4 Q60,2 120,5 T250,4"
+                  stroke={themeColors.text.primary}
+                  strokeWidth="3"
+                  fill="none"
+                />
+              </svg>
+            </div>
 
+            {/* 🔹 Explore More Courses Button */}
+            <button
+              onClick={() => onNavigate?.("courses")}
+              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-[1.03] hover:-translate-y-1
+                flex items-center gap-2"
+              style={{
+                backgroundColor: themeColors.primary.black,
+                color: themeColors.text.white,
+              }}
+            >
+              Coming Soon, Stay Tuned!
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-4 overflow-visible">
+          {/* Loading */}
+          {featuredCoursesLoading && (
+            <p className="text-sm opacity-70 col-span-full text-center">
+              Loading featured courses…
+            </p>
+          )}
+
+          {/* Empty state */}
+          {!featuredCoursesLoading && featuredCourses.length === 0 && (
+            <p className="text-sm opacity-70 col-span-full text-center">
+              
+            </p>
+          )}
+
+          {/* Courses */}
+          {!featuredCoursesLoading &&
+            featuredCourses.map((course) => (
+              <div
+                key={course.id}
+                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-[1.03] hover:-translate-y-1
+"
+                style={{ backgroundColor: themeColors.background.white }}
+              >
+                {/* Course Image */}
+                <div className="h-40 relative overflow-hidden">
+                  <img
+                    src={
+                      course.thumbnail_url ||
+                      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400"
+                    }
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Course Content */}
+                <div className="p-4">
+                  <h3
+                    className="font-bold text-base mb-2 line-clamp-2"
+                    style={{ color: themeColors.text.primary }}
+                  >
+                    {course.title}
+                  </h3>
+
+                  <p
+                    className="text-xs mb-1"
+                    style={{ color: themeColors.text.secondary }}
+                  >
+                    by {course.instructor_name}
+                  </p>
+
+                  <div
+                    className="flex items-center gap-3 text-xs mb-3"
+                    style={{ color: themeColors.text.tertiary }}
+                  >
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {course.duration_weeks} weeks
+                    </span>
+
+                    <span
+                      className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                      style={{ backgroundColor: themeColors.accent.blueLight }}
+                    >
+                      {course.level}
+                    </span>
+                  </div>
+
+                  <button
+                    className="w-full py-2 rounded-lg font-bold text-sm transition-transform hover:scale-[1.03] hover:-translate-y-1
+"
+                    style={{
+                      backgroundColor: themeColors.accent.blue,
+                      color: themeColors.text.white,
+                    }}
+                  >
+                    View Course
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
+        </div>
+        
         {/* Live Classes Section */}
         <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.red }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1152,125 +1271,6 @@ const resetFocusTimer = () => {
           <p className="text-center text-sm mt-4 text-gray-400">← Scroll to see more pulses →</p>
         </div>
 
-        </div>
-
-        {/* Featured Courses Section */}
-        <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8" style={{ backgroundColor: themeColors.accent.yellow }}>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            <div>
-              <h2
-                className="text-3xl sm:text-4xl font-bold mb-2 inline-block"
-                style={{ color: themeColors.text.primary }}
-              >
-                Featured Courses
-              </h2>
-              <svg className="w-80 h-3 mt-1" viewBox="0 0 250 8" preserveAspectRatio="none">
-                <path
-                  d="M0,4 Q60,2 120,5 T250,4"
-                  stroke={themeColors.text.primary}
-                  strokeWidth="3"
-                  fill="none"
-                />
-              </svg>
-            </div>
-
-            {/* 🔹 Explore More Courses Button */}
-            <button
-              onClick={() => onNavigate?.("courses")}
-              className="px-6 py-3 rounded-xl font-bold transition-transform hover:scale-[1.03] hover:-translate-y-1
-                flex items-center gap-2"
-              style={{
-                backgroundColor: themeColors.primary.black,
-                color: themeColors.text.white,
-              }}
-            >
-              Coming Soon, Stay Tuned!
-              <ChevronRight size={18} />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-4 overflow-visible">
-          {/* Loading */}
-          {featuredCoursesLoading && (
-            <p className="text-sm opacity-70 col-span-full text-center">
-              Loading featured courses…
-            </p>
-          )}
-
-          {/* Empty state */}
-          {!featuredCoursesLoading && featuredCourses.length === 0 && (
-            <p className="text-sm opacity-70 col-span-full text-center">
-              
-            </p>
-          )}
-
-          {/* Courses */}
-          {!featuredCoursesLoading &&
-            featuredCourses.map((course) => (
-              <div
-                key={course.id}
-                className="rounded-2xl shadow-lg overflow-hidden transition-transform transform hover:scale-[1.03] hover:-translate-y-1
-"
-                style={{ backgroundColor: themeColors.background.white }}
-              >
-                {/* Course Image */}
-                <div className="h-40 relative overflow-hidden">
-                  <img
-                    src={
-                      course.thumbnail_url ||
-                      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400"
-                    }
-                    alt={course.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Course Content */}
-                <div className="p-4">
-                  <h3
-                    className="font-bold text-base mb-2 line-clamp-2"
-                    style={{ color: themeColors.text.primary }}
-                  >
-                    {course.title}
-                  </h3>
-
-                  <p
-                    className="text-xs mb-1"
-                    style={{ color: themeColors.text.secondary }}
-                  >
-                    by {course.instructor_name}
-                  </p>
-
-                  <div
-                    className="flex items-center gap-3 text-xs mb-3"
-                    style={{ color: themeColors.text.tertiary }}
-                  >
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {course.duration_weeks} weeks
-                    </span>
-
-                    <span
-                      className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
-                      style={{ backgroundColor: themeColors.accent.blueLight }}
-                    >
-                      {course.level}
-                    </span>
-                  </div>
-
-                  <button
-                    className="w-full py-2 rounded-lg font-bold text-sm transition-transform hover:scale-[1.03] hover:-translate-y-1
-"
-                    style={{
-                      backgroundColor: themeColors.accent.blue,
-                      color: themeColors.text.white,
-                    }}
-                  >
-                    View Course
-                  </button>
-                </div>
-              </div>
-            ))}
-        </div>
         </div>
 
         {/* AI Hub Section */}
