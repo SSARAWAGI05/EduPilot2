@@ -1142,22 +1142,22 @@ const resetFocusTimer = () => {
               </button>
             </div>
 
-            {/* Right - Video Placeholder */}
-            {/* Right - Video Demo */}
-            <div
-              className="relative rounded-2xl shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1"
-              style={{ backgroundColor: themeColors.primary.black }}
-            >
-              <video
-                key={liveDemoVideoSrc} // forces reload on theme switch
-                src={liveDemoVideoSrc}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-auto block rounded-2xl"
-              />
-            </div>
+              {/* Right - Video Placeholder */}
+              {/* Right - Video Demo */}
+              <div
+                className="relative rounded-2xl shadow-lg transition-transform transform hover:scale-[1.03] hover:-translate-y-1"
+                style={{ backgroundColor: themeColors.primary.black }}
+              >
+                <video
+                  key={liveDemoVideoSrc} // forces reload on theme switch
+                  src={liveDemoVideoSrc}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto block rounded-2xl"
+                />
+              </div>
             </div>
           </div>
 
