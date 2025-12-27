@@ -18,7 +18,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const { isDark } = useTheme();
   const themeColors = getThemeColors(isDark);
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
